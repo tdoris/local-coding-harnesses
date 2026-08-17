@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-P=~/repos/scratch/harness-test/prompts
+P=~/repos/scratch/local-coding-harnesses/prompts
 /tmp/run-msg.sh claude fix $P/fix-claude.txt
 /tmp/run-msg.sh aider fix $P/fix-aider.txt
 /tmp/run-msg.sh opencode fix $P/fix-opencode.txt

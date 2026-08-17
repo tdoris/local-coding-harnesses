@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # cloud-run.sh <harness>  — full pipeline for one harness against gpt-oss:120b-cloud
-t=$1; ROOT=~/repos/scratch/harness-test/cloud; T=$ROOT/tasks; W=$ROOT/$t
+t=$1; ROOT=~/repos/scratch/local-coding-harnesses/cloud; T=$ROOT/tasks; W=$ROOT/$t
 mkdir -p $W/tomlq $W/jpatch; cd $W/tomlq && git init -q 2>/dev/null; git -C $W/tomlq config user.email j@x; git -C $W/tomlq config user.name j
 cd $W/jpatch && git init -q 2>/dev/null; git -C $W/jpatch config user.email j@x; git -C $W/jpatch config user.name j
 LA="local-agent --model gpt-oss:120b-cloud"

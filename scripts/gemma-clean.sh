@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-M=~/repos/scratch/harness-test/models-clean; T=~/repos/scratch/harness-test/cloud/tasks; L=~/repos/scratch/harness-test/local-llama
+M=~/repos/scratch/local-coding-harnesses/models-clean; T=~/repos/scratch/local-coding-harnesses/cloud/tasks; L=~/repos/scratch/local-coding-harnesses/local-llama
 TOMLP="$(cat $L/prompt-tomlA.txt)"; JP="$(cat $T/jpatch/spec.md)"
 ENVU=(env -u CLAUDE_CODE_MESSAGING_SOCKET -u CLAUDE_CODE_MESSAGING_TOKEN -u CLAUDE_CODE_SESSION_ID -u CLAUDE_CODE_CHILD_SESSION)
 run() { local label=$1 task=$2; shift 2; local dir=$M/$label/$task; mkdir -p $dir

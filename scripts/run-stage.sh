@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # run-stage.sh <tool> <stage#>  — runs stage prompt in the tool's test dir with session continuation
 tool=$1; stage=$2
-P=~/repos/scratch/harness-test/prompts/stage$stage.txt
-D=~/repos/scratch/harness-test/$tool
+P=~/repos/scratch/local-coding-harnesses/prompts/stage$stage.txt
+D=~/repos/scratch/local-coding-harnesses/$tool
 msg=$(cat "$P")
 case $tool in
   opencode) if [[ $stage == 1 ]]; then set -- local-agent opencode run "$msg"; else set -- local-agent opencode run -c "$msg"; fi ;;

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # run-msg.sh <tool> <label> <promptfile> — continue the tool's session with a prompt
-tool=$1; label=$2; msg=$(cat "$3"); D=~/repos/scratch/harness-test/$tool
+tool=$1; label=$2; msg=$(cat "$3"); D=~/repos/scratch/local-coding-harnesses/$tool
 case $tool in
   opencode) set -- local-agent opencode run -c "$msg" ;;
   qwen)     set -- local-agent qwen --approval-mode yolo -c -p "$msg" ;;

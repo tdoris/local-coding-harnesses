@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 until grep -q LOCAL-COMPARE-DONE /tmp/local-compare.log; do sleep 30; done
-M=~/repos/scratch/harness-test/models; T=~/repos/scratch/harness-test/cloud/tasks; L=~/repos/scratch/harness-test/local-llama
+M=~/repos/scratch/local-coding-harnesses/models; T=~/repos/scratch/local-coding-harnesses/cloud/tasks; L=~/repos/scratch/local-coding-harnesses/local-llama
 TOMLP="$(cat $L/prompt-tomlA.txt)"; JP="$(cat $T/jpatch/spec.md)"
 ENVU=(env -u CLAUDE_CODE_MESSAGING_SOCKET -u CLAUDE_CODE_MESSAGING_TOKEN -u CLAUDE_CODE_SESSION_ID -u CLAUDE_CODE_CHILD_SESSION)
 run() { # run <label> <task:toml|jpatch> <cmd...>
@@ -20,8 +20,8 @@ run gemma4-ollama jpatch local-agent --model gemma4:26b pi
 run qwen38-ollama jpatch local-agent --model qwen3.8 pi
 local-agent stop; sleep 5
 # --- llama-server qwen3.8 with reasoning budget 6000 / low
-( cd ~/repos/scratch/harness-test/llama && REASONING_BUDGET=6000 REASONING_EFFORT=low nohup ./run-llama-server.sh > llama-server.log 2>&1 & echo $! > llama-server.pid )
+( cd ~/repos/scratch/local-coding-harnesses/llama && REASONING_BUDGET=6000 REASONING_EFFORT=low nohup ./run-llama-server.sh > llama-server.log 2>&1 & echo $! > llama-server.pid )
 for i in $(seq 1 150); do curl -sf 127.0.0.1:11436/health >/dev/null 2>&1 && break; sleep 2; done
 run qwen38-llama-budget6k jpatch env PI_CODING_AGENT_DIR=$L/pi-agent pi --provider llama --model qwen3.8
-kill $(cat ~/repos/scratch/harness-test/llama/llama-server.pid) 2>/dev/null
+kill $(cat ~/repos/scratch/local-coding-harnesses/llama/llama-server.pid) 2>/dev/null
 echo MODELS-DONE
