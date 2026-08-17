@@ -1,0 +1,176 @@
+<title>Local Harness Bake-off</title>
+<style>
+:root{
+  --bg:#F7F8F6; --surface:#FFFFFF; --ink:#1B211D; --muted:#5C665F; --rule:#D9DED9;
+  --accent:#1F8A4C; --accent-soft:#E4F3E9; --warn:#9A6B00; --warn-soft:#FBF1D6; --bad:#A83A2E; --bad-soft:#F8E4E0;
+  --code-bg:#EEF1EE; --shot-bg:#2B2F2C;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --surface:#1A201C; --ink:#E6EBE7; --muted:#97A39B; --rule:#2A332D;
+    --accent:#5FD38A; --accent-soft:#1B3325; --warn:#E0B458; --warn-soft:#332B14; --bad:#F08A7C; --bad-soft:#3A1F1B;
+    --code-bg:#1E2622; --shot-bg:#0C0F0D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --surface:#1A201C; --ink:#E6EBE7; --muted:#97A39B; --rule:#2A332D;
+  --accent:#5FD38A; --accent-soft:#1B3325; --warn:#E0B458; --warn-soft:#332B14; --bad:#F08A7C; --bad-soft:#3A1F1B;
+  --code-bg:#1E2622; --shot-bg:#0C0F0D;
+}
+body{background:var(--bg);color:var(--ink);font-family:Charter,"Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;font-size:17px;line-height:1.55;margin:0;padding:0 20px 80px}
+.wrap{max-width:960px;margin:0 auto}
+.col{max-width:70ch}
+h1{font-size:2.1rem;line-height:1.15;margin:56px 0 8px;letter-spacing:-.01em;text-wrap:balance}
+h2{font-size:1.35rem;margin:52px 0 12px;text-wrap:balance}
+h3{font-size:1.05rem;margin:28px 0 6px}
+p{margin:0 0 14px}
+.eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:40px}
+.lede{font-size:1.15rem;line-height:1.5}
+.verdict{border-left:4px solid var(--accent);background:var(--accent-soft);padding:16px 20px;border-radius:0 6px 6px 0;margin:22px 0 28px}
+.verdict p:last-child{margin:0}
+code,pre,td.num,th.num,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+code{background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:.88em}
+pre{background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;font-size:.86rem;line-height:1.5;margin:10px 0 18px}
+pre code{background:none;padding:0;font-size:inherit}
+.tablewrap{overflow-x:auto;margin:14px 0 8px}
+table{border-collapse:collapse;width:100%;font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right}
+tr.pick td{background:var(--accent-soft)}
+.pill{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);vertical-align:middle}
+.pill.ok{color:var(--accent);border-color:var(--accent)}
+.pill.warn{color:var(--warn);border-color:var(--warn)}
+.pill.bad{color:var(--bad);border-color:var(--bad)}
+figure{margin:18px 0 26px}
+figure img{display:block;width:100%;height:auto;background:var(--shot-bg);border-radius:6px}
+figcaption{font-size:.85rem;color:var(--muted);margin-top:8px;line-height:1.45}
+.strip-labels{display:grid;grid-template-columns:repeat(4,1fr);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.strip-labels span{text-align:center}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px 28px;margin:12px 0 8px}
+.card{border:1px solid var(--rule);border-radius:6px;padding:14px 16px;background:var(--surface)}
+.card h3{margin:0 0 6px;font-size:1rem}
+.card p{font-size:.95rem;margin:0 0 8px}
+.card p:last-child{margin:0}
+ul{padding-left:1.2em;margin:0 0 14px}
+li{margin-bottom:6px}
+.small{font-size:.9rem;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+a{color:var(--accent)}
+</style>
+<div class="wrap">
+<div class="col">
+<div class="eyebrow">qwen3.8 · RTX 4090 · Ollama 0.32.14 · 16 Aug 2026</div>
+<h1>Local Harness Bake-off</h1>
+<p class="lede">Four coding-agent harnesses drove the same local model through the same three-stage Space Invaders build. All four ended with a playable game. They differ enormously in how much of the model's context they burn to get there — and that decides the recommendation.</p>
+
+<div class="verdict">
+<p><strong>Recommendation: <code>local-agent opencode</code> as your default harness for local models.</strong> It has a lean fixed prompt (~7.5k tokens vs Claude Code's ~25–31k), it drives Qwen's tool calls reliably, its permission model auto-runs in headless mode, and it built the game cleanly in 4.8 minutes with zero runtime errors. Use <strong>Aider</strong> when the question is "how good is this model at writing code" rather than "how well does it drive an agent loop" — it is the fastest and cheapest by a wide margin (154 s, ~2.5k prompt overhead) but its edit-then-hand-back workflow means you are the test runner. <strong>Claude Code works now</strong> with the wrapper, and produced a good game, but it is the heaviest and slowest. <strong>Qwen Code</strong> produced the prettiest build but is even heavier than Claude Code out of the box and needed the most tuning to behave.</p>
+</div>
+
+
+</div>
+<div class="verdict col" style="border-left-color:var(--warn);background:var(--warn-soft)">
+<p><strong>Updated after Jim's play-test and a feedback round (17 Aug).</strong> Hands-on play found what the "renders, no exceptions" probe could not: Claude Code's build had no invaders until Enter was pressed, Aider's formation went straight down, OpenCode's ship was oversized, and none of them restarted a wave (stage 4 hadn't been run). A second round fed each harness the bug reports verbatim plus stage 4, and <strong>pi</strong> (pi.dev, already installed) joined and ran the whole pipeline. Every harness fixed its reported bug in one short turn (21–65 s); the validator gained "observe" (is the formation present and moving sideways on load?) and "clear-level" (kill all invaders via page state, does a new wave appear?) checks that now catch all of the above. Details in the new sections below; the original report follows unchanged.</p>
+</div>
+
+<h2 class="col">Round 2 — feedback and stage 4</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Harness</th><th>Play-test finding</th><th class="num">Fix turn</th><th class="num">Stage 4</th><th>Stage-4 outcome (clear-level + soak checks)</th></tr></thead>
+<tbody>
+<tr><td><strong>Qwen Code</strong></td><td>"really playable"; no wave restart (stage 4 not run)</td><td class="num">—</td><td class="num">507 s</td><td><span class="pill ok">clean</span> new wave spawns lower/faster; UFO, attract screen; 36.7k tokens generated, auto-compacted mid-run</td></tr>
+<tr><td><strong>OpenCode</strong></td><td>ship far too big; no wave restart</td><td class="num">57 s</td><td class="num">249 s</td><td><span class="pill warn">1 bug</span> "WAVE 2" banner hung forever — <code>frame()</code> only ran <code>update()</code> while <code>mode==='playing'</code>, but the wave-break countdown lived inside <code>update()</code>; fixed in 37 s, verified</td></tr>
+<tr><td><strong>Aider</strong></td><td>invaders came straight down</td><td class="num">65 s</td><td class="num">79 s</td><td><span class="pill ok">clean</span> diagnosis matched mine exactly (433 px formation on a 480 px canvas with 20 px steps → edge every step); chose 32 px column spacing; wave restart works</td></tr>
+<tr><td><strong>Claude Code</strong></td><td>no invaders at all (formation only built in <code>reset()</code>, called only on Enter)</td><td class="num">46 s</td><td class="num">380 s</td><td><span class="pill ok">clean</span> formation on load fixed; stage 4 adds attract screen and wave restart; prompt reached 61k before compaction</td></tr>
+<tr class="pick"><td><strong>pi</strong> 0.84</td><td>(new entrant) prompt overhead <strong>~1.5–1.9k</strong>; stages 1–4 in <strong>274 s total</strong> (13 / 46 / 105 / 110 s)</td><td class="num">21 s + 32 s</td><td class="num">110 s</td><td><span class="pill warn">2 bugs</span> a block-scoped <code>const size</code> used outside its block froze the game from stage 2 (never self-checked); then the edge check ignored the formation offset so it marched off-screen. Both fixed from a symptom-only report with exact diagnoses; final build clean on all checks</td></tr>
+</tbody>
+</table>
+</div>
+<div class="strip-labels" style="grid-template-columns:repeat(5,1fr)"><span>Qwen Code</span><span>OpenCode</span><span>Aider</span><span>Claude Code</span><span>pi</span></div>
+<figure><img src="{{FINAL}}" alt="Five canvases after 15 seconds of automated play on the final builds"><figcaption><strong>Final builds after 15 s of scripted play</strong> — all five now pass observe (formation present and moving sideways), clear-level (new wave after wiping the formation) and soak (no console errors).</figcaption></figure>
+
+<div class="col">
+<h3>Revised recommendation</h3>
+<p>Two harnesses stand out for different reasons. <strong>Qwen Code (as tuned by the wrapper)</strong> produced the game Jim rated as the only truly playable one first time and the cleanest stage 4 — it thinks longest and self-checks (it ran <code>node --check</code> unprompted) — at the cost of being the slowest and heaviest. <strong>pi</strong> is the opposite pole: a 1.5k-token prompt, four built-in tools, four stages in the time others took for two, and the fastest, most precise debug turns of the set — but it never verifies its own output, so you are the test loop, and it shipped two logic bugs the others' longer deliberation avoided. <strong>OpenCode</strong> remains the balanced default; Aider is the efficient pair-programmer; Claude Code works but is the heaviest.</p>
+<p>Honest caveat on the game-logic bugs: with one sampled run per harness at temperature 1, whether a given build has an off-by-one is mostly model dice, not harness quality. What the harness genuinely determines is prompt overhead, speed, how much of the window is left for thinking, whether it nudges the model to self-verify, and how well it drives fixes — and on those, the table above is the real comparison. Wrapper: <code>local-agent pi</code> is now available (private <code>PI_CODING_AGENT_DIR</code> with a models.json carrying the real context window). Note that the <code>ollama launch pi</code> probe upgraded pi 0.70 → 0.84 and added a <code>qwen3.8:latest</code> default to <code>~/.pi/agent/</code>; the wrapper itself leaves those files alone.</p>
+</div>
+<div class="col">
+<h2>What was wrong in the first place</h2>
+<p>Your original failure ("Claude's response exceeded the 32000 output token maximum") was a context-window problem wearing an output-limit costume. Claude Code's interactive prompt tokenizes to <strong>~30,600 tokens</strong> for Qwen; Ollama was serving a <strong>32,768</strong>-token window. That left ~2k tokens per turn, the model hit the ceiling every turn (<code>truncated = 1</code> in the Ollama log, five turns in a row), Ollama reported <code>stop_reason: max_tokens</code>, and Claude Code relayed that as its own cap. Two other facts checked empirically: Ollama's Anthropic-compatible endpoint ignores <code>budget_tokens</code>, so thinking is on/off only (it stays on); and with the KV cache quantized to q8_0, an <strong>81,920-token window fits 100% on the 4090</strong> at ~68 tok/s (about 100 tok/s in practice thanks to speculative decoding), whereas 96k+ spills to CPU and halves throughput.</p>
+
+<h2>The wrapper</h2>
+<p><code>~/.local/bin/local-agent</code> starts a private <code>ollama serve</code> on port 11435 (context 81,920, q8_0 KV cache, flash attention, 2 h keep-alive; the system Ollama on 11434 is untouched except that its resident models are unloaded to free VRAM), preloads the model, reports the GPU split, then launches the harness with the real context window wired in. <code>claude-ollama</code> is kept as an alias for <code>local-agent claude</code>.</p>
+<pre><code>local-agent opencode                     # OpenCode TUI (recommended)
+local-agent aider                        # Aider pair-programmer
+local-agent qwen                         # Qwen Code TUI (edits auto-approved, shell asks; Shift+Tab cycles)
+local-agent claude --dangerously-skip-permissions
+local-agent --model qwen3.6:27b opencode # any Ollama model
+local-agent serve                        # just the tuned server, for anything else
+local-agent ps | stop
+
+# headless one-shots
+local-agent opencode run "…"
+local-agent qwen --approval-mode yolo -p "…"
+local-agent aider --yes-always --message "…"
+local-agent claude --dangerously-skip-permissions -p "…"</code></pre>
+<p class="small">Tunables: <code>--ctx</code>, <code>--kv</code>, <code>--port</code>, <code>--max-output</code>, or the <code>CLAUDE_OLLAMA_*</code> env vars. Server log with live prompt sizes: <code>~/.cache/local-agent/server.log</code> (<code>grep 'new prompt'</code>).</p>
+</div>
+
+<h2 class="col">The numbers</h2>
+<p class="col">Same model, same server, same three prompts (stage 1 skeleton + cannon + bullet; stage 2 the 5×11 formation with movement, speed-up, collisions and score; stage 3 bombs, lives, destructible shields, game over), each stage continuing the previous session. Headless mode throughout. "Prompt overhead" is the harness's fixed cost — the token count of its very first request, measured server-side.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Harness</th><th class="num">Prompt overhead</th><th class="num">Stage 1</th><th class="num">Stage 2</th><th class="num">Stage 3</th><th class="num">Total wall</th><th class="num">Tokens generated</th><th class="num">Model calls</th><th>Result</th></tr></thead>
+<tbody>
+<tr class="pick"><td><strong>OpenCode</strong> 1.18</td><td class="num">~7.5k</td><td class="num">20 s</td><td class="num">125 s</td><td class="num">142 s</td><td class="num"><strong>287 s</strong></td><td class="num">24.4k</td><td class="num">29</td><td><span class="pill ok">clean</span> playable, no errors</td></tr>
+<tr><td><strong>Aider</strong> 0.86</td><td class="num">~2.5–3k</td><td class="num">15 s</td><td class="num">59 s</td><td class="num">80 s</td><td class="num"><strong>154 s</strong></td><td class="num">15.9k</td><td class="num">6</td><td><span class="pill warn">1 bug</span> init only on Enter; fixed by one 29 s debug turn</td></tr>
+<tr><td><strong>Claude Code</strong> 2.1.233</td><td class="num">~25k headless / ~31k TUI</td><td class="num">47 s</td><td class="num">165 s</td><td class="num">227 s</td><td class="num"><strong>439 s</strong></td><td class="num">32.3k</td><td class="num">10</td><td><span class="pill ok">clean</span> playable, no errors; prompt reached 58k by stage 3</td></tr>
+<tr><td><strong>Qwen Code</strong> 0.21</td><td class="num">~16k trimmed (33k stock)</td><td class="num">57 s</td><td class="num">269 s</td><td class="num">189 s</td><td class="num"><strong>515 s</strong></td><td class="num">37.3k</td><td class="num">24</td><td><span class="pill ok">clean</span> playable, best-looking; auto-compacted mid stage 3</td></tr>
+</tbody>
+</table>
+</div>
+<p class="col small">Stage 1 for Qwen Code ran before its tuning (33k prompt); stages 2–3 after. Two of its first attempts at stage 2/3 died because I had accidentally enabled its loop detector, which halts on repeated thoughts — a hazard for thinking models; the wrapper now leaves it off (the default). Ollama's prefix cache means the per-turn cost of a large fixed prompt is mostly paid once, but it still occupies the window: with an 80k window, Claude Code starts each session with ~50k of usable room, OpenCode with ~73k.</p>
+
+<h2 class="col">What they built</h2>
+<p class="col">Each strip is, left to right, OpenCode · Aider · Claude Code · Qwen Code. Screenshots come from headless Chrome driven over the DevTools protocol in real time (virtual-time mode never runs <code>requestAnimationFrame</code>, a trap worth knowing), with scripted key presses; the same runner also collected console errors.</p>
+
+<div class="strip-labels"><span>OpenCode</span><span>Aider</span><span>Claude Code</span><span>Qwen Code</span></div>
+<figure><img src="{{S1}}" alt="Stage 1: four canvases each showing a green cannon near the bottom and a white bullet in flight"><figcaption><strong>Stage 1</strong> — after Enter, hold Right 0.9 s, fire, hold Left 0.4 s. All four moved the cannon and fired. OpenCode chose chunkier 12-px pixels.</figcaption></figure>
+
+<div class="strip-labels"><span>OpenCode</span><span>Aider</span><span>Claude Code</span><span>Qwen Code</span></div>
+<figure><img src="{{S2}}" alt="Stage 2: four canvases each with a 5 by 11 formation of coloured pixel-art invaders and a score readout"><figcaption><strong>Stage 2</strong> — the 5×11 formation, three sprite types, score top-left. Aider's build threw <code>TypeError … reading '0'</code> every frame until Enter was pressed, because it only built the formation inside <code>reset()</code> and never called it at startup.</figcaption></figure>
+
+<div class="strip-labels"><span>OpenCode</span><span>Aider (after fix)</span><span>Claude Code</span><span>Qwen Code</span></div>
+<figure><img src="{{S3}}" alt="Stage 3: four canvases with formation, four green shields, lives indicators and bombs"><figcaption><strong>Stage 3</strong> — shields, bombs, lives, game over. Aider is shown after its debug turn: given the console error, it diagnosed the missing <code>reset()</code> call and fixed it with a one-line edit in 29 s.</figcaption></figure>
+
+<div class="strip-labels"><span>OpenCode</span><span>Aider (after fix)</span><span>Claude Code</span><span>Qwen Code</span></div>
+<figure><img src="{{SOAK}}" alt="After 15 seconds of automated play: two GAME OVER screens, two games still in progress with damaged shields and thinned formations"><figcaption><strong>15-second soak</strong> — scripted dodging and firing. Kills registered, shields chipped, bombs fell, lives were lost; OpenCode's and Aider's runs reached GAME OVER (Aider's formation descends fast enough to reach the cannon row — a tuning choice, not a crash), Claude Code's and Qwen Code's were still going. Zero console errors in all four. OpenCode's one cosmetic flaw: the "LIVES" label draws no count.</figcaption></figure>
+
+<div class="col">
+<h2>Harness by harness</h2>
+<div class="grid2">
+<div class="card"><h3>OpenCode <span class="pill ok">recommended</span></h3><p>Configured entirely through <code>OPENCODE_CONFIG_CONTENT</code> (provider = <code>@ai-sdk/openai-compatible</code> at the private server's <code>/v1</code>, with the real context/output limits so its compaction is right). Lean prompt, reliable tool calls, <code>opencode run</code> auto-executes edits and shell in headless mode. Fastest of the true agentic harnesses. One gotcha found: it blocks on a non-TTY stdin that never closes — use <code>&lt;/dev/null</code> in scripts.</p></div>
+<div class="card"><h3>Aider <span class="pill ok">best for model evals</span></h3><p>Talks to Ollama's native <code>/api/chat</code>; the wrapper generates model metadata (window/output) and settings (<code>diff</code> edit format, repo map, explicit <code>num_ctx</code>). Tiny prompt, text-based edits (no tool calling needed), git-native, shows the model's thinking. It cannot test its own work, so treat it as pair-programming: you run it, paste errors back. With <code>--yes-always</code> it will also run suggested commands such as <code>xdg-open</code>.</p></div>
+<div class="card"><h3>Claude Code <span class="pill warn">heaviest</span></h3><p>Works via <code>ollama launch claude</code> pointed at the private server, plus <code>CLAUDE_CODE_AUTO_COMPACT_WINDOW=81920</code> and a 30-min API timeout. Solid results, and it self-verified with shell commands, but ~25–31k of every window goes to its own prompt and tool schemas, and by stage 3 the conversation was at 58k tokens. Fine for occasional use; not the harness that shows the model at its best.</p></div>
+<div class="card"><h3>Qwen Code <span class="pill warn">heavy, tunable</span></h3><p>Stock, its prompt is 33k (workflow, cron, artifact, computer-use, subagent and deferred-tool machinery), it defaults to an LLM approval classifier (extra local-model calls per tool use), and it assumes a 200k window. The wrapper gives it a private <code>QWEN_HOME</code> whose provider entry carries the real window and turns the extras off — prompt drops to ~16k and it auto-compacts correctly (observed: 50k → 25k mid-run). Best sprites of the four. Headless needs <code>--approval-mode yolo</code>.</p></div>
+</div>
+
+<h2>Caveats</h2>
+<ul>
+<li>One model, one task, one run each — this is a functional shakedown, not a benchmark. Sampling at temperature 1 means a rerun would land differently in detail; the overhead numbers and the "does it work at all" verdicts are the stable parts.</li>
+<li>Prompt overhead was measured for headless mode; interactive prompts are somewhat larger (Claude Code: 25k vs 31k). OpenCode's and Aider's TUIs were launched and reached their prompts under the wrapper but were not driven interactively.</li>
+<li>Qwen Code's stage 1 timing is pre-tuning; the two failed stage attempts caused by the loop-detector mistake are excluded from its totals but noted above.</li>
+<li>Codex CLI is wired into the wrapper (via <code>ollama launch codex</code>) but untested; it pairs naturally with your <code>gpt-oss</code> models rather than Qwen.</li>
+</ul>
+
+<h2>Files</h2>
+<ul>
+<li><code>~/.local/bin/local-agent</code>, <code>~/.local/bin/claude-ollama</code> (alias)</li>
+<li><code>~/repos/scratch/harness-test/&lt;harness&gt;/invaders.stage{1,2,3}.html</code> — every build, plus <code>aider/invaders.debug1.html</code>; open any of them in a browser</li>
+<li><code>~/repos/scratch/harness-test/prompts/stage{1,2,3}.txt</code> — the exact prompts</li>
+<li><code>/tmp/validate/cdp-run.mjs</code>, <code>validate.sh</code> — the headless-Chrome validator (<code>--keys</code> for the scripted sequence, <code>--soak</code> for 15 s of play)</li>
+<li><code>~/.cache/local-agent/server.log</code> — the Ollama server log with every request's prompt size</li>
+</ul>
+</div>
+</div>

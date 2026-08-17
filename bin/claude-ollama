@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# thin alias kept for compatibility: claude-ollama [claude args] == local-agent claude [claude args]
+exec "$(dirname "$0")/local-agent" claude "$@"

@@ -1,0 +1,24 @@
+<!doctype html><html><body style="margin:0;background:#222">
+<iframe id="g" style="width:520px;height:600px;border:0"></iframe>
+<script>
+const f = new URLSearchParams(location.search).get('f');
+const fr = document.getElementById('g');
+function key(doc, type, k, code, kc){ const ev = new KeyboardEvent(type,{key:k,code:code,keyCode:kc,which:kc,bubbles:true,cancelable:true}); doc.dispatchEvent(ev); }
+fr.addEventListener('load', () => {
+  const w = fr.contentWindow, d = fr.contentDocument;
+  console.log('WRAP: iframe loaded');
+  w.addEventListener('error', e => console.log('WRAP_ERROR: ' + e.message + ' @' + e.lineno));
+  const seq = [
+    [100,  () => { key(d,'keydown','Enter','Enter',13); key(d,'keyup','Enter','Enter',13); }],
+    [300,  () => key(d,'keydown','ArrowRight','ArrowRight',39)],
+    [1300, () => key(d,'keyup','ArrowRight','ArrowRight',39)],
+    [1400, () => { key(d,'keydown',' ','Space',32); key(d,'keyup',' ','Space',32); }],
+    [1500, () => key(d,'keydown','ArrowLeft','ArrowLeft',37)],
+    [1900, () => key(d,'keyup','ArrowLeft','ArrowLeft',37)],
+    [1950, () => { key(d,'keydown',' ','Space',32); key(d,'keyup',' ','Space',32); }],
+    [2400, () => console.log('WRAP: sequence done')],
+  ];
+  for (const [t, fn] of seq) setTimeout(fn, t);
+});
+fr.src = f;
+</script></body></html>

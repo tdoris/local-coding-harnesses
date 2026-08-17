@@ -1,0 +1,245 @@
+#!/usr/bin/env bash
+# local-agent — run a coding agent harness against a local Ollama model, with the
+# Ollama side tuned so the harness's prompt actually fits and the model stays on GPU.
+#
+#   local-agent [opts] claude   [claude args...]     Claude Code   (via `ollama launch claude`)
+#   local-agent [opts] opencode [opencode args...]   OpenCode      (config injected via OPENCODE_CONFIG_CONTENT)
+#   local-agent [opts] qwen     [qwen args...]       Qwen Code     (own QWEN_HOME w/ trimmed settings; add --approval-mode yolo for -p)
+#   local-agent [opts] aider    [aider args...]      Aider         (ollama_chat/<model>, generated model settings)
+#   local-agent [opts] pi       [pi args...]         pi (pi.dev)   (own PI_CODING_AGENT_DIR w/ models.json)
+#   local-agent [opts] codex    [codex args...]      Codex CLI     (via `ollama launch codex`; untested)
+#   local-agent [opts] serve                          just run the tuned server in the foreground
+#   local-agent        ps | stop                      show / stop the private server
+#
+# opts:  --model NAME   --ctx TOKENS   --kv TYPE   --port N   --max-output N
+# env:   CLAUDE_OLLAMA_MODEL / _CTX / _KV / _PORT / _MAX_OUTPUT (same meaning), CLAUDE_OLLAMA_NO_UNLOAD=1
+#
+# The private server: `ollama serve` on 127.0.0.1:11435 with OLLAMA_CONTEXT_LENGTH=<ctx>,
+# OLLAMA_KV_CACHE_TYPE=q8_0, flash attention, 2h keep-alive. Defaults (qwen3.8, 81920 ctx)
+# are the largest that stay 100% on a 24 GB RTX 4090. The system Ollama on :11434 is untouched
+# except that its resident models are unloaded first to free VRAM. Thinking is left ON.
+
+set -euo pipefail
+
+MODEL="${CLAUDE_OLLAMA_MODEL:-qwen3.8}"
+CTX="${CLAUDE_OLLAMA_CTX:-81920}"; CTX_SET="${CLAUDE_OLLAMA_CTX:+1}"
+KV="${CLAUDE_OLLAMA_KV:-q8_0}"
+PORT="${CLAUDE_OLLAMA_PORT:-11435}"
+MAX_OUTPUT="${CLAUDE_OLLAMA_MAX_OUTPUT:-32000}"
+SYSTEM_HOST="${CLAUDE_OLLAMA_SYSTEM_HOST:-127.0.0.1:11434}"
+MODELS_DIR="${OLLAMA_MODELS:-/usr/share/ollama/.ollama/models}"
+LOG_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/local-agent"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --model) MODEL="$2"; shift 2 ;;
+    --ctx) CTX="$2"; CTX_SET=1; shift 2 ;;
+    --kv) KV="$2"; shift 2 ;;
+    --port) PORT="$2"; shift 2 ;;
+    --max-output) MAX_OUTPUT="$2"; shift 2 ;;
+    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+    *) break ;;
+  esac
+done
+TOOL="${1:-}"; [[ $# -gt 0 ]] && shift
+CLOUD=""
+case "$MODEL" in *-cloud|*:cloud) CLOUD=1; PORT="${CLAUDE_OLLAMA_SYSTEM_PORT:-11434}" ;; esac   # cloud models: only the signed-in system server can serve them
+PRIVATE_HOST="127.0.0.1:${PORT}"
+BASE_URL="http://${PRIVATE_HOST}"
+
+mkdir -p "$LOG_DIR"
+log() { printf '\033[36m[local-agent]\033[0m %s\n' "$*" >&2; }
+api() { # api HOST PATH [JSON]
+  if [[ $# -ge 3 ]]; then curl -sf --max-time 600 "http://$1$2" -d "$3"; else curl -sf --max-time 10 "http://$1$2"; fi
+}
+server_up() { api "$PRIVATE_HOST" /api/version >/dev/null 2>&1; }
+
+case "$TOOL" in
+  ""|-h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+  ps) OLLAMA_HOST="$PRIVATE_HOST" ollama ps; exit ;;
+  stop) pkill -f "ollama serve" -U "$(id -u)" && log "stopped private server(s)" || log "no private server running"; exit ;;
+esac
+
+# ---- 1. free the GPU -------------------------------------------------------------
+if [[ -z "${CLAUDE_OLLAMA_NO_UNLOAD:-}" && -z "$CLOUD" ]] && api "$SYSTEM_HOST" /api/version >/dev/null 2>&1; then
+  loaded=$(api "$SYSTEM_HOST" /api/ps | python3 -c 'import sys,json; print(" ".join(m["name"] for m in json.load(sys.stdin).get("models",[])))' 2>/dev/null || true)
+  for m in $loaded; do
+    log "unloading $m from system Ollama ($SYSTEM_HOST) to free VRAM"
+    api "$SYSTEM_HOST" /api/generate "{\"model\":\"$m\",\"keep_alive\":0}" >/dev/null || true
+  done
+fi
+
+# ---- 2. start (or reuse) the private server -------------------------------------
+SERVER_PID=""
+cleanup() {
+  if [[ -n "$SERVER_PID" ]]; then
+    log "stopping private Ollama server (pid $SERVER_PID)"
+    kill "$SERVER_PID" 2>/dev/null || true
+  fi
+}
+trap cleanup EXIT
+
+if server_up; then
+  log "reusing Ollama server already on $PRIVATE_HOST (won't stop it on exit)"
+else
+  log "starting private Ollama server on $PRIVATE_HOST (ctx=$CTX, kv=$KV, log: $LOG_DIR/server.log)"
+  OLLAMA_HOST="$PRIVATE_HOST" OLLAMA_MODELS="$MODELS_DIR" OLLAMA_CONTEXT_LENGTH="$CTX" \
+  OLLAMA_KV_CACHE_TYPE="$KV" OLLAMA_FLASH_ATTENTION=1 OLLAMA_KEEP_ALIVE=2h \
+    ollama serve >"$LOG_DIR/server.log" 2>&1 &
+  SERVER_PID=$!
+  for _ in $(seq 1 60); do server_up && break; sleep 0.5; done
+  server_up || { log "server failed to start; see $LOG_DIR/server.log"; exit 1; }
+fi
+
+if [[ "$TOOL" == "serve" ]]; then
+  log "server running; Ctrl-C to stop.  OpenAI: $BASE_URL/v1  Anthropic: $BASE_URL  native: $BASE_URL"
+  wait "$SERVER_PID"; exit
+fi
+
+# ---- 3. preload the model, report GPU split -------------------------------------
+if [[ -n "$CLOUD" ]]; then
+  log "cloud model $MODEL via system Ollama on $PRIVATE_HOST (no local GPU work)"
+  if [[ -z "${CTX_SET:-}" ]]; then   # use the cloud model's real window for harness compaction limits
+    mc=$(OLLAMA_HOST="$PRIVATE_HOST" ollama show "$MODEL" 2>/dev/null | awk '/context length/{print $3}'); [[ -n "$mc" ]] && CTX="$mc"
+  fi
+  api "$PRIVATE_HOST" /api/generate "{\"model\":\"$MODEL\",\"prompt\":\"\"}" >/dev/null \
+    || { log "cannot reach $MODEL — is the system Ollama signed in? (ollama signin)"; exit 1; }
+else
+log "loading $MODEL ..."
+api "$PRIVATE_HOST" /api/generate "{\"model\":\"$MODEL\",\"keep_alive\":\"2h\"}" >/dev/null \
+  || { log "failed to load $MODEL (is it in 'ollama list'?)"; exit 1; }
+OLLAMA_HOST="$PRIVATE_HOST" ollama ps | tail -n +2 | while read -r line; do
+  log "loaded: $line"
+  case "$line" in *"100% GPU"*) ;; *) log "WARNING: model partly on CPU — lower --ctx for full speed" ;; esac
+done
+fi
+
+# ---- 3b. read the model's own recommended sampling (Modelfile PARAMETERs) -------------
+# Request-level params override the Modelfile, and OpenAI-compatible clients fill in
+# top_p=1 (and aider sends temperature=0) unless told otherwise — so we push the model's
+# values into every harness explicitly. Vendor guidance (Qwen): never greedy-decode a
+# thinking model. Models with no Modelfile params (e.g. gpt-oss) get OpenAI's guidance
+# for gpt-oss: temperature 1.0, top_p 1.0.
+unset P_TEMPERATURE P_TOP_P P_PRESENCE_PENALTY
+eval "$(OLLAMA_HOST="$PRIVATE_HOST" ollama show "$MODEL" --parameters 2>/dev/null \
+  | awk '$1 ~ /^(temperature|top_p|presence_penalty)$/ {print "P_" toupper($1) "=" $2}')"
+if [[ -z "${P_TEMPERATURE:-}${P_TOP_P:-}" ]]; then SAMPLING_SRC="no Modelfile params → gpt-oss/OpenAI guidance"; else SAMPLING_SRC="from Modelfile"; fi
+P_TEMPERATURE="${P_TEMPERATURE:-1.0}"; P_TOP_P="${P_TOP_P:-1.0}"; P_PRESENCE_PENALTY="${P_PRESENCE_PENALTY:-0}"
+export P_TEMPERATURE P_TOP_P P_PRESENCE_PENALTY
+log "sampling ($SAMPLING_SRC): temperature=$P_TEMPERATURE top_p=$P_TOP_P presence_penalty=$P_PRESENCE_PENALTY"
+
+# ---- 4. launch the harness ------------------------------------------------------
+export OLLAMA_HOST="$PRIVATE_HOST"
+log "launching $TOOL (model=$MODEL, ctx=$CTX, max_output=$MAX_OUTPUT)"
+
+case "$TOOL" in
+  claude)
+    export CLAUDE_CODE_AUTO_COMPACT_WINDOW="$CTX"      # compact before Ollama's window overflows
+    export CLAUDE_CODE_MAX_OUTPUT_TOKENS="$MAX_OUTPUT"
+    export API_TIMEOUT_MS="${API_TIMEOUT_MS:-1800000}"  # long thinking turns take minutes
+    unset MAX_THINKING_TOKENS
+    ollama launch claude --model "$MODEL" -- "$@"
+    ;;
+
+  opencode)
+    # Same shape as `ollama launch opencode` produces, plus context/output limits so
+    # OpenCode's compaction knows the real window.
+    export OPENCODE_CONFIG_CONTENT
+    OPENCODE_CONFIG_CONTENT=$(MODEL="$MODEL" CTX="$CTX" MAX_OUTPUT="$MAX_OUTPUT" BASE_URL="$BASE_URL" python3 - <<'EOF'
+import json, os
+m, ctx, out, base = os.environ["MODEL"], int(os.environ["CTX"]), int(os.environ["MAX_OUTPUT"]), os.environ["BASE_URL"]
+temp, top_p = float(os.environ["P_TEMPERATURE"]), float(os.environ["P_TOP_P"])
+print(json.dumps({
+  "$schema": "https://opencode.ai/config.json",
+  "model": f"ollama/{m}",
+  "provider": {"ollama": {
+    "name": "Ollama", "npm": "@ai-sdk/openai-compatible",
+    "options": {"baseURL": base + "/v1"},
+    "models": {m: {"name": m, "reasoning": True, "tool_call": True, "temperature": True,
+                   "limit": {"context": ctx, "output": out}}}}},
+  "agent": {a: {"temperature": temp, "top_p": top_p} for a in ("build", "plan", "general", "explore", "title", "summary", "compaction")}}))
+EOF
+)
+    opencode "$@"
+    ;;
+
+  qwen)
+    # Qwen Code ships a lot of machinery that costs prompt tokens or extra model calls
+    # (workflows, cron, artifacts, computer-use, LLM tool-use summaries, auto-memory,
+    # follow-up suggestions, an LLM approval classifier). Give it a self-contained
+    # config dir (QWEN_HOME) whose provider entry carries the real context window —
+    # otherwise it assumes 200k and never compacts before Ollama truncates.
+    qh="$LOG_DIR/qwen-home"; mkdir -p "$qh"
+    MODEL="$MODEL" CTX="$CTX" MAX_OUTPUT="$MAX_OUTPUT" BASE_URL="$BASE_URL" python3 - "$qh/settings.json" <<'PYEOF'
+import json, os, sys
+m, ctx, out, base = os.environ["MODEL"], int(os.environ["CTX"]), int(os.environ["MAX_OUTPUT"]), os.environ["BASE_URL"] + "/v1"
+json.dump({
+  "$version": 4,
+  "env": {"OLLAMA_API_KEY": "ollama"},
+  "model": {"name": m},
+  "modelProviders": {"openai": [{"id": m, "name": f"{m} (Ollama via local-agent)", "baseUrl": base, "envKey": "OLLAMA_API_KEY",
+                                 "generationConfig": {"contextWindowSize": ctx, "samplingParams": {"max_tokens": out, "temperature": float(os.environ["P_TEMPERATURE"]), "top_p": float(os.environ["P_TOP_P"]), "presence_penalty": float(os.environ["P_PRESENCE_PENALTY"])}}}]},
+  "security": {"auth": {"selectedType": "openai", "baseUrl": base}},
+  "context": {"autoCompactThreshold": 0.8},
+  "memory": {"enableManagedAutoMemory": False, "enableAutoSkill": False},
+  "ui": {"enableFollowupSuggestions": False},
+  "tools": {"approvalMode": "auto-edit", "toolSearch": {"threshold": 3}, "computerUse": {"enabled": False}},
+  "experimental": {"cron": False, "artifact": False, "emitToolUseSummaries": False, "agentTeam": False},
+}, open(sys.argv[1], "w"), indent=2)
+PYEOF
+    export QWEN_HOME="$qh"
+    export OPENAI_API_KEY=ollama OPENAI_BASE_URL="$BASE_URL/v1" OPENAI_MODEL="$MODEL"
+    export QWEN_CODE_DISABLE_WORKFLOWS=1 QWEN_CODE_DISABLE_CRON=1 QWEN_CODE_DISABLE_ARTIFACT=1
+    export QWEN_CODE_EMIT_TOOL_USE_SUMMARIES=0 QWEN_DISABLE_AUTO_TITLE=1 QWEN_CODE_SUPPRESS_YOLO_WARNING=1
+    qwen --model "$MODEL" --auth-type openai "$@"
+    ;;
+
+  aider)
+    # aider talks to Ollama's native /api/chat via litellm; tell it the real window and
+    # ask Ollama for the same num_ctx explicitly (in case the server default differs).
+    meta="$LOG_DIR/aider.model.metadata.json"; settings="$LOG_DIR/aider.model.settings.yml"
+    cat >"$meta" <<EOF
+{"ollama_chat/$MODEL": {"max_input_tokens": $CTX, "max_output_tokens": $MAX_OUTPUT, "input_cost_per_token": 0, "output_cost_per_token": 0, "litellm_provider": "ollama_chat", "mode": "chat"}}
+EOF
+    cat >"$settings" <<EOF
+- name: ollama_chat/$MODEL
+  edit_format: diff
+  use_repo_map: true
+  use_temperature: $P_TEMPERATURE
+  extra_params:
+    num_ctx: $CTX
+    max_tokens: $MAX_OUTPUT
+    top_p: $P_TOP_P
+    presence_penalty: $P_PRESENCE_PENALTY
+EOF
+    export OLLAMA_API_BASE="$BASE_URL"
+    aider --model "ollama_chat/$MODEL" --model-metadata-file "$meta" --model-settings-file "$settings" \
+      --no-show-model-warnings "$@"
+    ;;
+
+  pi)
+    # pi (pi.dev): minimal harness — read/bash/edit/write. Give it a private agent dir so we
+    # don't rewrite ~/.pi/agent/models.json; the model entry carries the real context window.
+    pd="$LOG_DIR/pi-agent"; mkdir -p "$pd"
+    MODEL="$MODEL" CTX="$CTX" MAX_OUTPUT="$MAX_OUTPUT" BASE_URL="$BASE_URL" python3 - "$pd" <<'PYEOF'
+import json, os, sys
+m, ctx, out, base, d = os.environ["MODEL"], int(os.environ["CTX"]), int(os.environ["MAX_OUTPUT"]), os.environ["BASE_URL"], sys.argv[1]
+json.dump({"providers": {"ollama": {
+    "api": "openai-completions", "apiKey": "ollama", "baseUrl": base + "/v1",
+    "compat": {"supportsDeveloperRole": False, "supportsReasoningEffort": False},
+    "models": [{"id": m, "name": m, "reasoning": True, "input": ["text", "image"],
+                "contextWindow": ctx, "maxTokens": out,
+                "samplingParams": {"temperature": float(os.environ["P_TEMPERATURE"]), "top_p": float(os.environ["P_TOP_P"]),
+                                   "presence_penalty": float(os.environ["P_PRESENCE_PENALTY"])}}]}}}, open(d + "/models.json", "w"), indent=2)
+json.dump({"defaultProvider": "ollama", "defaultModel": m}, open(d + "/settings.json", "w"), indent=2)
+PYEOF
+    export PI_CODING_AGENT_DIR="$pd"
+    pi --provider ollama --model "$MODEL" "$@"
+    ;;
+
+  codex)
+    ollama launch codex --model "$MODEL" -- "$@"
+    ;;
+
+  *) log "unknown tool '$TOOL' (claude|opencode|qwen|aider|pi|codex|serve|ps|stop)"; exit 2 ;;
+esac
