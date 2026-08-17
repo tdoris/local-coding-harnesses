@@ -189,6 +189,24 @@ hr{border:0;border-top:1px solid var(--rule);margin:20px 0}
 </ol>
 </div>
 
+<h2 class="col">Addendum · pi is a floor, not a ceiling</h2>
+<div class="col">
+<p>The scores above measure each harness <em>as it ships</em>. That undersells pi, whose entire design is a minimal core you extend — and the docs explicitly invite you to have pi extend itself: <em>"pi can create skills. Ask it to build one for your use case."</em> So we did. pi (driving gpt-oss:120b) was asked to author a <code>verify-before-finishing</code> skill — a short <code>SKILL.md</code> instructing the agent to syntax-check every file it writes, run any <code>test_*.py</code> present, and iterate until green before declaring done. Then the exact task pi failed bare was re-run with that skill installed, everything else identical.</p>
+</div>
+<div class="tablewrap col">
+<table>
+<caption>gpt-oss:120b · TOML parser with a test file present · same model, same prompt, skill toggled</caption>
+<thead><tr><th>pi configuration</th><th class="n">Hidden / 70</th><th class="n">Visible tests / 70</th><th class="n">Wall</th><th>What the agent did</th></tr></thead>
+<tbody>
+<tr><th>bare kernel</th><td class="n zero">25</td><td class="n zero">11 / 41</td><td class="n">74&nbsp;s</td><td>shipped a broken file, and <em>cheated</em> by importing <code>tomllib</code>; never ran the tests</td></tr>
+<tr class="hl"><th>+ verify skill</th><td class="n win">62</td><td class="n win">41 / 41</td><td class="n">580&nbsp;s</td><td>ran the test file and a syntax check 6× across 30 edits; wrote a genuine stdlib parser; iterated to green</td></tr>
+</tbody>
+</table>
+</div>
+<div class="col">
+<p>A <strong>25 → 62</strong> jump on the hidden suite, all 41 visible tests passing, and the forbidden-library cheat gone — from one small markdown file pi wrote for itself. The session log confirms it wasn't luck: the skill's behaviour is visible as six shell calls running <code>python3 test_tomlq.py</code> and <code>ast.parse</code> checks that the bare run never made. The cost is real too — verification took ~8× the wall time, because actually running and fixing is slower than declaring victory. That is the pi bargain in one experiment: <strong>you pay ~1.5k tokens of baseline and add exactly the guardrail you want, rather than paying 16–31k for a fixed set baked into a heavier harness.</strong> The earlier "pi has no safety net" verdict was measuring the kernel; the net is a file away, and pi will write it for you.</p>
+</div>
+
 <h2 class="col">Caveats</h2>
 <div class="col">
 <ul>
