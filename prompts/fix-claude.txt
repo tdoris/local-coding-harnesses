@@ -1,0 +1,1 @@
+Bug report from a play-test of invaders.html: on load the ship shows and I can move and fire, but there are no invaders at all. The formation must be present as soon as the page loads (it should not require pressing Enter first). Find the cause and fix it with a minimal edit; don't refactor anything else.

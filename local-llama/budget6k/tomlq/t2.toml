@@ -1,0 +1,16 @@
+a = """
+line1
+line2"""
+b = """line1\
+    line2"""
+c = '''
+literal
+'''
+d = '''no\escape'''
+e = "esc \t \u0041 \U0001F600 \"q\" \\back"
+f = """ends with quote """"
+g = ''
+h = ""
+i = '''''''
+j = """""""""
+k = "tab	inside"

@@ -1,0 +1,17 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching qwen (model=qwen3.8, ctx=81920, max_output=32000)
+All 37 tests pass (`Ran 37 tests in 0.646s ... OK`, exit code 0). The `ResourceWarning: unclosed file` messages originate from the test harness's own `open()` calls in `test_jpatch.py`, not from `jpatch.py`, and don't affect the pass.
+
+Done. `jpatch.py` is written and verified:
+
+- **RFC 6901 pointers**: `~1`→`/` decoded before `~0`→`~`; `""` = whole document; `/` = key `""`.
+- **RFC 6902 ops**: `add` (object member append-in-place or array insert/append with `-` or index==length), `remove`, `replace`, `test`, `move` (remove-then-add so indices are post-removal), `copy` (deep copy).
+- **Errors → stderr, empty stdout, exit 1**, atomic (nothing printed on failure): non-array patch, non-object op, missing `op`/`path`/`value`/`from`, unknown `op`, malformed pointer, unresolved target, non-canonical/out-of-range array index, failed `test`, move-into-own-child.
+- **JSON equality**: objects irrespective of key order, arrays in order, numbers by value (`1 == 1.0`), with strict type distinction for strings/booleans/null.
+- **Key order preserved** via Python dict insertion order + in-place replacement.
+- Standard library only (`json`, `sys`, `re`, `copy`).
+
+The test file was left unmodified.

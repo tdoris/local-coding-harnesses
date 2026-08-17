@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #000;
+  }
+</style>
+</head>
+<body>
+<canvas id="game" width="480" height="560"></canvas>
+<script>
+"use strict";
+const W = 480, H = 560;
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const PS = 4; // pixel-art unit size
+
+const CANNON = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,0],
+];
+const CANNON_W = CANNON[0].length * PS;
+const CANNON_H = CANNON.length * PS;
+const PLAYER_Y = H - CANNON_H - 24;
+
+const MOVE_SPEED = 240;   // px/s
+const BULLET_SPEED = 600; // px/s
+
+// Invader sprites: three types, each with 2 animation frames (8x8 pixel arrays).
+const SQUID = [
+  [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,0,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [1,1,0,0,0,0,1,1],
+    [0,1,0,0,0,0,1,0],
+  ],
+  [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,0,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [1,1,0,1,1,0,1,1],
+  ],
+];
+const CRAB = [
+  [
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [1,0,0,0,0,0,0,1],
+  ],
+  [
+    [0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,1,0,0,1,0,0],
+  ],
+];
+const OCTOPUS = [
+  [
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,0,0,1,1,1],
+    [1,1,0,0,0,0,1,1],
+  ],
+  [
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,0,0,1,0,0],
+    [1,0,0,1,1,0,0,1],
+    [1,0,0,0,0,0,0,1],
+  ],
+];
+const INV_SPRITES = [SQUID, CRAB, OCTOPUS];
+const INV_TYPE_BY_ROW = [0, 1, 1, 2, 2];   // row 0 squid, rows 1-2 crab, rows 3-4 octopus
+const INV_SCORE  = [30, 20, 10];           // points by type
+const INV_COLOR  = ['#7df9ff', '#ffb15e', '#c792ea'];
+const INV_COLS = 11, INV_ROWS = 5;
+const INV_W = 8 * PS, INV_H = 8 * PS;
+const H_GAP = 8, V_GAP = 16;
+const INV_TOTAL = INV_COLS * INV_ROWS;
+const INV_STEP_PX = 8;                     // sideways jump per tick
+const INV_MIN_INT = 0.15, INV_MAX_INT = 0.85; // step interval (shrinks as they die)
+const INV_DROP = V_GAP;                    // "drop one row"
+const FORMATION_W = INV_COLS * INV_W + (INV_COLS - 1) * H_GAP;
+const FORMATION_START_X = (W - FORMATION_W) / 2;
+const FORMATION_START_Y = 56;
+
+// Invader bombs
+const BOMB_SPEED = 240;      // px/s
+const BOMB_MAX = 3;
+const BOMB_MIN_INT = 0.45, BOMB_MAX_INT = 1.0; // spawn interval (shorter as fewer remain)
+const DEATH_FREEZE = 0.8;
+const START_LIVES = 3;
+
+// Wave progression
+const WAVE_MSG_DURATION = 1.5;   // seconds to show "WAVE N"
+const WAVE_SPEED_MULT = 0.85;    // step interval *= this each wave (faster)
+const WAVE_SPEED_MIN = 0.08;     // floor for step interval
+
+// Mystery UFO
+const UFO_SPEED    = 80;
+const UFO_Y        = 36;
+const UFO_MIN_SPAWN = 20;
+const UFO_MAX_SPAWN = 30;
+const UFO_SCORES   = [50, 100, 150, 200, 250, 300];
+const UFO_SPRITE   = [
+  [0,0,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1],
+  [1,0,0,1,1,0,0,1],
+];
+const UFO_W = UFO_SPRITE[0].length * PS;
+const UFO_H = UFO_SPRITE.length    * PS;
+
+// Destructible shields (grid of pixel blocks)
+const CELL = 6;
+const SHIELD_SHAPE = [
+  [0,0,1,1,1,1,1,1,0,0],
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1],
+  [1,1,0,0,0,0,0,0,1,1],
+  [1,1,0,0,0,0,0,0,1,1],
+];
+const SHIELD_ROWS = SHIELD_SHAPE.length;
+const SHIELD_COLS = SHIELD_SHAPE[0].length;
+const SHIELD_W = SHIELD_COLS * CELL;
+const SHIELD_H = SHIELD_ROWS * CELL;
+const SHIELD_COUNT = 4;
+const SHIELD_Y = PLAYER_Y - 48;
+
+const state = {
+  x: 0,
+  y: PLAYER_Y,
+  bullet: null, // {x, y} or null
+  paused: false,
+  score: 0,
+  inv: null,    // {x, y, dir, timer, frame, live}
+  list: [],     // invaders
+  bombs: [],    // invader bombs [{x, y}]
+  bombTimer: 0,
+  shields: [],  // [{x, y, grid}]
+  lives: 3,
+  dying: 0,     // freeze-time remaining after being hit
+  gameOver: false,
+  started: false,
+  wave: 1,
+  waveMsg: 0,
+  waveStartY: FORMATION_START_Y,
+  speedFactor: 1,
+  ufo: null,
+  ufoTimer: 0,
+};
+
+const keys = {};
+function codeMap(e) {
+  switch (e.code) {
+    case 'ArrowLeft':  case 'KeyA':  return 'left';
+    case 'ArrowRight': case 'KeyD':  return 'right';
+    case 'Space':       return 'fire';
+    case 'KeyP':        return 'pause';
+    case 'Enter':       return 'start';
+  }
+  return null;
+}
+addEventListener('keydown', (e) => {
+  const k = codeMap(e);
+  if (k) {
+    if (e.code === 'Space' ) e.preventDefault();
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') e.preventDefault();
+    if (!keys[k]) {
+      if (k === 'pause') state.paused = !state.paused;
+      if (k === 'start') {
+        if (!state.started) { reset(); state.started = true; }
+        else if (state.gameOver) reset();
+      }
+    }
+    keys[k] = true;
+  }
+});
+addEventListener('keyup', (e) => {
+  const k = codeMap(e);
+  if (k) keys[k] = false;
+});
+
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+function buildInvaders() {
+  const list = [];
+  for (let r = 0; r < INV_ROWS; r++) {
+    for (let c = 0; c < INV_COLS; c++) {
+      list.push({
+        row: r,
+        col: c,
+        colOffset: c * (INV_W + H_GAP),
+        type: INV_TYPE_BY_ROW[r],
+        alive: true,
+      });
+    }
+  }
+  return list;
+}
+
+function resetFormation() {
+  state.inv = {
+    x: FORMATION_START_X,
+    y: state.waveStartY,
+    dir: 1,
+    timer: 0,
+    frame: 0,
+    live: INV_TOTAL,
+  };
+  state.list = buildInvaders();
+}
+
+// Step interval shrinks as fewer invaders remain (classic speed-up).
+function stepInterval() {
+  const live = state.inv.live;
+  if (live <= 0) return Math.max(WAVE_SPEED_MIN, INV_MIN_INT * state.speedFactor);
+  return Math.max(WAVE_SPEED_MIN,
+    (INV_MIN_INT + (INV_MAX_INT - INV_MIN_INT) * (live / INV_TOTAL)) * state.speedFactor);
+}
+
+function stepFormation() {
+  const f = state.inv;
+  const nx = f.x + f.dir * INV_STEP_PX;
+  let blocked = false;
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    const l = nx + inv.colOffset;
+    const r = l + INV_W;
+    if (l < 0 || r > W) { blocked = true; break; }
+  }
+  if (blocked) {
+    f.dir = -f.dir;      // reversed
+    f.y += INV_DROP;     // drop one row
+  } else {
+    f.x = nx;            // step sideways
+  }
+  f.frame ^= 1;          // toggle animation frame on every step
+}
+
+function buildShields() {
+  const shields = [];
+  const slot = W / SHIELD_COUNT;
+  for (let i = 0; i < SHIELD_COUNT; i++) {
+    shields.push({
+      x: i * slot + (slot - SHIELD_W) / 2,
+      y: SHIELD_Y,
+      grid: SHIELD_SHAPE.map(row => row.slice()),
+    });
+  }
+  state.shields = shields;
+}
+
+function bombInterval() {
+  const live = state.inv.live;
+  if (live <= 0) return BOMB_MIN_INT;
+  return BOMB_MIN_INT + (BOMB_MAX_INT - BOMB_MIN_INT) * (live / INV_TOTAL);
+}
+
+function spawnBomb() {
+  const f = state.inv;
+  const byCol = {};
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    if (!byCol[inv.col] || inv.row > byCol[inv.col].row) byCol[inv.col] = inv;
+  }
+  const cols = Object.keys(byCol);
+  if (!cols.length) return;
+  const pick = byCol[cols[(Math.random() * cols.length) | 0]];
+  state.bombs.push({
+    x: f.x + pick.colOffset + INV_W / 2,
+    y: f.y + pick.row * (INV_H + V_GAP) + INV_H,
+  });
+}
+
+function damageShield(shield, bx, by, bw, bh) {
+  let erased = false;
+  const c0 = Math.floor((bx - shield.x) / CELL);
+  const c1 = Math.floor((bx + bw - shield.x) / CELL);
+  const r0 = Math.floor((by - shield.y) / CELL);
+  const r1 = Math.floor((by + bh - shield.y) / CELL);
+  for (let r = 0; r < SHIELD_ROWS; r++) {
+    for (let c = 0; c < SHIELD_COLS; c++) {
+      if (!shield.grid[r][c]) continue;
+      if (c >= c0 && c <= c1 && r >= r0 && r <= r1) { shield.grid[r][c] = 0; erased = true; }
+    }
+  }
+  return erased;
+}
+
+function killPlayer() {
+  state.lives -= 1;
+  state.dying = DEATH_FREEZE;
+  state.bullet = null;
+}
+
+function reset() {
+  state.x = (W - CANNON_W) / 2;
+  state.y = PLAYER_Y;
+  state.bullet = null;
+  state.paused = false;
+  state.score = 0;
+  resetFormation();
+  state.bombs = [];
+  state.bombTimer = 0;
+  state.lives = START_LIVES;
+  state.dying = 0;
+  state.gameOver = false;
+  state.wave       = 1;
+  state.waveMsg    = 0;
+  state.waveStartY = FORMATION_START_Y;
+  state.speedFactor = 1;
+  state.ufo        = null;
+  state.ufoTimer   = UFO_MIN_SPAWN + Math.random() * (UFO_MAX_SPAWN - UFO_MIN_SPAWN);
+  buildShields();
+}
+
+function update(dt) {
+  if (state.gameOver) return;
+  if (!state.started) return;
+
+  // Dying freeze: world is frozen, just count down then respawn (bombs cleared).
+  if (state.dying > 0) {
+    state.dying -= dt;
+    if (state.dying <= 0) {
+      state.dying = 0;
+      if (state.lives <= 0) {
+        state.gameOver = true;
+      } else {
+        state.x = (W - CANNON_W) / 2;
+        state.bombs = [];
+        state.bullet = null;
+      }
+    }
+    // bombs still fall during the freeze for feel, but do not re-hit
+    for (const b of state.bombs) b.y += BOMB_SPEED * dt;
+    state.bombs = state.bombs.filter(b => b.y <= H);
+    return;
+  }
+
+  // Wave message: freeze gameplay, count down, then advance wave.
+  if (state.waveMsg > 0) {
+    state.waveMsg -= dt;
+    if (state.waveMsg <= 0) {
+      state.waveMsg = 0;
+      state.wave += 1;
+      state.waveStartY += INV_H + V_GAP;
+      state.speedFactor = Math.max(WAVE_SPEED_MIN, state.speedFactor * WAVE_SPEED_MULT);
+      resetFormation();
+      state.bombs  = [];
+      state.bullet = null;
+      state.ufo    = null;
+      state.ufoTimer = UFO_MIN_SPAWN + Math.random() * (UFO_MAX_SPAWN - UFO_MIN_SPAWN);
+    }
+    return;
+  }
+
+  if (keys.left)  state.x -= MOVE_SPEED * dt;
+  if (keys.right) state.x += MOVE_SPEED * dt;
+  state.x = clamp(state.x, 0, W - CANNON_W);
+
+  if (keys.fire && !state.bullet) {
+    state.bullet = { x: state.x + CANNON_W / 2, y: state.y };
+  }
+  if (state.bullet) {
+    state.bullet.y -= BULLET_SPEED * dt;
+    if (state.bullet.y < -8) state.bullet = null;
+  }
+
+  const f = state.inv;
+
+  // Invader formation: step on a timer (interval shrinks as they die).
+  f.timer += dt;
+  const interval = stepInterval();
+  let guard = 0;
+  while (f.timer >= interval && guard++ < 8) {
+    stepFormation();
+    f.timer -= interval;
+  }
+
+  // Invader reached the player's row -> game over.
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    const t = f.y + inv.row * (INV_H + V_GAP);
+    if (t + INV_H >= PLAYER_Y) { state.gameOver = true; break; }
+  }
+  if (state.gameOver) return;
+
+  // Player bullet: shield first, then invader, else fly off.
+  if (state.bullet) {
+    const bx = Math.round(state.bullet.x) - 2;
+    const by = Math.round(state.bullet.y);
+    const bw = 4, bh = 8;
+    let consumed = false;
+    for (const s of state.shields) {
+      if (rectHit(bx, by, bw, bh, s.x, s.y, SHIELD_W, SHIELD_H)) {
+        if (damageShield(s, bx, by, bw, bh)) consumed = true;
+        break;
+      }
+    }
+    if (!consumed) {
+      let hit = -1;
+      for (let i = 0; i < state.list.length; i++) {
+        const inv = state.list[i];
+        if (!inv.alive) continue;
+        const l = f.x + inv.colOffset;
+        const t = f.y + inv.row * (INV_H + V_GAP);
+        if (bx < l + INV_W && bx + bw > l && by < t + INV_H && by + bh > t) {
+          hit = i; break;
+        }
+      }
+      if (hit >= 0) {
+        const inv = state.list[hit];
+        inv.alive = false;
+        f.live -= 1;
+        state.score += INV_SCORE[inv.type];
+        consumed = true;
+      } else if (state.ufo &&
+                 rectHit(bx, by, bw, bh, state.ufo.x, state.ufo.y, UFO_W, UFO_H)) {
+        state.score += state.ufo.score;
+        state.ufo = null;
+        state.ufoTimer = UFO_MIN_SPAWN + Math.random() * (UFO_MAX_SPAWN - UFO_MIN_SPAWN);
+        consumed = true;
+      }
+    }
+    if (consumed) state.bullet = null;
+  }
+
+  // Invader bombs: spawn (capped, faster as fewer remain), move, collide.
+  state.bombTimer += dt;
+  const bInt = bombInterval();
+  while (state.bombTimer >= bInt) {
+    state.bombTimer -= bInt;
+    if (state.bombs.length < BOMB_MAX && f.live > 0) spawnBomb();
+  }
+  for (let i = state.bombs.length - 1; i >= 0; i--) {
+    const b = state.bombs[i];
+    b.y += BOMB_SPEED * dt;
+    const bx = Math.round(b.x) - 2, by = Math.round(b.y), bw = 4, bh = 8;
+    let consumed = false;
+    for (const s of state.shields) {
+      if (rectHit(bx, by, bw, bh, s.x, s.y, SHIELD_W, SHIELD_H)) {
+        if (damageShield(s, bx, by, bw, bh)) consumed = true;
+        break;
+      }
+    }
+    if (!consumed) {
+      if (rectHit(bx, by, bw, bh, state.x, state.y, CANNON_W, CANNON_H)) {
+        consumed = true;
+        state.lives -= 1;
+        state.dying = DEATH_FREEZE;
+        state.bullet = null;
+      }
+    }
+    if (consumed || b.y > H) state.bombs.splice(i, 1);
+  }
+
+  // UFO: move, remove off-screen; spawn on timer.
+  if (state.ufo) {
+    state.ufo.x += state.ufo.dir * UFO_SPEED * dt;
+    if (state.ufo.x < -UFO_W || state.ufo.x > W) state.ufo = null;
+  } else if (f.live > 0) {
+    state.ufoTimer -= dt;
+    if (state.ufoTimer <= 0) {
+      const dir = Math.random() < 0.5 ? 1 : -1;
+      state.ufo = {
+        x: dir > 0 ? -UFO_W : W,
+        y: UFO_Y,
+        dir,
+        score: UFO_SCORES[(Math.random() * UFO_SCORES.length) | 0],
+      };
+      state.ufoTimer = UFO_MIN_SPAWN + Math.random() * (UFO_MAX_SPAWN - UFO_MIN_SPAWN);
+    }
+  }
+
+  // Wave clear: all invaders dead.
+  if (f.live <= 0) {
+    state.waveMsg = WAVE_MSG_DURATION;
+    state.ufo = null;
+  }
+}
+
+function rectHit(ax, ay, aw, ah, bx, by, bw, bh) {
+  return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
+}
+
+function drawSprite(sprite, x, y, color) {
+  const ox = Math.round(x), oy = Math.round(y);
+  ctx.fillStyle = color;
+  for (let r = 0; r < sprite.length; r++) {
+    const row = sprite[r];
+    for (let c = 0; c < row.length; c++) {
+      if (row[c]) ctx.fillRect(ox + c * PS, oy + r * PS, PS, PS);
+    }
+  }
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!state.started) {
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillStyle = '#7be97a';
+    ctx.fillText('SPACE INVADERS', W / 2, H / 2 - 72);
+    ctx.font = '13px "Courier New", monospace';
+    ctx.fillStyle = '#aaa';
+    ctx.fillText('\u2190 \u2192  MOVE', W / 2, H / 2 - 16);
+    ctx.fillText('SPACE  FIRE     P  PAUSE', W / 2, H / 2 + 4);
+    ctx.fillStyle = '#ffb15e';
+    ctx.font = '15px "Courier New", monospace';
+    ctx.fillText('PRESS ENTER TO START', W / 2, H / 2 + 48);
+    return;
+  }
+
+  const f = state.inv;
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    const sprite = INV_SPRITES[inv.type][f.frame];
+    const x = f.x + inv.colOffset;
+    const y = f.y + inv.row * (INV_H + V_GAP);
+    drawSprite(sprite, x, y, INV_COLOR[inv.type]);
+  }
+
+  // Mystery UFO.
+  if (state.ufo) {
+    drawSprite(UFO_SPRITE, Math.round(state.ufo.x), Math.round(state.ufo.y), '#ff6688');
+  }
+
+  // Destructible shields: draw remaining cells as small blocks.
+  ctx.fillStyle = '#5fd38a';
+  for (const s of state.shields) {
+    for (let r = 0; r < SHIELD_ROWS; r++) {
+      for (let c = 0; c < SHIELD_COLS; c++) {
+        if (s.grid[r][c]) ctx.fillRect(Math.round(s.x + c * CELL), Math.round(s.y + r * CELL), CELL, CELL);
+      }
+    }
+  }
+
+  // Invader bombs.
+  ctx.fillStyle = '#ff5c5c';
+  for (const b of state.bombs) {
+    ctx.fillRect(Math.round(b.x) - 1, Math.round(b.y), 3, 8);
+  }
+
+  // Hide the cannon while it's being rebuilt after a hit.
+  if (state.dying <= 0) drawSprite(CANNON, state.x, state.y, '#7be97a');
+
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(Math.round(state.bullet.x) - 1, Math.round(state.bullet.y), 3, 8);
+  }
+
+  ctx.textBaseline = 'top';
+  ctx.font = '16px "Courier New", monospace';
+  ctx.fillStyle = '#7be97a';
+  ctx.textAlign = 'left';
+  ctx.fillText('SCORE ' + String(state.score).padStart(4, '0'), 12, 10);
+  ctx.textAlign = 'right';
+  ctx.fillText('1UP', W - 90, 10);
+  ctx.textAlign = 'left';
+  for (let i = 0; i < state.lives; i++) {
+    drawSprite(CANNON, W - 72 + i * 26, 8, '#7be97a');
+  }
+
+  if (state.waveMsg > 0) {
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ffb15e';
+    ctx.font = '24px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('WAVE  ' + state.wave, W / 2, H / 2);
+  } else if (state.gameOver) {
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ff5c5c';
+    ctx.font = '28px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('GAME OVER', W / 2, H / 2 - 20);
+    ctx.fillStyle = '#7be97a';
+    ctx.font = '16px "Courier New", monospace';
+    ctx.fillText('PRESS ENTER TO RESTART', W / 2, H / 2 + 16);
+  }
+}
+
+// Fixed-timestep loop
+const STEP = 1 / 60;
+let last = performance.now();
+let acc = 0;
+function frame(now) {
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  acc += dt;
+  while (acc >= STEP) {
+    if (!state.paused) update(STEP);
+    acc -= STEP;
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+
+reset();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

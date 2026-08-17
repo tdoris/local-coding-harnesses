@@ -1,0 +1,15 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching qwen (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+Implemented **jpatch.py**, a standalone Python 3 utility that applies JSON Patch (RFC 6902) to a JSON document. The script:
+
+- Handles command‑line arguments, file I/O, and error reporting.
+- Implements JSON Pointer decoding (RFC 6901) with proper escaping.
+- Supports all RFC 6902 operations (`add`, `remove`, `replace`, `move`, `copy`, `test`), including array handling, `-` appends, and edge cases.
+- Performs deep copies for `move` and `copy`.
+- Provides JSON equality checks respecting numeric, boolean, string, array, and object semantics.
+- Ensures atomic application: any error aborts without output.
+- Preserves object key order and uses standard‑library only.
+
+All tests in `test_jpatch.py` now pass (`37 passed`).

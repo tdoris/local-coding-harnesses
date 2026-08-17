@@ -1,0 +1,12 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching opencode (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+[0m
+> build · gpt-oss:120b-cloud
+[0m
+[0m← [0mWrite tomlq.py
+Wrote file successfully.
+[0m
+Creating tomlq.py implementing a TOML subset parser as described.
+tomlq.py has been added to the repository. It parses the specified TOML subset, handles key paths, and outputs JSON with appropriate exit codes.

@@ -1,0 +1,33 @@
+# top comment
+title = "TOML"
+owner.name = "Carl"
+owner."last name" = "Weiss"
+
+[a.b]
+x = 1_000
+neg = -42
+y = -0.01
+z = 5e+22
+w = 6.626e-34
+p = +1.0
+hex = 0xDEAD_beef
+oct = 0o755
+bin = 0b1101
+b1 = true
+b2 = false
+
+[[fruits]]
+name = "apple"
+
+[fruits.physical]
+color = "red"
+
+[[fruits]]
+name = "banana"
+
+[server]
+ports = [8000, 8080,
+         9090] # trailing comment
+empty = []
+mixed = [1, "two", true, [3, 4], {a = 1}]
+it = { x = 1, y = "two" }

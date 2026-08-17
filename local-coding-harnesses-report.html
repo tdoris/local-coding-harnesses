@@ -1,0 +1,203 @@
+<title>Local Coding Harnesses</title>
+<style>
+:root{
+  --bg:#F7F8F6; --surface:#FFFFFF; --raise:#FCFDFB; --ink:#1A201C; --muted:#5A645D; --faint:#8A938C; --rule:#DCE1DC;
+  --accent:#1F8A4C; --accent-ink:#166B3B; --accent-soft:#E4F3E9; --warn:#946200; --warn-soft:#FaF0D6; --bad:#A83A2E; --bad-soft:#F8E4E0;
+  --code-bg:#EDF1ED; --shot-bg:#2B2F2C;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111512; --surface:#191F1B; --raise:#1E241F; --ink:#E7ECE8; --muted:#98A39B; --faint:#6E786F; --rule:#2A332D;
+  --accent:#5FD38A; --accent-ink:#8CE3AC; --accent-soft:#183024; --warn:#E0B458; --warn-soft:#2F2812; --bad:#F08A7C; --bad-soft:#381E1A;
+  --code-bg:#1D241F; --shot-bg:#0C0F0D;
+}}
+:root[data-theme="dark"]{
+  --bg:#111512; --surface:#191F1B; --raise:#1E241F; --ink:#E7ECE8; --muted:#98A39B; --faint:#6E786F; --rule:#2A332D;
+  --accent:#5FD38A; --accent-ink:#8CE3AC; --accent-soft:#183024; --warn:#E0B458; --warn-soft:#2F2812; --bad:#F08A7C; --bad-soft:#381E1A;
+  --code-bg:#1D241F; --shot-bg:#0C0F0D;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:Charter,"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:17px;line-height:1.58;margin:0;padding:0 20px 96px}
+.wrap{max-width:1000px;margin:0 auto}
+.col{max-width:68ch}
+h1{font-size:2.3rem;line-height:1.1;margin:52px 0 6px;letter-spacing:-.015em;text-wrap:balance}
+h2{font-size:1.5rem;margin:60px 0 8px;letter-spacing:-.01em;text-wrap:balance;padding-top:10px;border-top:2px solid var(--rule)}
+h3{font-size:1.12rem;margin:30px 0 6px}
+p{margin:0 0 15px}
+.mono,code,pre,td.n,th.n{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+.eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;color:var(--accent-ink);margin-top:44px;font-weight:600}
+.lede{font-size:1.2rem;line-height:1.5;color:var(--ink)}
+.tldr{background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:10px;padding:20px 24px;margin:24px 0 8px}
+.tldr h3{margin:0 0 8px;font-size:1rem;letter-spacing:.02em;text-transform:uppercase;font-family:ui-monospace,monospace;color:var(--accent-ink)}
+.tldr p:last-child{margin:0}
+code{background:var(--code-bg);padding:1px 5px;border-radius:4px;font-size:.86em}
+pre{background:var(--code-bg);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.84rem;line-height:1.5;margin:12px 0 18px;border:1px solid var(--rule)}
+pre code{background:none;padding:0;font-size:inherit}
+.tablewrap{overflow-x:auto;margin:16px 0 10px;border:1px solid var(--rule);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums;background:var(--surface)}
+caption{caption-side:top;text-align:left;font-size:.85rem;color:var(--muted);padding:10px 14px 4px}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--rule)}
+thead th{font-family:ui-monospace,monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--raise);position:sticky;top:0}
+tbody tr:last-child td{border-bottom:none}
+td.n,th.n{text-align:right}
+tbody th{font-weight:600;font-family:inherit}
+.win{color:var(--accent-ink);font-weight:700}
+.zero{color:var(--bad)}
+.mid{color:var(--warn)}
+tr.hl td,tr.hl th{background:var(--accent-soft)}
+.pill{display:inline-block;font-family:ui-monospace,monospace;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--rule);color:var(--muted);white-space:nowrap}
+.pill.ok{color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.pill.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.pill.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:14px 0 10px}
+.card{border:1px solid var(--rule);border-radius:10px;padding:16px 18px;background:var(--surface)}
+.card h3{margin:0 0 6px;font-size:1.02rem}
+.card p{font-size:.92rem;margin:0 0 8px;color:var(--muted)}
+.card p:last-child{margin:0}
+.card .big{font-size:1.9rem;font-weight:700;color:var(--accent-ink);font-variant-numeric:tabular-nums;line-height:1}
+figure{margin:20px 0 10px}
+figure img{display:block;width:100%;height:auto;background:var(--shot-bg);border-radius:8px;border:1px solid var(--rule)}
+figcaption{font-size:.84rem;color:var(--muted);margin-top:8px;line-height:1.45}
+ul,ol{padding-left:1.25em;margin:0 0 15px}
+li{margin-bottom:7px}
+.small{font-size:.9rem;color:var(--muted)}
+.note{border-left:3px solid var(--warn);background:var(--warn-soft);padding:12px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-size:.94rem}
+.note.correct{border-left-color:var(--accent);background:var(--accent-soft)}
+a{color:var(--accent-ink);text-decoration-thickness:1px;text-underline-offset:2px}
+hr{border:0;border-top:1px solid var(--rule);margin:20px 0}
+.foot{margin-top:60px;padding-top:16px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--faint)}
+</style>
+<div class="wrap">
+<div class="col">
+<div class="eyebrow">Local models · RTX 4090 · Ollama 0.32.14 · 16–17 Aug 2026</div>
+<h1>Local Coding Harnesses</h1>
+<p class="lede">Five terminal coding agents, four models, two objectively-graded programming tasks, and one arcade game — measured end to end on one 24&nbsp;GB GPU. Which harness, which model, and why the answer to each depends on the other.</p>
+</div>
+
+<div class="tldr col">
+<h3>Bottom line</h3>
+<p><strong>For day-to-day local coding: <code>pi</code> with <code>qwen3.8</code>.</strong> pi carries the leanest prompt of any harness (~1.5k tokens vs 7.5k–31k), and qwen3.8 was the only local model that reliably closed the write-run-verify loop — it scored a perfect 70/70 on a TOML parser written from spec through pi. Keep <code>opencode</code> as the fallback for any other model or when you want guardrails. But the headline finding is a caveat: <strong>on hard, open-ended tasks the harness and the model interact</strong> — the same qwen3.8 that aced the task through pi produced <em>nothing</em> through the heavier harnesses, because it spent the whole turn planning instead of writing. Match the harness weight to the task, not to a leaderboard.</p>
+</div>
+
+<div class="col">
+<p class="small">This is the sequel to the <a href="https://claude.ai/code/artifact/5ee93c8a-01d1-4125-ae49-4710e81ec29f">Space Invaders bake-off</a>, which established the tooling (a tuned Ollama server, the <code>local-agent</code> wrapper, a headless-Chrome validator). That round showed all five harnesses <em>can</em> drive a local model, but graded on a game — subjective. This round grades on programs a script can score exactly, swaps in a cloud-hosted 116B model to strip out small-model noise, and pits <code>qwen3.8</code> against <code>gemma4:26b</code>.</p>
+</div>
+
+<h2 class="col">How it was measured</h2>
+<div class="col">
+<p>Two tasks, each graded by a hidden test suite the model never sees, using a reference implementation as oracle:</p>
+<ul>
+<li><strong>tomlq</strong> — a TOML-subset-to-JSON command-line tool, parser written from scratch (stdlib only; <code>tomllib</code> forbidden and detected). Graded against Python's own <code>tomllib</code> across 70 cases: values, escapes, multiline strings, all integer bases, dotted keys, arrays of tables, and 29 malformed inputs that must be rejected with the right exit code. Run in two phases: <em>spec only</em>, then <em>with a visible test file handed over</em> to iterate against.</li>
+<li><strong>jpatch</strong> — a JSON Patch (RFC 6902) applier with JSON Pointer, graded against the <code>jsonpatch</code> library across 67 cases including atomicity, <code>test</code> ops, and malformed patches. The visible test file is present from the start (test-first).</li>
+</ul>
+<p>Both grade the compiled behaviour of the produced <code>.py</code> — exit codes and stdout — so a file that doesn't run scores zero, exactly as it would in real use. Sampling was pinned to each model's own recommended values on every request (temperature 1.0, top_p 0.95 for the Qwen models), verified on the wire.</p>
+</div>
+
+<h2 class="col">Round 1 · A stronger model, to isolate the harness</h2>
+<div class="col">
+<p>Running every harness against the same <strong>gpt-oss:120b</strong> (116B, cloud-hosted) removes "the small model got unlucky" as an explanation: whatever differences remain are the harness. Hidden-suite scores, sequential run (the trustworthy one — a parallel run corrupted some tool-call payloads through the shared proxy):</p>
+</div>
+<div class="tablewrap col">
+<table>
+<caption>gpt-oss:120b · hidden-test pass counts · higher is better</caption>
+<thead><tr><th>Harness</th><th class="n">Prompt overhead</th><th class="n">TOML from spec<br>/ 70</th><th class="n">TOML with tests<br>/ 70</th><th class="n">JSON Patch<br>/ 67</th></tr></thead>
+<tbody>
+<tr><th>Aider</th><td class="n">~2.5k</td><td class="n win">51</td><td class="n win">55</td><td class="n win">67</td></tr>
+<tr><th>OpenCode</th><td class="n">~7.5k</td><td class="n win">51</td><td class="n">51</td><td class="n">66</td></tr>
+<tr><th>Qwen Code</th><td class="n">~16k</td><td class="n mid">40</td><td class="n mid">40</td><td class="n">66</td></tr>
+<tr><th>Claude Code</th><td class="n">~25k</td><td class="n zero">0*</td><td class="n win">65</td><td class="n win">67</td></tr>
+<tr><th>pi</th><td class="n">~1.5k</td><td class="n mid">25</td><td class="n mid">25</td><td class="n win">67</td></tr>
+</tbody>
+</table>
+</div>
+<div class="col">
+<p class="small">* Claude Code's spec-phase run hit the 1500&nbsp;s cap mid-write — its ~25k prompt plus a long generation exhausted the turn — then it recovered to 65 once a test file gave it a target. pi's low TOML score is the model shipping a file with a stray backslash escape that broke Python syntax — <em>reproducibly, in both runs</em> — with no harness safety net to catch it.</p>
+<p>Two things stand out. First, <strong>on the easy task (JSON Patch) the harness barely matters</strong> — everyone lands 66–67; a capable model plus a test file closes the loop regardless of wrapper. Second, <strong>on the hard task the harness matters a lot, but not by weight alone.</strong> Aider (leanest but for pi) and OpenCode lead; pi's minimalism actively hurt here because it gave a good model no second look at a broken file; Claude Code's bulk cost it the spec phase entirely. The lesson that carries into the local runs: <em>overhead is a real cost, but a total absence of guardrails is also a cost.</em></p>
+</div>
+
+<h2 class="col">Round 2 · qwen3.8 vs gemma4:26b, head to head</h2>
+<div class="col">
+<p>Both models are ~26–27B, Q4_K_M, ~17&nbsp;GB, run locally. Each was given both tasks through three harnesses, everything else held constant. Hidden-suite scores:</p>
+</div>
+<div class="tablewrap col">
+<table>
+<caption>Local models · hidden-test pass counts · full-GPU, ~150 tok/s each</caption>
+<thead><tr><th>Model · Harness</th><th class="n">TOML spec / 70</th><th class="n">JSON Patch / 67</th><th>What happened</th></tr></thead>
+<tbody>
+<tr class="hl"><th>qwen3.8 · pi</th><td class="n win">70</td><td class="n win">65</td><td>clean; wrote its own fuzz + differential tests unprompted</td></tr>
+<tr><th>qwen3.8 · OpenCode</th><td class="n zero">0†</td><td class="n win">66</td><td>TOML: burned the turn planning, never wrote the file</td></tr>
+<tr><th>qwen3.8 · Qwen Code</th><td class="n zero">0†</td><td class="n win">67</td><td>same — 7&nbsp;min of "let me think through this…", no tool call</td></tr>
+<tr><th>gemma4:26b · pi</th><td class="n zero">0</td><td class="n zero">0</td><td>printed code to chat instead of calling the write tool</td></tr>
+<tr><th>gemma4:26b · OpenCode</th><td class="n zero">0‡</td><td class="n mid">55</td><td>TOML: wrote a parser but no CLI entry point → no output</td></tr>
+<tr><th>gemma4:26b · Qwen Code</th><td class="n zero">0</td><td class="n zero">0</td><td>no file produced</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note correct col"><strong>A correction worth stating plainly.</strong> gemma4:26b's first runs scored zero at 8 tokens/sec and looked broken. They weren't representative: a leftover <code>llama-server</code> process from another experiment was squatting on 20&nbsp;GB of VRAM, so gemma loaded with <strong>0 of 31 layers on the GPU</strong>. Cleared, gemma runs at 152 tok/s, fully on the GPU — and the table above is that clean re-run. Its earlier "failure" was half my mess. The remaining zeros are real, but the fair read is below.</div>
+
+<div class="col">
+<p class="small">† Not a capability failure — a loop-closing failure explored in the next section. ‡ gemma wrote a syntactically valid 121-line parser class with no <code>__main__</code>/<code>argv</code>/<code>print</code>, so it produced nothing, violating the spec's stated CLI contract.</p>
+<h3>The honest verdict on the two models</h3>
+<p><strong>qwen3.8 is the better agentic coder here, but the gap is about discipline, not raw code quality.</strong> When qwen3.8 closed the loop it was excellent (70/70, 65–67/67). gemma4:26b's one <em>complete</em> attempt — JSON Patch through OpenCode — scored 55/67, which is respectable; its underlying patch logic isn't far off qwen's 66. gemma's problem is that it frequently doesn't finish the agentic contract: it prints code to the chat instead of invoking the write tool, or writes a library without the command-line entry point the task requires, or stops after one malformed tool call. qwen3.8 also wins a hardware point unrelated to intelligence — its KV cache is small enough to run at an 80k context on the 4090, while gemma4:26b must drop to ≤40k to stay on the GPU at all.</p>
+</div>
+
+<h2 class="col">The finding that reframes everything: closing the loop</h2>
+<div class="col">
+<p>Why did qwen3.8 score 70/70 on TOML through pi but <strong>0 through OpenCode and Qwen Code</strong> — the same model, same task, same hardware? The session logs are unambiguous. Through the heavier harnesses, qwen3.8 spent its entire headless turn reasoning in the text channel:</p>
+<pre><code>"Let me start by understanding the task. I need to write a single-file
+ Python 3 program tomlq.py… Let me plan this out… The current working
+ directory is… Let me think about the implementation carefully. ## …"</code></pre>
+<p>…and the turn ended before it ever emitted a <code>write_file</code> call. Seven minutes of planning, zero files. Through pi — whose prompt is a screwdriver, not a manual — it just wrote the parser.</p>
+<p>The pattern across every cell points to an interaction, not a ranking:</p>
+<ul>
+<li><strong>Open-ended task + heavy harness prompt → the model plans instead of acting.</strong> "Write X and test it yourself first," wrapped in a 16k-token system-and-tools prompt full of workflow guidance, invites a thinking model to deliberate until the turn is gone.</li>
+<li><strong>Constrained task or a visible test file → the loop closes everywhere.</strong> JSON Patch (a test file sitting in the directory, a concrete "make this pass" target) succeeded through <em>every</em> harness for qwen3.8: 65, 66, 67.</li>
+<li><strong>A lean harness closes the loop even when the task is open-ended</strong>, because there's less prompt pulling the model toward ceremony.</li>
+</ul>
+<p>So the earlier zeros for both models on TOML-through-heavy-harnesses are substantially a <em>task-framing artifact</em>, not pure capability. That cuts against a simple "pi is best" story just as much as it cut against "gemma is bad."</p>
+</div>
+
+<h2 class="col">What the harnesses spend their tokens on</h2>
+<div class="col">
+<p>Prompt overhead — the fixed token cost before you type anything — is the clearest axis the harness controls. Measured on the wire against the real tokenizer:</p>
+</div>
+<div class="grid col">
+<div class="card"><h3>pi</h3><div class="big">1.5k</div><p>4 built-in tools. A screwdriver. Fastest turns, most window left for the model — and no safety net.</p></div>
+<div class="card"><h3>OpenCode</h3><div class="big">7.5k</div><p>Balanced. Validates tool arguments, real compaction config, sane permissions. The robust default.</p></div>
+<div class="card"><h3>Qwen Code</h3><div class="big">16k</div><p>~⅔ of it is <strong>24 tool schemas</strong> — subagents, git worktrees, goals, monitors, MCP — most unrelated to editing one file.</p></div>
+<div class="card"><h3>Claude Code</h3><div class="big">25k</div><p>Heaviest. ~25k headless, ~31k interactive. On an 80k window that's a third gone before the first token.</p></div>
+</div>
+<div class="col">
+<p>Qwen Code is the instructive case. Proxying its first request shows ~6.6k tokens of system prompt (21 sections of engineering methodology) and <strong>~14k tokens of tool schemas</strong> for an agent <em>platform</em> — <code>agent</code>, <code>create_sub_session</code>, <code>enter_worktree</code>, <code>monitor</code>, <code>update_goal</code>, <code>send_message</code> — when the coding core is seven tools. But that heavy system prompt is not pure waste: it's opinionated craft guidance (an explicit plan→implement→verify loop, anti-over-engineering rules), and on the open-ended Space Invaders build in round&nbsp;0 it produced the best-judged game of the five. The overhead that hurts on a single graded file is the scaffolding that helps on a sprawling one.</p>
+</div>
+
+<h2 class="col">Two engineering notes from the trenches</h2>
+<div class="grid col">
+<div class="card"><h3>Sampling drifts unless you pin it</h3><p>Left alone, the OpenAI-compatible path sends <code>top_p=1.0</code> (not the model's 0.95) and <strong>Aider sends temperature&nbsp;0</strong> — greedy decoding, which Qwen explicitly warns against for a thinking model. The wrapper now reads each model's Modelfile parameters and pushes them into every harness explicitly; verified identical on the wire.</p></div>
+<div class="card"><h3>Ollama can't dial qwen3.8's reasoning</h3><p>qwen3.8 defaults to maximum reasoning effort, and <strong>Ollama's renderer ignores the effort level</strong> — <code>think:&nbsp;low</code> produced the same ~56k characters of reasoning as <code>max</code>. Only bypassing Ollama with <code>llama-server&nbsp;+</code> a fixed Jinja template restored the control (and a token <em>budget</em> cap, which on JSON Patch changed the score by one point — 66 vs 65 — so it costs little quality).</p></div>
+</div>
+
+<h2 class="col">Recommendations</h2>
+<div class="col">
+<ol>
+<li><strong>Default: <code>local-agent pi</code> with <code>qwen3.8</code>.</strong> Leanest prompt, fastest turns, and the model closed the loop reliably. Best for tight, well-specified, single-file work and for iterating against a test file.</li>
+<li><strong>Give the model a target, not an essay prompt.</strong> The single biggest quality lever wasn't the harness or the model — it was task framing. A visible test file or a prescriptive spec closed the loop everywhere; "write X and test it yourself" let thinking models plan until the turn died. Hand over tests.</li>
+<li><strong>Fallback: <code>local-agent opencode</code>.</strong> The most robust across models — it validated tool arguments and produced complete files where pi let a good model ship a broken one. Use it for any model other than qwen3.8, or when you want guardrails.</li>
+<li><strong>Reach for Qwen Code for big, open-ended builds</strong> (a new app, a game), where its workflow scaffolding earns its 16k — and where the 4090 can spare it. Not for single graded files.</li>
+<li><strong>Model: qwen3.8 over gemma4:26b for agentic coding</strong> on this hardware — better loop-closing and it fits an 80k context. gemma's code is decent when it finishes; it just often doesn't.</li>
+<li><strong>Aider</strong> stays the sharpest instrument for "how well does this model <em>write</em> code," distinct from "how well does it drive an agent." <strong>Claude Code</strong> works but is the heaviest; save it for when you specifically want its features.</li>
+</ol>
+</div>
+
+<h2 class="col">Caveats</h2>
+<div class="col">
+<ul>
+<li>Each cell is a single sampled run at temperature 1. The objective scores are exact, but a given cell would land differently on a re-run; the stable signals are the large gaps (70 vs 0, loop-closes vs doesn't) and the prompt-overhead and speed numbers, not one-point differences.</li>
+<li>Two tasks, both parsing/transforming structured text — a real but narrow slice of coding. They reward correctness and edge-case discipline; they say nothing about UI work, large-codebase navigation, or long multi-file refactors.</li>
+<li>The gemma4 VRAM-starvation episode is a reminder that local benchmarking is as much about the host as the model — always confirm <code>ollama ps</code> shows 100% GPU before trusting a number.</li>
+<li>Gemini CLI was considered for gemma and excluded as non-comparable: its only local path runs a 1B on-device Gemma, and it has no OpenAI/Ollama provider to reach gemma4:26b. The fair equivalent — gemma4 through Qwen Code, a Gemini-CLI fork — is in the table above.</li>
+</ul>
+</div>
+
+<p class="foot">Tasks, graders, every produced file, and the <code>local-agent</code> wrapper live under <code>~/repos/scratch/harness-test/</code>. Models: qwen3.8 (Qwen3.8 27B), gemma4:26b, gpt-oss:120b-cloud. Harnesses: pi 0.84, OpenCode 1.18, Qwen Code 0.21, Aider 0.86, Claude Code 2.1.233. Hardware: RTX 4090 24&nbsp;GB, Ollama 0.32.14.</p>
+</div>

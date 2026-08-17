@@ -1,0 +1,15 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching pi (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+Implemented a full JSON Patch utility (`jpatch.py`) with:
+
+- Comprehensive parsing, validation, and error handling.
+- JSON Pointer decoding and navigation.
+- Support for RFC 6902 operations: add, remove, replace, move, copy, test.
+- Proper handling of array indexing, dash (`-`) for appends, and canonical index checks.
+- Deep copy for copy operation and atomic behavior on errors.
+- Strict JSON equality for `test` operation, ignoring object key order.
+- Preserves object key order and uses only the Python standard library.
+
+All tests now pass.

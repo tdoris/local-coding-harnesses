@@ -1,0 +1,6 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done — `tomlq.py` is written in the current directory: a self-contained stdlib-only TOML-subset parser (strings with escapes/multi-line, int/float with underscore and radix rules, booleans, nested arrays, inline tables with closedness checks, `[a.b]`/`[[a]]` headers with duplicate/redefinition errors) that prints `json.dumps` of the whole document or a dotted keypath, with exit 0/1/2 semantics verified against a range of valid and invalid inputs.

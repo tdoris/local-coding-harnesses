@@ -1,0 +1,4 @@
+Bug report from a play-test of invaders.html: after pressing Enter the invaders are drawn but nothing moves and the game does not respond.
+Browser console says:
+ReferenceError: size is not defined at update (invaders.html:250:23)
+Find the cause and fix it with a minimal edit; don't refactor anything else. Then check the file's script with node --check.

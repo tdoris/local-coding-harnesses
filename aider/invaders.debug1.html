@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+</style>
+</head>
+<body>
+<canvas id="c" width="480" height="560"></canvas>
+<script>
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const W = 480, H = 560;
+const PLAYER_SPEED = 200;
+const BULLET_SPEED = 400;
+const STEP = 1 / 60;
+
+const keys = {};
+addEventListener('keydown', e => { keys[e.code] = true; if (['Space','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault(); });
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+const playerSprite = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1],
+];
+const PS = 4; // pixel scale
+
+// Invader sprites (11x8, 2 frames each)
+const squid = [
+  [[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,0,0,1,1,0,0,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,0,1,0,1,1,1,0,1,0,0],[0,1,0,1,0,0,0,1,0,1,0],[1,0,1,0,0,0,0,0,1,0,1]],
+  [[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,0,0,1,1,0,0,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,0,0,0,0,0,0,1,1],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+const crab = [
+  [[0,0,1,0,0,0,0,0,1,0,0],[0,0,0,1,0,0,0,1,0,0,0],[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,0,1,1,1,0,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,0,1,1,1,1,1,1,1,0,1],[1,0,1,0,0,0,0,0,1,0,1],[0,0,0,1,1,0,1,1,0,0,0]],
+  [[0,0,1,0,0,0,0,0,1,0,0],[1,0,0,1,0,0,0,1,0,0,1],[1,0,1,1,1,1,1,1,1,0,1],[1,1,1,0,1,1,1,0,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,0],[0,0,1,0,0,0,0,0,1,0,0],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+const octopus = [
+  [[0,0,0,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,0,1,1,1,0,0],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,1,1,0,1,1,0,1,1],[1,1,0,0,0,0,0,0,0,1,1]],
+  [[0,0,0,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,1,1,0,1,1,0,1,1],[1,0,1,0,0,0,0,0,1,0,1],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+
+const INV_SCALE = 3;
+const INV_SPX = 40; // horizontal spacing
+const INV_SPY = 35; // vertical spacing
+const INV_COLS = 11;
+const INV_ROWS = 5;
+const INV_STEP = 20; // px per step
+const INV_START_INTERVAL = 0.8;
+const INV_MIN_INTERVAL = 0.1;
+const INV_SPEEDUP = 0.02;
+
+const BOMB_SPEED = 200;
+const BOMB_START_INTERVAL = 1.0;
+const BOMB_MIN_INTERVAL = 0.3;
+const MAX_BOMBS = 3;
+const SHIELD_COLS = 12;
+const SHIELD_ROWS = 8;
+const SHIELD_BLOCK = 4;
+const SHIELD_Y = H - 90;
+const PLAYER_LIVES = 3;
+const FREEZE_TIME = 1.0;
+
+const shieldPattern = [
+  [0,0,1,1,1,1,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,0,0,0,0,0,0,1,1,1],
+  [1,1,0,0,0,0,0,0,0,0,1,1],
+  [1,0,0,0,0,0,0,0,0,0,0,1],
+];
+
+const state = {
+  playing: true,
+  paused: false,
+  playerX: W / 2,
+  bullet: null, // {x, y}
+  // formation
+  invaders: [],   // [row][col] = {alive, type}
+  invX: 20,
+  invY: 60,
+  invDir: 1,
+  invTimer: 0,
+  invInterval: INV_START_INTERVAL,
+  invFrame: 0,
+  score: 0,
+  // bombs
+  bombs: [],
+  bombTimer: 0,
+  bombInterval: BOMB_START_INTERVAL,
+  // lives & shields
+  lives: PLAYER_LIVES,
+  shields: [],
+  freezeTimer: 0,
+  gameOver: false,
+};
+
+function makeFormation() {
+  const types = ['squid','crab','crab','octopus','octopus'];
+  const grid = [];
+  for (let r = 0; r < INV_ROWS; r++) {
+    grid[r] = [];
+    for (let c = 0; c < INV_COLS; c++) {
+      grid[r][c] = { alive: true, type: types[r] };
+    }
+  }
+  return grid;
+}
+
+function makeShields() {
+  const positions = [50, 155, 260, 365];
+  return positions.map(x => {
+    const grid = [];
+    for (let r = 0; r < SHIELD_ROWS; r++) {
+      grid[r] = [];
+      for (let c = 0; c < SHIELD_COLS; c++) {
+        grid[r][c] = shieldPattern[r][c];
+      }
+    }
+    return { x, y: SHIELD_Y, grid };
+  });
+}
+
+function eraseShieldArea(shield, hx, hy) {
+  const col = Math.floor((hx - shield.x) / SHIELD_BLOCK);
+  const row = Math.floor((hy - shield.y) / SHIELD_BLOCK);
+  for (let dr = -1; dr <= 1; dr++) {
+    for (let dc = -1; dc <= 1; dc++) {
+      const r = row + dr, c = col + dc;
+      if (r >= 0 && r < SHIELD_ROWS && c >= 0 && c < SHIELD_COLS) {
+        shield.grid[r][c] = 0;
+      }
+    }
+  }
+}
+
+function reset() {
+  state.playing = true;
+  state.paused = false;
+  state.playerX = W / 2;
+  state.bullet = null;
+  state.invaders = makeFormation();
+  state.invX = 20;
+  state.invY = 60;
+  state.invDir = 1;
+  state.invTimer = 0;
+  state.invInterval = INV_START_INTERVAL;
+  state.invFrame = 0;
+  state.score = 0;
+  state.bombs = [];
+  state.bombTimer = 0;
+  state.bombInterval = BOMB_START_INTERVAL;
+  state.lives = PLAYER_LIVES;
+  state.shields = makeShields();
+  state.freezeTimer = 0;
+  state.gameOver = false;
+}
+
+function update(dt) {
+  if (!state.playing || state.paused) return;
+
+  // freeze after death
+  if (state.freezeTimer > 0) {
+    state.freezeTimer -= dt;
+    return;
+  }
+
+  // game over: only allow restart
+  if (state.gameOver) {
+    if (keys['Enter']) { reset(); keys['Enter'] = false; }
+    return;
+  }
+
+  // player movement
+  let dx = 0;
+  if (keys['ArrowLeft'] || keys['KeyA']) dx -= 1;
+  if (keys['ArrowRight'] || keys['KeyD']) dx += 1;
+  state.playerX += dx * PLAYER_SPEED * dt;
+  state.playerX = Math.max(20, Math.min(W - 20, state.playerX));
+
+  // fire
+  if (keys['Space'] && !state.bullet) {
+    state.bullet = { x: state.playerX, y: H - 40 };
+  }
+
+  // bullet
+  if (state.bullet) {
+    state.bullet.y -= BULLET_SPEED * dt;
+    if (state.bullet.y < -10) state.bullet = null;
+  }
+
+  // bullet vs shield
+  if (state.bullet) {
+    for (const sh of state.shields) {
+      const sx = sh.x, sy = sh.y;
+      const sw = SHIELD_COLS * SHIELD_BLOCK, shh = SHIELD_ROWS * SHIELD_BLOCK;
+      if (state.bullet.x >= sx && state.bullet.x <= sx + sw &&
+          state.bullet.y >= sy && state.bullet.y <= sy + shh) {
+        eraseShieldArea(sh, state.bullet.x, state.bullet.y);
+        state.bullet = null;
+        break;
+      }
+    }
+  }
+
+  // formation step
+  state.invTimer += dt;
+  if (state.invTimer >= state.invInterval) {
+    state.invTimer = 0;
+    state.invFrame ^= 1;
+    state.invX += INV_STEP * state.invDir;
+
+    // check edge: find live invaders extent
+    let minX = Infinity, maxX = -Infinity;
+    for (let r = 0; r < INV_ROWS; r++) {
+      for (let c = 0; c < INV_COLS; c++) {
+        if (state.invaders[r][c].alive) {
+          const ix = state.invX + c * INV_SPX;
+          if (ix < minX) minX = ix;
+          if (ix + 11 * INV_SCALE > maxX) maxX = ix + 11 * INV_SCALE;
+        }
+      }
+    }
+    if (minX < 10 || maxX > W - 10) {
+      state.invDir *= -1;
+      state.invY += INV_SPY;
+      state.invX += INV_STEP * state.invDir; // undo and re-step
+    }
+  }
+
+  // bullet vs invader collision
+  if (state.bullet) {
+    const bx = state.bullet.x, by = state.bullet.y;
+    for (let r = 0; r < INV_ROWS; r++) {
+      for (let c = 0; c < INV_COLS; c++) {
+        const inv = state.invaders[r][c];
+        if (!inv.alive) continue;
+        const ix = state.invX + c * INV_SPX;
+        const iy = state.invY + r * INV_SPY;
+        const iw = 11 * INV_SCALE, ih = 8 * INV_SCALE;
+        if (bx + 2 > ix && bx - 1 < ix + iw && by + 8 > iy && by < iy + ih) {
+          inv.alive = false;
+          state.bullet = null;
+          const pts = inv.type === 'squid' ? 30 : inv.type === 'crab' ? 20 : 10;
+          state.score += pts;
+          state.invInterval = Math.max(INV_MIN_INTERVAL, state.invInterval - INV_SPEEDUP);
+          break;
+        }
+      }
+      if (!state.bullet) break;
+    }
+  }
+
+  // invader reaches player row → game over
+  const playerRow = H - 30;
+  for (let r = 0; r < INV_ROWS; r++) {
+    for (let c = 0; c < INV_COLS; c++) {
+      if (!state.invaders[r][c].alive) continue;
+      const iy = state.invY + r * INV_SPY;
+      if (iy + 8 * INV_SCALE >= playerRow) {
+        state.gameOver = true;
+        return;
+      }
+    }
+  }
+
+  // bomb spawning
+  state.bombTimer += dt;
+  if (state.bombTimer >= state.bombInterval && state.bombs.length < MAX_BOMBS) {
+    state.bombTimer = 0;
+    // pick random column with at least one alive invader
+    const cols = [];
+    for (let c = 0; c < INV_COLS; c++) {
+      for (let r = 0; r < INV_ROWS; r++) {
+        if (state.invaders[r][c].alive) { cols.push(c); break; }
+      }
+    }
+    if (cols.length > 0) {
+      const col = cols[Math.floor(Math.random() * cols.length)];
+      // find bottom-most alive invader in that column
+      let bottomRow = -1;
+      for (let r = INV_ROWS - 1; r >= 0; r--) {
+        if (state.invaders[r][col].alive) { bottomRow = r; break; }
+      }
+      if (bottomRow >= 0) {
+        const bx = state.invX + col * INV_SPX + 5 * INV_SCALE;
+        const by = state.invY + bottomRow * INV_SPY + 8 * INV_SCALE;
+        state.bombs.push({ x: bx, y: by });
+      }
+    }
+    // speed up as fewer invaders remain
+    let alive = 0;
+    for (let r = 0; r < INV_ROWS; r++)
+      for (let c = 0; c < INV_COLS; c++)
+        if (state.invaders[r][c].alive) alive++;
+    const ratio = alive / (INV_ROWS * INV_COLS);
+    state.bombInterval = Math.max(BOMB_MIN_INTERVAL, BOMB_START_INTERVAL * ratio);
+  }
+
+  // bomb movement & collisions
+  for (let i = state.bombs.length - 1; i >= 0; i--) {
+    const b = state.bombs[i];
+    b.y += BOMB_SPEED * dt;
+    if (b.y > H + 10) { state.bombs.splice(i, 1); continue; }
+
+    // bomb vs shield
+    let hitShield = false;
+    for (const sh of state.shields) {
+      const sx = sh.x, sy = sh.y;
+      const sw = SHIELD_COLS * SHIELD_BLOCK, shh = SHIELD_ROWS * SHIELD_BLOCK;
+      if (b.x >= sx && b.x <= sx + sw && b.y >= sy && b.y <= sy + shh) {
+        eraseShieldArea(sh, b.x, b.y);
+        state.bombs.splice(i, 1);
+        hitShield = true;
+        break;
+      }
+    }
+    if (hitShield) continue;
+
+    // bomb vs player
+    const pw = playerSprite[0].length * PS;
+    const ph = playerSprite.length * PS;
+    const px = state.playerX - pw / 2;
+    const py = H - 30 - ph;
+    if (b.x > px && b.x < px + pw && b.y > py && b.y < py + ph) {
+      state.bombs.splice(i, 1);
+      state.lives--;
+      if (state.lives <= 0) {
+        state.gameOver = true;
+      } else {
+        state.freezeTimer = FREEZE_TIME;
+        state.playerX = W / 2;
+      }
+      break;
+    }
+  }
+
+  // pause
+  if (keys['KeyP']) {
+    state.paused = !state.paused;
+    keys['KeyP'] = false;
+  }
+
+  // restart
+  if (keys['Enter']) {
+    reset();
+    keys['Enter'] = false;
+  }
+}
+
+function drawSprite(sprite, x, y, scale, color) {
+  ctx.fillStyle = color;
+  for (let r = 0; r < sprite.length; r++) {
+    for (let c = 0; c < sprite[r].length; c++) {
+      if (sprite[r][c]) {
+        ctx.fillRect(x + c * scale, y + r * scale, scale, scale);
+      }
+    }
+  }
+}
+
+function getSprite(type, frame) {
+  if (type === 'squid') return squid[frame];
+  if (type === 'crab') return crab[frame];
+  return octopus[frame];
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // shields
+  for (const sh of state.shields) {
+    ctx.fillStyle = '#0f0';
+    for (let r = 0; r < SHIELD_ROWS; r++) {
+      for (let c = 0; c < SHIELD_COLS; c++) {
+        if (sh.grid[r][c]) {
+          ctx.fillRect(sh.x + c * SHIELD_BLOCK, sh.y + r * SHIELD_BLOCK, SHIELD_BLOCK, SHIELD_BLOCK);
+        }
+      }
+    }
+  }
+
+  // invaders
+  for (let r = 0; r < INV_ROWS; r++) {
+    for (let c = 0; c < INV_COLS; c++) {
+      const inv = state.invaders[r][c];
+      if (!inv.alive) continue;
+      const ix = state.invX + c * INV_SPX;
+      const iy = state.invY + r * INV_SPY;
+      const color = inv.type === 'squid' ? '#f44' : inv.type === 'crab' ? '#4f4' : '#44f';
+      drawSprite(getSprite(inv.type, state.invFrame), ix, iy, INV_SCALE, color);
+    }
+  }
+
+  // score
+  ctx.fillStyle = '#fff';
+  ctx.font = '14px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('SCORE ' + state.score, 10, 20);
+
+  // lives
+  ctx.textAlign = 'right';
+  ctx.fillText('LIVES ' + state.lives, W - 10, 20);
+  ctx.textAlign = 'left';
+
+  // player
+  const pw = playerSprite[0].length * PS;
+  const ph = playerSprite.length * PS;
+  const px = state.playerX - pw / 2;
+  const py = H - 30 - ph;
+  drawSprite(playerSprite, px, py, PS, '#4f4');
+
+  // bullet
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(state.bullet.x - 1, state.bullet.y, 3, 8);
+  }
+
+  // bombs
+  ctx.fillStyle = '#f80';
+  for (const b of state.bombs) {
+    ctx.fillRect(b.x - 2, b.y, 4, 10);
+  }
+
+  // game over
+  if (state.gameOver) {
+    ctx.fillStyle = '#fff';
+    ctx.font = '28px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('GAME OVER', W / 2, H / 2 - 20);
+    ctx.font = '16px monospace';
+    ctx.fillText('SCORE ' + state.score, W / 2, H / 2 + 10);
+    ctx.fillText('Press ENTER to restart', W / 2, H / 2 + 40);
+    ctx.textAlign = 'left';
+    return;
+  }
+
+  // pause overlay
+  if (state.paused) {
+    ctx.fillStyle = '#fff';
+    ctx.font = '24px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H / 2);
+  }
+}
+
+let last = 0;
+let acc = 0;
+function loop(t) {
+  requestAnimationFrame(loop);
+  const dt = Math.min((t - last) / 1000, 0.1);
+  last = t;
+  acc += dt;
+  while (acc >= STEP) {
+    update(STEP);
+    acc -= STEP;
+  }
+  draw();
+}
+reset();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

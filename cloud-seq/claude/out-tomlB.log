@@ -1,0 +1,7 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching claude (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+⚠ claude.ai connectors are disabled because ANTHROPIC_API_KEY or another auth source is set and takes precedence over your claude.ai login · Unset it to load your organization's connectors
+[claude-code:unrecognized_model] {"model":"gpt-oss:120b-cloud","query_source":"sdk"}
+All tests now pass successfully.

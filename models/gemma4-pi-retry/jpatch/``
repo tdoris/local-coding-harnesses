@@ -1,0 +1,229 @@
+import json
+import sys
+import copy
+
+def parse_pointer(pointer):
+    if pointer == "":
+        return []
+    if not pointer.startswith("/"):
+        raise ValueError("Malformed JSON Pointer")
+    parts = pointer[1:].split("/")
+    decoded_parts = []
+    for part in parts:
+        part = part.replace("~1", "/").replace("~0", "~")
+        decoded_parts.append(part)
+    return decoded_parts
+
+def get_parent_and_key(doc, parts):
+    if not parts:
+        return None, None
+    curr = doc
+    parent_parts = parts[:-1]
+    target_key = parts[-1]
+    for part in parent_parts:
+        if isinstance(curr, dict):
+            if part in curr:
+                curr = curr[part]
+            else:
+                raise KeyError(f"Path component '{part}' not found")
+        elif isinstance(curr, list):
+            if not part.isdigit() and part != "-":
+                raise ValueError(f"Invalid array index '{part}'")
+            if part == "-":
+                raise KeyError("'-' not valid for navigation")
+            idx = int(str(part))
+            if idx < 0 or idx >= len(curr):
+                raise IndexError(f"Index '{idx}' out of range")
+            curr = curr[idx]
+        else:
+            raise TypeError("Cannot navigate into non-container")
+    if isinstance(curr, dict):
+        return curr, target_key
+    elif isinstance(curr, list):
+        if not target_key.isdigit() and target_key != "-":
+            raise ValueError(f"Invalid array index '{target_key}'")
+        if target_key == "-":
+            return curr, "-"
+        idx = int(str(target_key))
+        if idx < 0 or idx >= len(curr):
+            raise IndexError(f"Index '{idx}' out of range")
+        return curr, idx
+    else:
+        raise TypeError("Parent is not a container")
+
+def get_value_at_pointer(doc, parts):
+    if not parts:
+        return doc
+    curr = doc
+    for part in parts:
+        if isinstance(curr, dict):
+            if part in curr:
+                curr = curr[part]
+            else:
+                raise KeyError(f"Path component '{part}' not at path")
+        elif isinstance(curr, list):
+            if not part.isdigit() and part != "-":
+                raise ValueError(f"Invalid array index '{part}'")
+            if part == "-":
+                raise KeyError("'-' not valid for navigation")
+            idx = int(str(part))
+            if idx < 0 or idx >= len(curr):
+                raise IndexError(f"Index '{idx}' out of range")
+            curr = curr[idx]
+        else:
+            raise TypeError("Cannot navigate into non-container")
+    return curr
+
+def apply_patch(doc, patch):
+    if not isinstance(patch, list):
+        raise ValueError("Patch must be an array")
+    new_doc = copy.deepcopy(doc)
+    for op_obj in patch:
+        if not isinstance(op_obj, dict):
+            raise ValueError("Operation must be an object")
+        if "op" not in op_obj:
+            raise ValueError("Operation missing 'op'")
+        
+        op = op_obj["op"]
+        if op == "add":
+            if "path" not in op_obj: raise ValueError("Missing 'path'")
+            if "value" not in op_obj: raise ValueError("Missing 'value'")
+            path_parts = parse_pointer(op_obj["path"])
+            value = op_obj["value"]
+            if not path_parts:
+                new_doc = value
+            else:
+                parent, key = get_parent_and_key(new_doc, path_parts)
+                if isinstance(parent, dict):
+                    parent[key] = value
+                elif isinstance(parent, list):
+                    if key == "-":
+                        parent.append(value)
+                    else:
+                        idx = int(str(key))
+                        if idx == len(parent):
+                            parent.append(value)
+                        else:
+                            parent.insert(idx, value)
+                else:
+                    raise TypeError("Target parent is not a container")
+        elif op == "remove":
+            if "path" not in op_obj: raise ValueError("Missing 'path'")
+            path_parts = parse_pointer(op_obj["path"])
+            if not path_parts: raise ValueError("Cannot remove root")
+            parent, key = get_parent_and_key(new_doc, path_parts)
+            if isinstance(parent, dict):
+                if key not in parent: raise KeyError("Key not found")
+                del parent[key]
+            elif isinstance(parent, list):
+                if key == "-": raise ValueError("'-' not valid for remove")
+                idx = int(pass_val := str(key)) # wait, I can't use assignment expression like that in all python versions, but it's 3.6+
+                idx = int(key)
+                parent.pop(idx)
+            else: raise TypeError("Target parent is not a container")
+        elif op == "replace":
+            if "path" not in op_obj: raise ValueError("Missing 'path'")
+            if "value" not in op_obj: raise ValueError("Missing 'value'")
+            path_parts = parse_pointer(op_obj["path"])
+            if not path_parts: raise ValueError("Cannot replace root")
+            parent, key = get_parent_and_key(new_doc, path_parts)
+            value = op_obj["value"]
+            if isinstance(parent, dict):
+                if key not in parent: raise KeyError("Key not in dict")
+                parent[key] = value
+            elif isinstance(parent, list):
+                if key == "-": raise ValueError("'-' not valid for replace")
+                idx = int(key)
+                parent[idx] = value
+            else: raise TypeError("Target parent is not a container")
+        elif op == "move":
+            if "from" not in op_obj: raise ValueError("Missing 'from'")
+            if "path" not in op_obj: raise ValueError("Missing 'path'")
+            from_parts = parse_pointer(op_obj["from"])
+            path_parts = parse_pointer(op_obj["path"])
+            # Check if moving into own child
+            # A location is a child of another if the first is a prefix of the second.
+            # But it's more complex with arrays.
+            # For simplicity, let's use the rule: moving from A to B is invalid if A is a descendant of B.
+            # Wait, the rule is: moving a location into one of its own children.
+            # If 'from' is a prefix of 'path', then 'path' is in the subtree of 'from'.
+            # So if from_parts is a prefix of path_parts (and not equal), it's invalid.
+            if len(from_parts) < len(path_points) and from_parts == path_parts[:len(from_parts)]:
+                # Actually, it's more like: if from_parts is a prefix of path_parts, 
+                # then path_parts is a descendant of from_parts.
+                pass
+            # Let's re-evaluate: moving from /a to /a/b/c is invalid.
+            # In this case, from_parts = ['a'], path_parts = ['a', 'b', 'c'].
+            # 'from_parts' is a prefix of 'path_parts'.
+            if len(from_parts) < len(path_parts) and from_parts == path_parts[:len(from_parts)]:
+                 raise ValueError("Moving a location into one of its own children")
+
+            val = get_value_at_pointer(new_doc, from_parts)
+            # Now perform remove and add.
+            # But we must be careful about the order. If we remove first, 'path' might change.
+            # RFC 6902 says: "move is equivalent to a remove and an add"
+            # Let's do remove first.
+            
+            # To implement move correctly, we need to handle the case where 'from' and 'path' are both in the same operation.
+            # We should remove 'from' then add to 'path'.
+            # But wait, if we remove first, the 'path' might be affected.
+            # Actually, if we use a copy, we can just perform the operations.
+            # However, the 'from' must be removed.
+            
+            # Let's use a more robust way:
+            # 1. Get the value at 'from'
+            # 2. Remove 'from'
+            # 3. Add value at 'path'
+            
+            # We need to be careful about the 'from' removal.
+            # Let's do the remove part.
+            # We'll implement this after I fix the other ops.
+            pass
+        elif op == "copy":
+            # similar to move but without remove
+            pass
+        elif op == "test":
+            if "path" not in op_obj: raise ValueError("Missing 'path'")
+            if "value" not in op_obj: raise ValueError("Missing 'value'")
+            path_parts = parse_pointer(op_obj["path"])
+            expected_val = op_obj["value"]
+            actual_val = get_value_at_pointer(new_doc, path_parts)
+            # Use the strict equality from the test file logic if possible, 
+            # but the requirement says JSON equality.
+            # JSON equality: objects irrespective of key order, arrays in order, 
+            # numbers by numeric value (1 == 1.0), strings/booleans/null by exact type.
+            # Python's == for dicts/lists/etc. mostly does this, except for numbers (1 == 1.0).
+            # Let's check the requirement: "numbers by numeric value (1 == 1.0)".
+            # Python's 1 == 1.0 is True.
+            if not (actual_val == expected_val):
+                 # Special check for types in some cases? 
+                 # "strings/booleans/null by exact type"
+                 # In Python, 1 == 1.0 is True, but we need to be careful.
+                 # Actually, the requirement says: "numbers by numeric value (1 == 1.0), 
+                 # strings/booleans/null by exact type".
+                 # Python: True == 1 is True. This might be a problem.
+                 # Let's check: 
+                 # isinstance(True, bool) is True, isinstance(1, bool) is False.
+                 # So we should check types for bool, str, None.
+                 if type(actual_val) is not type(expected_val):
+                     if not (isinstance(actual_val, (int, float)) and isinstance(expected_val, (int, float))):
+                         raise ValueError("Test failed: type mismatch")
+                 if not (actual_val == expected_val):
+                     raise ValueError("Test failed: value mismatch")
+            # Wait, the requirement is "strings/booleans/null by exact type".
+            # So if actual is 1 and expected is True, it should fail.
+            # Python's 1 == True is True.
+            # So we must check types.
+            if type(actual_val) is not type(expected_val):
+                # If they are both numbers, we allow 1 == 1.0
+                if isinstance(actual_val, (int, float)) and isinstance(expected_val, (int, float)):
+                    if not (actual_val == expected_val):
+                        raise ValueError("Test failed: value mismatch")
+                else:
+                    raise ValueError("Test failed: type mismatch")
+            elif not (actual_val == expected_val):
+                 raise ValueError("Test failed: value mismatch")
+
+        else:
+            raise ValueError(f"Unknown operation: {op}")
+    return new_doc

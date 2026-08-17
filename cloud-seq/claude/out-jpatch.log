@@ -1,0 +1,16 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching claude (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+⚠ claude.ai connectors are disabled because ANTHROPIC_API_KEY or another auth source is set and takes precedence over your claude.ai login · Unset it to load your organization's connectors
+[claude-code:unrecognized_model] {"model":"gpt-oss:120b-cloud","query_source":"generate_session_title"}
+Implemented a complete JSON Patch utility (`jpatch.py`) adhering to RFC 6902 and RFC 6901. Key features:
+
+- Robust argument handling, JSON loading, and atomic patch application.
+- Full support for `add`, `remove`, `replace`, `move`, `copy`, and `test` operations with detailed error checking.
+- Proper JSON Pointer decoding, canonical array index validation, and prevention of invalid moves.
+- Preservation of object key order throughout modifications.
+- Custom strict equality for output verification and a separate equality function (`json_eq`) for `test` operations, ignoring key order.
+- Comprehensive error handling and appropriate exit codes.
+
+All unit tests now pass (`37 passed`).

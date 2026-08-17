@@ -1,0 +1,1 @@
+Bug report from a play-test of invaders.html: after clearing all invaders, "WAVE 2" appears and then the game hangs on that banner forever — the next wave never starts. Find the cause and fix it with a minimal edit; don't refactor anything else.

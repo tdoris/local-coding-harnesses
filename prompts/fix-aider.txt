@@ -1,0 +1,1 @@
+Bug report from a play-test of invaders.html: the invaders come straight down instead of marching side to side and dropping one row at the edges — the formation seems to reverse and drop on every step. Find the cause and fix it with a minimal edit (check the formation width against the canvas, the edge margins and the step size); don't refactor anything else.

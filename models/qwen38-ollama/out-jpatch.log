@@ -1,0 +1,11 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All 37 tests pass. `jpatch.py` is complete:
+
+- **Pointer resolution** (`parse_pointer`/`locate`): RFC 6901 with `~1`→`/` decoded before `~0`→`~`, requires `""` or a leading `/`, walks to the parent container, validates canonical array indices (no leading zeros/sign) and existence as required per operation.
+- **Operations**: `add` (insert/set/append, `-` or index==len appends, index>len errors, existing member replaced in place preserving order), `remove`, `replace`, `test` (JSON equality: key-order-insensitive objects, ordered arrays, `1 == 1.0` but `"10" != 10`, bool/str/null type-strict), `move` (rejects moving into own children, then remove+add of the live value), `copy` (deep copy).
+- **Errors**: any failure raises `PatchError`, message to stderr, nothing on stdout, exit 1; unknown ops and missing `op`/`path`/`value`/`from` are all rejected; extra members ignored.
+- **Output**: key order preserved (`json` module keeps insertion order), printed as JSON on success with exit 0.

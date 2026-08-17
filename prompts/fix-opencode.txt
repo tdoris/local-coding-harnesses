@@ -1,0 +1,1 @@
+Feedback from a play-test of invaders.html: the player's ship is far too big. Draw the cannon at about 3 canvas pixels per sprite pixel (roughly 40px wide, 15px tall) and adjust its hit box, bullet spawn point and clamping accordingly. Minimal edit; don't change anything else.

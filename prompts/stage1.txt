@@ -1,0 +1,15 @@
+We're building Space Invaders as a single self-contained HTML file: invaders.html in this directory.
+Rules for the whole project:
+- One file, vanilla JS, HTML5 canvas, no libraries, no build step, no external assets. Sprites are drawn with fillRect (pixel-art from small 0/1 arrays), sound optional and last.
+- Keep the code compact and plain: one requestAnimationFrame game loop, a `state` object, functions update(dt) and draw(). No class hierarchy, no modules.
+- Build it in stages. Do only the stage asked for. Do not explain the code at length; just write it.
+- After the file exists, make changes by editing specific functions; do not rewrite the whole file unless asked.
+
+Stage 1: create invaders.html with:
+- a 480x560 canvas centered on a black page, crisp pixel scaling (imageSmoothingEnabled=false, CSS image-rendering: pixelated),
+- a game loop with fixed-timestep update(dt) and draw(),
+- keyboard input (Left/Right arrows or A/D to move, Space to fire, P to pause, Enter to start/restart) tracked in a `keys` object,
+- the game starts immediately in a playing state (no start screen yet),
+- the player cannon drawn from a pixel-art array at the bottom, moving left/right clamped to the canvas,
+- one player bullet at a time (Space fires if none active), moving up and disappearing off the top.
+Nothing else yet. When done, reply with one line saying what to test.

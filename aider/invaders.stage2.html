@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+</style>
+</head>
+<body>
+<canvas id="c" width="480" height="560"></canvas>
+<script>
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const W = 480, H = 560;
+const PLAYER_SPEED = 200;
+const BULLET_SPEED = 400;
+const STEP = 1 / 60;
+
+const keys = {};
+addEventListener('keydown', e => { keys[e.code] = true; if (['Space','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault(); });
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+const playerSprite = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1],
+];
+const PS = 4; // pixel scale
+
+// Invader sprites (11x8, 2 frames each)
+const squid = [
+  [[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,0,0,1,1,0,0,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,0,1,0,1,1,1,0,1,0,0],[0,1,0,1,0,0,0,1,0,1,0],[1,0,1,0,0,0,0,0,1,0,1]],
+  [[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,0,0,1,1,0,0,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,0,0,0,0,0,0,1,1],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+const crab = [
+  [[0,0,1,0,0,0,0,0,1,0,0],[0,0,0,1,0,0,0,1,0,0,0],[0,0,1,1,1,1,1,1,1,0,0],[0,1,1,0,1,1,1,0,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,0,1,1,1,1,1,1,1,0,1],[1,0,1,0,0,0,0,0,1,0,1],[0,0,0,1,1,0,1,1,0,0,0]],
+  [[0,0,1,0,0,0,0,0,1,0,0],[1,0,0,1,0,0,0,1,0,0,1],[1,0,1,1,1,1,1,1,1,0,1],[1,1,1,0,1,1,1,0,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,0],[0,0,1,0,0,0,0,0,1,0,0],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+const octopus = [
+  [[0,0,0,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,0,1,1,1,0,1,1,1,0,0],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,1,1,0,1,1,0,1,1],[1,1,0,0,0,0,0,0,0,1,1]],
+  [[0,0,0,1,1,1,1,1,0,0,0],[0,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[0,1,1,0,1,1,1,0,1,1,0],[1,1,0,1,1,0,1,1,0,1,1],[1,0,1,0,0,0,0,0,1,0,1],[0,1,0,0,0,0,0,0,0,1,0]]
+];
+
+const INV_SCALE = 3;
+const INV_SPX = 40; // horizontal spacing
+const INV_SPY = 35; // vertical spacing
+const INV_COLS = 11;
+const INV_ROWS = 5;
+const INV_STEP = 20; // px per step
+const INV_START_INTERVAL = 0.8;
+const INV_MIN_INTERVAL = 0.1;
+const INV_SPEEDUP = 0.02;
+
+const state = {
+  playing: true,
+  paused: false,
+  playerX: W / 2,
+  bullet: null, // {x, y}
+  // formation
+  invaders: [],   // [row][col] = {alive, type}
+  invX: 20,
+  invY: 60,
+  invDir: 1,
+  invTimer: 0,
+  invInterval: INV_START_INTERVAL,
+  invFrame: 0,
+  score: 0,
+};
+
+function makeFormation() {
+  const types = ['squid','crab','crab','octopus','octopus'];
+  const grid = [];
+  for (let r = 0; r < INV_ROWS; r++) {
+    grid[r] = [];
+    for (let c = 0; c < INV_COLS; c++) {
+      grid[r][c] = { alive: true, type: types[r] };
+    }
+  }
+  return grid;
+}
+
+function reset() {
+  state.playing = true;
+  state.paused = false;
+  state.playerX = W / 2;
+  state.bullet = null;
+  state.invaders = makeFormation();
+  state.invX = 20;
+  state.invY = 60;
+  state.invDir = 1;
+  state.invTimer = 0;
+  state.invInterval = INV_START_INTERVAL;
+  state.invFrame = 0;
+  state.score = 0;
+}
+
+function update(dt) {
+  if (!state.playing || state.paused) return;
+
+  // player movement
+  let dx = 0;
+  if (keys['ArrowLeft'] || keys['KeyA']) dx -= 1;
+  if (keys['ArrowRight'] || keys['KeyD']) dx += 1;
+  state.playerX += dx * PLAYER_SPEED * dt;
+  state.playerX = Math.max(20, Math.min(W - 20, state.playerX));
+
+  // fire
+  if (keys['Space'] && !state.bullet) {
+    state.bullet = { x: state.playerX, y: H - 40 };
+  }
+
+  // bullet
+  if (state.bullet) {
+    state.bullet.y -= BULLET_SPEED * dt;
+    if (state.bullet.y < -10) state.bullet = null;
+  }
+
+  // formation step
+  state.invTimer += dt;
+  if (state.invTimer >= state.invInterval) {
+    state.invTimer = 0;
+    state.invFrame ^= 1;
+    state.invX += INV_STEP * state.invDir;
+
+    // check edge: find live invaders extent
+    let minX = Infinity, maxX = -Infinity;
+    for (let r = 0; r < INV_ROWS; r++) {
+      for (let c = 0; c < INV_COLS; c++) {
+        if (state.invaders[r][c].alive) {
+          const ix = state.invX + c * INV_SPX;
+          if (ix < minX) minX = ix;
+          if (ix + 11 * INV_SCALE > maxX) maxX = ix + 11 * INV_SCALE;
+        }
+      }
+    }
+    if (minX < 10 || maxX > W - 10) {
+      state.invDir *= -1;
+      state.invY += INV_SPY;
+      state.invX += INV_STEP * state.invDir; // undo and re-step
+    }
+  }
+
+  // bullet vs invader collision
+  if (state.bullet) {
+    const bx = state.bullet.x, by = state.bullet.y;
+    for (let r = 0; r < INV_ROWS; r++) {
+      for (let c = 0; c < INV_COLS; c++) {
+        const inv = state.invaders[r][c];
+        if (!inv.alive) continue;
+        const ix = state.invX + c * INV_SPX;
+        const iy = state.invY + r * INV_SPY;
+        const iw = 11 * INV_SCALE, ih = 8 * INV_SCALE;
+        if (bx + 2 > ix && bx - 1 < ix + iw && by + 8 > iy && by < iy + ih) {
+          inv.alive = false;
+          state.bullet = null;
+          const pts = inv.type === 'squid' ? 30 : inv.type === 'crab' ? 20 : 10;
+          state.score += pts;
+          state.invInterval = Math.max(INV_MIN_INTERVAL, state.invInterval - INV_SPEEDUP);
+          break;
+        }
+      }
+      if (!state.bullet) break;
+    }
+  }
+
+  // pause
+  if (keys['KeyP']) {
+    state.paused = !state.paused;
+    keys['KeyP'] = false;
+  }
+
+  // restart
+  if (keys['Enter']) {
+    reset();
+    keys['Enter'] = false;
+  }
+}
+
+function drawSprite(sprite, x, y, scale, color) {
+  ctx.fillStyle = color;
+  for (let r = 0; r < sprite.length; r++) {
+    for (let c = 0; c < sprite[r].length; c++) {
+      if (sprite[r][c]) {
+        ctx.fillRect(x + c * scale, y + r * scale, scale, scale);
+      }
+    }
+  }
+}
+
+function getSprite(type, frame) {
+  if (type === 'squid') return squid[frame];
+  if (type === 'crab') return crab[frame];
+  return octopus[frame];
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // invaders
+  for (let r = 0; r < INV_ROWS; r++) {
+    for (let c = 0; c < INV_COLS; c++) {
+      const inv = state.invaders[r][c];
+      if (!inv.alive) continue;
+      const ix = state.invX + c * INV_SPX;
+      const iy = state.invY + r * INV_SPY;
+      const color = inv.type === 'squid' ? '#f44' : inv.type === 'crab' ? '#4f4' : '#44f';
+      drawSprite(getSprite(inv.type, state.invFrame), ix, iy, INV_SCALE, color);
+    }
+  }
+
+  // score
+  ctx.fillStyle = '#fff';
+  ctx.font = '14px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('SCORE ' + state.score, 10, 20);
+
+  // player
+  const pw = playerSprite[0].length * PS;
+  const ph = playerSprite.length * PS;
+  const px = state.playerX - pw / 2;
+  const py = H - 30 - ph;
+  drawSprite(playerSprite, px, py, PS, '#4f4');
+
+  // bullet
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(state.bullet.x - 1, state.bullet.y, 3, 8);
+  }
+
+  // pause overlay
+  if (state.paused) {
+    ctx.fillStyle = '#fff';
+    ctx.font = '24px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', W / 2, H / 2);
+  }
+}
+
+let last = 0;
+let acc = 0;
+function loop(t) {
+  requestAnimationFrame(loop);
+  const dt = Math.min((t - last) / 1000, 0.1);
+  last = t;
+  acc += dt;
+  while (acc >= STEP) {
+    update(STEP);
+    acc -= STEP;
+  }
+  draw();
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

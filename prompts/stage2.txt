@@ -1,0 +1,5 @@
+Stage 2: add the invader formation to invaders.html.
+- 5 rows x 11 columns, three sprite types by row (top row squid, middle two crab, bottom two octopus), each with 2 animation frames from pixel arrays.
+- The formation moves as a block: steps sideways on a timer, and when any live invader touches an edge the whole block drops one row and reverses. The step interval shrinks as invaders die (classic speed-up), and the animation frame toggles on each step.
+- Player bullet vs invader collision: invader dies, score += 10/20/30 by type, show score top-left.
+Edit the existing file (specific functions), don't rewrite it. When done, reply with one line saying what to test.

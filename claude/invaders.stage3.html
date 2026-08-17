@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;display:flex;align-items:center;justify-content:center}
+  canvas{image-rendering:pixelated;background:#000}
+</style>
+</head>
+<body>
+<canvas id="c" width="480" height="560"></canvas>
+<script>
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+ctx.imageSmoothingEnabled=false;
+const W=480,H=560,STEP=1/60;
+
+// player cannon sprite (13x7), pixel scale
+const SPR=3;
+const CANNON=[
+  "0000001000000",
+  "0000001000000",
+  "0000001000000",
+  "0011111111110",
+  "0111111111110",
+  "1111111111111",
+  "1111111111111"
+].map(r=>r.split('').map(Number));
+const CANNON_W=13*SPR;
+
+// invader sprites (2px scale), two animation frames each
+const INV_S=2,ROWS=5,COLS=11,CW=28,RH=24;
+const mkf=f=>f.map(r=>r.split('').map(Number));
+const SQUID=[
+  ["00111100","01111110","11111111","11111111","00100100","01011010","10100101","01000010"],
+  ["00111100","01111110","11111111","11111111","01100110","10111010","01000100","00111000"]
+].map(mkf);
+const CRAB=[
+  ["00100000100","00010001000","00111111100","01101110110","11111111111","11111111111","10111111101","10100000101"],
+  ["00100000100","10010001001","10111111101","11101110111","11111111111","01111111110","00111111100","01100000110"]
+].map(mkf);
+const OCTO=[
+  ["001111111100","011111111110","111111111111","111111111111","110111111011","111110011111","001001100100","010110011010"],
+  ["001111111100","011111111110","111111111111","111111111111","110111111011","111110011111","001110011100","011001100110"]
+].map(mkf);
+const invT=(v,col,s)=>({v,col,s,w:s[0][0].length*INV_S});
+const TYPES={squid:invT(30,'#5cf',SQUID),crab:invT(20,'#f85',CRAB),octopus:invT(10,'#f5f',OCTO)};
+const ROWTYPE=['squid','crab','crab','octopus','octopus'];
+const BOMB=[["010","111","010","111","010","111"]].map(mkf);
+
+const keys={};
+addEventListener('keydown',e=>{
+  keys[e.code]=true;
+  if(e.code==='KeyP'){state.mode=state.mode==='playing'?'paused':'playing';}
+  if(e.code==='Enter')reset();
+  if(['Space','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+});
+addEventListener('keyup',e=>{keys[e.code]=false;});
+
+const state={mode:'playing',px:W/2,bullet:null,score:0,inv:[],alive:0,fmx:86,fmy:64,fdir:1,ftimer:0.8,anim:0,lives:3,bombs:[],bt:1.5,freeze:0,dead:false,shields:[]};
+const PY=H-7*SPR-10;
+
+function reset(){
+  state.px=W/2;
+  state.bullet=null;
+  state.lives=3;
+  state.bombs=[];
+  state.bt=1.5;
+  state.freeze=0;
+  state.dead=false;
+  buildFormation();
+  buildShields();
+  state.mode='playing';
+}
+
+function buildFormation(){
+  state.inv=[];
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)state.inv.push({r,c,alive:true});
+  state.alive=ROWS*COLS;
+  state.fmx=(W-COLS*CW)/2;
+  state.fmy=64;
+  state.fdir=1;
+  state.ftimer=0.8;
+  state.anim=0;
+  state.score=0;
+}
+
+// destructible shields: 4 grids of pixel blocks above the player
+const SHY=440,BS=4;
+const SHMASK=[
+  "0111111111110",
+  "1111111111111",
+  "1111111111111",
+  "1111111111111",
+  "1110000000111",
+  "1100000000011",
+  "1100000000011",
+  "1000000000001"
+];
+function buildShields(){
+  state.shields=[];
+  for(let i=0;i<4;i++){
+    const x=60+i*120-26,cells=[];
+    for(let r=0;r<SHMASK.length;r++)for(let c=0;c<13;c++)
+      if(SHMASK[r][c]==='1')cells.push({x:x+c*BS,y:SHY+r*BS,alive:true});
+    state.shields.push({cells});
+  }
+}
+function shieldHit(cx,cy,hx,hy,r){
+  for(const sh of state.shields)
+    for(const cl of sh.cells){
+      if(cl.alive&&Math.abs(cx-cl.x-2)<hx+2&&Math.abs(cy-cl.y-2)<hy+2){
+        for(const c2 of sh.cells)
+          if(c2.alive&&Math.abs(c2.x+2-cx)<r&&Math.abs(c2.y+2-cy)<r)c2.alive=false;
+        return true;
+      }
+    }
+  return false;
+}
+
+function update(dt){
+  if(state.mode!=='playing')return;
+  if(state.freeze>0){
+    state.freeze-=dt;
+    if(state.freeze<=0&&state.lives>0){state.px=W/2;state.dead=false;}
+    return;
+  }
+  const sp=240;
+  if(keys.ArrowLeft||keys.KeyA)state.px-=sp*dt;
+  if(keys.ArrowRight||keys.KeyD)state.px+=sp*dt;
+  const hw=CANNON_W/2;
+  state.px=Math.max(hw,Math.min(W-hw,state.px));
+  if(keys.Space&&!state.bullet)state.bullet={x:state.px,y:PY-8};
+  if(state.bullet){
+    state.bullet.y-=420*dt;
+    if(shieldHit(state.bullet.x,state.bullet.y+4,1.5,4,12))state.bullet=null;
+  }
+  // formation: step on a timer, drop+reverse at the edges
+  if(state.alive>0){
+    state.ftimer-=dt;
+    if(state.ftimer<=0){
+      state.ftimer+=0.06+0.68*Math.pow(state.alive/55,1.2);
+      state.anim^=1;
+      state.fmx+=state.fdir*10;
+      let lo=1e9,hi=-1e9;
+      for(const ivd of state.inv)if(ivd.alive){
+        const T=TYPES[ROWTYPE[ivd.r]];
+        const x=state.fmx+ivd.c*CW+(CW-T.w)/2;
+        if(x<lo)lo=x;
+        if(x+T.w>hi)hi=x+T.w;
+      }
+      if(lo<0||hi>W){
+        state.fmy+=RH;
+        state.fdir*=-1;
+        state.fmx+=lo<0?-lo:W-hi;
+      }
+    }
+  }
+  if(state.fmy+(ROWS-1)*RH+8*INV_S>=PY)state.mode='gameover';
+  // player bullet vs invader
+  if(state.bullet&&state.alive>0){
+    const b=state.bullet;
+    for(const ivd of state.inv){
+      if(!ivd.alive)continue;
+      const T=TYPES[ROWTYPE[ivd.r]];
+      const x=state.fmx+ivd.c*CW+(CW-T.w)/2,y=state.fmy+ivd.r*RH;
+      if(b.x+1>x&&b.x-1<x+T.w&&b.y+8>y&&b.y<y+8*INV_S){
+        ivd.alive=false;state.alive--;state.score+=T.v;state.bullet=null;
+        break;
+      }
+    }
+  }
+  if(state.bullet&&state.bullet.y<-8)state.bullet=null;
+  // invader bombs
+  if(state.alive>0){
+    state.bt-=dt;
+    if(state.bt<=0&&state.bombs.length<3){
+      state.bt+=0.4+0.6*state.alive/55;
+      const cols=[];
+      for(const ivd of state.inv)if(ivd.alive&&cols.indexOf(ivd.c)<0)cols.push(ivd.c);
+      if(cols.length){
+        const c=cols[(Math.random()*cols.length)|0];
+        let br=-1;
+        for(const ivd of state.inv)if(ivd.alive&&ivd.c===c&&ivd.r>br)br=ivd.r;
+        const T=TYPES[ROWTYPE[br]];
+        state.bombs.push({x:state.fmx+c*CW+(CW-T.w)/2+T.w/2,y:state.fmy+br*RH+8*INV_S});
+      }
+    }
+  }
+  for(let i=state.bombs.length-1;i>=0;i--){
+    const b=state.bombs[i];
+    b.y+=240*dt;
+    if(b.y>H+10){state.bombs.splice(i,1);continue;}
+    if(shieldHit(b.x,b.y+6,3,6,14)){state.bombs.splice(i,1);continue;}
+    if(!state.dead&&Math.abs(b.x-state.px)<CANNON_W/2+3&&b.y+12>PY&&b.y<PY+7*SPR){
+      state.bombs.splice(i,1);
+      state.lives--;
+      if(state.lives<=0){state.mode='gameover';state.bombs=[];}
+      else{state.freeze=0.8;state.dead=true;}
+      return;
+    }
+  }
+}
+
+function drawSprite(spr,x,y,color,s=SPR){
+  ctx.fillStyle=color;
+  for(let r=0;r<spr.length;r++)
+    for(let c=0;c<spr[r].length;c++)
+      if(spr[r][c])ctx.fillRect(Math.round(x+c*s),Math.round(y+r*s),s,s);
+}
+
+function draw(){
+  ctx.fillStyle='#000';
+  ctx.fillRect(0,0,W,H);
+  if(state.mode==='paused'){
+    ctx.fillStyle='#fff';
+    ctx.font='16px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('PAUSED',W/2,H/2);
+    return;
+  }
+  if(!state.dead)drawSprite(CANNON,state.px-CANNON_W/2,PY,'#4f8');
+  if(state.bullet){
+    ctx.fillStyle='#fff';
+    ctx.fillRect(Math.round(state.bullet.x-1),Math.round(state.bullet.y),3,8);
+  }
+  for(const b of state.bombs)drawSprite(BOMB[0],Math.round(b.x-3),Math.round(b.y),'#f55',2);
+  ctx.fillStyle='#4f8';
+  for(const sh of state.shields)for(const cl of sh.cells)if(cl.alive)ctx.fillRect(cl.x,cl.y,BS,BS);
+  for(const ivd of state.inv){
+    if(!ivd.alive)continue;
+    const T=TYPES[ROWTYPE[ivd.r]];
+    drawSprite(T.s[state.anim],state.fmx+ivd.c*CW+(CW-T.w)/2,state.fmy+ivd.r*RH,T.col,INV_S);
+  }
+  ctx.fillStyle='#fff';
+  ctx.font='14px monospace';
+  ctx.textAlign='left';
+  ctx.fillText('SCORE '+state.score,10,20);
+  for(let i=0;i<state.lives;i++)drawSprite(CANNON,W-13*2-i*30,4,'#4f8',2);
+  if(state.mode==='gameover'){
+    ctx.fillStyle='#fff';ctx.font='24px monospace';ctx.textAlign='center';
+    ctx.fillText('GAME OVER',W/2,H/2-10);
+    ctx.font='14px monospace';
+    ctx.fillText('SCORE '+state.score,W/2,H/2+14);
+    ctx.fillText('PRESS ENTER TO RESTART',W/2,H/2+36);
+  }
+}
+
+let last=performance.now(),acc=0;
+function frame(now){
+  requestAnimationFrame(frame);
+  acc+=Math.min((now-last)/1000,0.25);
+  last=now;
+  while(acc>=STEP){update(STEP);acc-=STEP;}
+  draw();
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

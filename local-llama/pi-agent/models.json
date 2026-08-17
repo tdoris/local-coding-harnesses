@@ -1,0 +1,29 @@
+{
+ "providers": {
+  "llama": {
+   "api": "openai-completions",
+   "apiKey": "none",
+   "baseUrl": "http://127.0.0.1:11436/v1",
+   "compat": {
+    "supportsDeveloperRole": false,
+    "supportsReasoningEffort": false
+   },
+   "models": [
+    {
+     "id": "qwen3.8",
+     "name": "qwen3.8 (llama-server)",
+     "reasoning": true,
+     "input": [
+      "text"
+     ],
+     "contextWindow": 81920,
+     "maxTokens": 32000,
+     "samplingParams": {
+      "temperature": 1.0,
+      "top_p": 0.95
+     }
+    }
+   ]
+  }
+ }
+}

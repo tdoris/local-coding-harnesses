@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { display: flex; align-items: center; justify-content: center; }
+  canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
+</style>
+</head>
+<body>
+<canvas id="c" width="480" height="560"></canvas>
+<script>
+const cvs = document.getElementById('c');
+const ctx = cvs.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const W = cvs.width, H = cvs.height;
+
+// ---- pixel art (1 = filled) ----
+const CANNON = [
+  [0,0,1,0,0],
+  [0,0,1,0,0],
+  [0,1,1,1,0],
+  [1,1,1,1,1],
+  [1,1,1,1,1],
+];
+const CANNON_SCALE = 6;
+
+const SQUID_A = [
+  [0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,0,0,1,1,1],[1,1,1,1,1,1,1,1],
+  [0,0,1,0,0,1,0,0],[0,1,0,1,1,0,1,0],[1,1,0,0,0,0,1,1],[0,1,1,0,0,1,1,0]];
+const SQUID_B = [
+  [0,0,1,1,1,1,0,0],[0,1,1,1,1,1,1,0],[1,1,1,0,0,1,1,1],[1,1,1,1,1,1,1,1],
+  [0,1,0,1,1,0,1,0],[1,0,1,0,0,1,0,1],[1,0,0,1,1,0,0,1],[0,0,1,0,0,1,0,0]];
+const CRAB_A = [
+  [0,1,0,0,0,0,1,0],[0,0,1,0,0,1,0,0],[0,1,1,1,1,1,1,0],[1,1,0,1,1,0,1,1],
+  [1,1,1,1,1,1,1,1],[1,0,1,1,1,1,0,1],[1,0,1,0,0,1,0,1],[0,0,0,1,1,0,0,0]];
+const CRAB_B = [
+  [0,1,0,0,0,0,1,0],[1,0,1,0,0,1,0,1],[1,1,1,1,1,1,1,1],[1,1,0,1,1,0,1,1],
+  [1,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,0],[0,1,0,0,0,0,1,0],[1,0,0,0,0,0,0,1]];
+const OCTO_A = [
+  [1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,0,0,1,1,0,0,1],
+  [1,1,1,1,1,1,1,1],[0,0,1,0,0,1,0,0],[1,0,1,1,1,1,0,1],[1,0,0,0,0,0,0,1]];
+const OCTO_B = [
+  [1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,0,0,1,1,0,0,1],
+  [1,1,1,1,1,1,1,1],[0,0,1,0,0,1,0,0],[0,1,1,0,0,1,1,0],[0,1,0,0,0,0,1,0]];
+const INV_SC = 4;
+const INV = {
+  squid:  { frames: [SQUID_A, SQUID_B], score: 30 },
+  crab:   { frames: [CRAB_A,  CRAB_B ], score: 20 },
+  octopus:{ frames: [OCTO_A,  OCTO_B ], score: 10 },
+};
+
+// ---- state ----
+const state = {
+  paused: false,
+  player: { x: W / 2, speed: 280, w: CANNON.length * CANNON_SCALE },
+  bullet: null, // { x, y }
+  score: 0,
+  fx: 140, fy: 100,           // formation block offset
+  dir: 1,
+  invTimer: 0,
+  invFrame: 0,
+  invaders: [],               // { x, y, type, alive }
+};
+
+function makeInvaders() {
+  const s = state;
+  s.invaders.length = 0;
+  s.fx = 140; s.fy = 100; s.dir = 1; s.invTimer = 0; s.invFrame = 0;
+  const COLS = 11, SP = 36;
+  for (let r = 0; r < 5; r++) {
+    const type = r === 0 ? 'squid' : r < 3 ? 'crab' : 'octopus';
+    for (let c = 0; c < COLS; c++)
+      s.invaders.push({ x: 24 + c * SP, y: 24 + r * SP, type, alive: true });
+  }
+}
+makeInvaders();
+
+function aliveCount() {
+  let n = 0;
+  for (const v of state.invaders) if (v.alive) n++;
+  return n;
+}
+
+// ---- input ----
+const keys = {};
+addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if (['ArrowLeft','ArrowRight','Space'].includes(e.code)) e.preventDefault();
+});
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+function inputLeft()  { return keys['ArrowLeft']  || keys['KeyA']; }
+function inputRight() { return keys['ArrowRight'] || keys['KeyD']; }
+
+// ---- update (one fixed-timestep tick) ----
+function update(dt) {
+  const p = state.player;
+  let dx = 0;
+  if (inputLeft())  dx -= 1;
+  if (inputRight()) dx += 1;
+  p.x += dx * p.speed * dt;
+  const half = p.w / 2;
+  p.x = Math.max(half, Math.min(W - half, p.x));
+
+  if (keys['Space'] && !state.bullet) {
+    state.bullet = { x: p.x, y: H - 70 };
+  }
+  const b = state.bullet;
+  if (b) {
+    b.y -= 480 * dt;
+    if (b.y < -8) state.bullet = null;
+  }
+
+  // ---- invader formation ----
+  const s = state, alive = aliveCount();
+  if (alive) {
+    s.invTimer += dt;
+    const interval = 0.12 + Math.pow(alive / 55, 2) * 0.5;
+    if (s.invTimer >= interval) {
+      s.invTimer = 0;
+      s.invFrame ^= 1;
+      const size = 8 * INV_SC, STEP_X = 12;
+      const dx = s.dir * STEP_X;
+      let minX = 1e9, maxX = -1e9;
+      for (const v of s.invaders) if (v.alive) {
+        const nx = v.x + dx;
+        if (nx < minX) minX = nx;
+        if (nx > maxX) maxX = nx;
+      }
+      if (minX < 8 || maxX + size > W - 8) { s.dir *= -1; s.fy += 24; }
+      else s.fx += dx;
+    }
+
+    // bullet vs invader
+    if (state.bullet) {
+      const bx = state.bullet.x, by = state.bullet.y;
+      outer: for (const v of s.invaders) {
+        if (!v.alive) continue;
+        const vx = s.fx + v.x, vy = s.fy + v.y;
+        if (bx > vx - 3 && bx < vx + size + 3 && by > vy - 3 && by < vy + size + 3) {
+          v.alive = false;
+          s.score += INV[v.type].score;
+          state.bullet = null;
+          break outer;
+        }
+      }
+    }
+  }
+}
+
+// ---- draw ----
+function drawSprite(arr, x, y, scale, color) {
+  ctx.fillStyle = color;
+  for (let r = 0; r < arr.length; r++)
+    for (let c = 0; c < arr[r].length; c++)
+      if (arr[r][c]) ctx.fillRect(x + c * scale, y + r * scale, scale, scale);
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  const p = state.player;
+  const w = p.w, h = CANNON.length * CANNON_SCALE;
+  drawSprite(CANNON, p.x - w / 2, H - h - 20, CANNON_SCALE, '#4f4');
+
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(state.bullet.x - 1, state.bullet.y, 3, 10);
+  }
+
+  const size = 8 * INV_SC;
+  for (const v of state.invaders) {
+    if (!v.alive) continue;
+    const frames = INV[v.type].frames;
+    drawSprite(frames[state.invFrame], state.fx + v.x, state.fy + v.y, INV_SC, '#cfcfcf');
+  }
+
+  ctx.fillStyle = '#cfcfcf';
+  ctx.font = '12px monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('SCORE ' + String(state.score).padStart(4, '0'), 8, 16);
+}
+
+// ---- fixed-timestep loop ----
+const STEP = 1 / 120;
+let last = performance.now(), acc = 0;
+
+function frame(now) {
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  if (!state.paused) {
+    acc += dt;
+    while (acc >= STEP) { update(STEP); acc -= STEP; }
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

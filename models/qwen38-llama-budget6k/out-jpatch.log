@@ -1,0 +1,14 @@
+All edge cases behave per spec. `jpatch.py` is complete at `/home/jim/repos/scratch/harness-test/models/qwen38-llama-budget6k/jpatch/jpatch.py` and the full acceptance suite passes (37/37, `OK`).
+
+**Implementation notes:**
+
+- **Pointer (RFC 6901):** `locate()` splits on `/`, decodes each token with `~1`→`/` first, then `~0`→`~` (so `~01`→`~1`), and walks intermediate tokens requiring them to resolve. Returns `(parent, last_token)` with `parent=None` for the `""` root pointer; existence of the final target is checked by the caller, since `add` allows new targets.
+- **Array indices:** validated against `^(0|[1-9][0-9]*)$` (canonical decimal, no sign/leading zeros); `-` is accepted only as the final token of an `add` target.
+- **Ops:**
+  - `add` — appends/replaces in dicts (new keys keep insertion order), inserts/appends in arrays (index ≤ length, or `-`); `""` replaces the whole document.
+  - `remove`/`replace` — require the target to exist (`replace ""` replaces the root).
+  - `test` — `json_eq` implements RFC 6902 equality: dict order-insensitive, arrays order-sensitive, numbers by value (`1 == 1.0`), bool/string/null type-strict (bool checked before numeric so `true != 1`).
+  - `move` — verifies `from` exists, rejects `path` == `from` or a descendant (`path.startswith(frm + "/")`), then remove-then-add with a deep copy of the value.
+  - `copy` — deep-copies the value at `from`, then `add`s.
+  - Unrecognized op members ignored; unknown ops, non-object ops, and missing required members (`op`/`path`, `value` for add/replace/test — checked with `"value" in op` so `null` values are allowed, `from` for move/copy) all error.
+- **Atomicity:** the document is only mutated in memory; output is printed only after every op succeeds. Any `PatchError`/I/O/parse failure goes to stderr with exit 1 and empty stdout.

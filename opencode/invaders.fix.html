@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; }
+  canvas { image-rendering: pixelated; background: #000; }
+</style>
+</head>
+<body>
+<canvas id="game" width="480" height="560"></canvas>
+<script>
+"use strict";
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
+
+// pixel-art sprites: 1 = pixel on, 2 = pixel off. scale in draw().
+const CANNON = [
+  [0,0,0,1,0,0,0],
+  [0,0,1,1,1,0,0],
+  [1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1],
+];
+
+// invader sprites: 2 animation frames each
+const SPRITES = {
+  squid: {
+    score: 30, color: "#8ef", w: 8, h: 8,
+    frames: [
+      [
+        [0,0,1,1,1,1,0,0],
+        [0,1,1,1,1,1,1,0],
+        [1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1],
+        [1,0,1,1,1,1,0,1],
+        [1,1,0,1,1,0,1,1],
+        [0,1,1,0,0,1,1,0],
+        [1,0,1,0,0,1,0,1],
+      ],
+      [
+        [0,0,1,1,1,1,0,0],
+        [0,1,1,1,1,1,1,0],
+        [1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1],
+        [1,0,1,1,1,1,0,1],
+        [0,1,1,0,0,1,1,0],
+        [1,1,0,1,1,0,1,1],
+        [0,1,0,0,0,0,1,0],
+      ],
+    ],
+  },
+  crab: {
+    score: 20, color: "#fe8", w: 11, h: 8,
+    frames: [
+      [
+        [0,0,1,0,0,0,0,0,1,0,0],
+        [0,0,0,1,0,0,0,1,0,0,0],
+        [0,0,1,1,1,1,1,1,1,0,0],
+        [0,1,1,0,1,1,1,0,1,1,0],
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,0,1,1,1,1,1,0,1,1],
+        [1,1,0,1,0,0,0,1,0,1,1],
+      ],
+      [
+        [0,0,1,0,0,0,0,0,1,0,0],
+        [1,0,0,1,0,0,0,1,0,0,1],
+        [1,0,1,1,1,1,1,1,1,0,1],
+        [1,1,1,0,1,1,1,0,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [0,1,1,1,1,1,1,1,1,1,0],
+        [0,1,1,0,1,1,1,0,1,1,0],
+        [0,0,1,0,0,0,0,0,1,0,0],
+      ],
+    ],
+  },
+  octopus: {
+    score: 10, color: "#f8f", w: 12, h: 8,
+    frames: [
+      [
+        [0,0,0,1,1,1,1,1,1,0,0,0],
+        [0,1,1,1,1,1,1,1,1,1,1,0],
+        [1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1],
+        [0,0,1,1,0,1,1,0,1,1,0,0],
+        [0,1,1,0,0,1,1,0,0,1,1,0],
+        [1,1,0,1,1,0,0,1,1,0,1,1],
+        [1,1,1,0,0,0,0,0,0,1,1,1],
+      ],
+      [
+        [0,0,0,1,1,1,1,1,1,0,0,0],
+        [0,1,1,1,1,1,1,1,1,1,1,0],
+        [1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1],
+        [0,0,1,1,0,1,1,0,1,1,0,0],
+        [0,1,1,0,1,1,1,1,0,1,1,0],
+        [1,1,0,1,0,0,0,0,1,0,1,1],
+        [1,1,0,0,0,0,0,0,0,0,1,1],
+      ],
+    ],
+  },
+};
+
+const ROW_TYPE = ["squid", "crab", "crab", "octopus", "octopus"];
+const FORM_ROWS = 5, FORM_COLS = 11;
+const CELL_W = 36, CELL_H = 36;
+const INV_SCALE = 3;
+
+function makeFormation() {
+  const grid = [];
+  for (let r = 0; r < FORM_ROWS; r++) {
+    const row = [];
+    for (let c = 0; c < FORM_COLS; c++) row.push({ alive: true, type: ROW_TYPE[r] });
+    grid.push(row);
+  }
+  return { x: 42, y: 70, dir: 1, frame: 0, stepTimer: 0, grid };
+}
+
+function countAlive() {
+  let n = 0;
+  for (const row of state.formation.grid) for (const cell of row) if (cell.alive) n++;
+  return n;
+}
+
+// destructible shield: grid of pixel blocks (1 = intact)
+const BLOCK = 3;
+const SHIELD = [
+  [0,0,0,1,1,1,1,1,1,0,0,0],
+  [0,1,1,1,1,1,1,1,1,1,1,0],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,1,1,1,1,1,1,1,1,1],
+  [1,1,1,0,0,0,0,0,0,1,1,1],
+  [1,1,0,0,0,0,0,0,0,0,1,1],
+  [1,1,0,0,0,0,0,0,0,0,1,1],
+  [1,1,0,0,0,0,0,0,0,0,1,1],
+];
+
+function makeShields() {
+  const xs = [70, 165, 260, 355];
+  return xs.map(x => ({
+    x, y: 470,
+    w: SHIELD[0].length * BLOCK,
+    h: SHIELD.length * BLOCK,
+    cells: SHIELD.map(row => row.slice()),
+  }));
+}
+
+function shieldAt(x, y) {
+  for (const sh of state.shields)
+    if (x >= sh.x && x <= sh.x + sh.w && y >= sh.y && y <= sh.y + sh.h) return sh;
+  return null;
+}
+
+function erodeShield(sh, x, y, rad) {
+  const bx = (x - sh.x) / BLOCK;
+  const by = (y - sh.y) / BLOCK;
+  const r = rad / BLOCK;
+  for (let j = 0; j < sh.cells.length; j++)
+    for (let i = 0; i < sh.cells[j].length; i++) {
+      if (sh.cells[j][i] && Math.hypot(i - bx, j - by) <= r) sh.cells[j][i] = 0;
+    }
+}
+
+const state = {
+  over: false,
+  paused: false,
+  player: { x: 240, y: 520, w: 21, h: 12 },
+  bullet: null,
+  bombs: [],
+  bombTimer: 1,
+  bombInterval: 1.0,
+  shields: makeShields(),
+  formation: makeFormation(),
+  score: 0,
+  lives: 3,
+  freeze: 0, // freeze frames after a hit
+};
+
+const keys = {};
+addEventListener("keydown", e => {
+  keys[e.key] = true;
+  if (e.repeat) return;
+  if (e.key === "p") state.paused = !state.paused;
+  if (e.key === "Enter") restart();
+});
+addEventListener("keyup", e => { keys[e.key] = false; });
+
+const STEP = 1000 / 60;
+
+function update(dt) {
+  if (state.freeze > 0) { state.freeze -= dt; return; }
+
+  // player movement
+  const speed = 240; // px/s
+  let dx = 0;
+  if (keys["ArrowLeft"] || keys["a"]) dx -= 1;
+  if (keys["ArrowRight"] || keys["d"]) dx += 1;
+  state.player.x += dx * speed * dt;
+  state.player.x = Math.max(12, Math.min(480 - 12, state.player.x));
+
+  // fire
+  if (keys[" "] && !state.bullet) {
+    state.bullet = { x: state.player.x, y: state.player.y - 10 };
+  }
+
+  // player bullet
+  const b = state.bullet;
+  if (b) {
+    b.y -= 420 * dt;
+    const sh = shieldAt(b.x, b.y);
+    if (sh) { erodeShield(sh, b.x, b.y, 7); state.bullet = null; }
+    else if (b.y < -4) state.bullet = null;
+    else hitInvader(b);
+  }
+
+  // invader bombs fall + collide
+  for (let i = state.bombs.length - 1; i >= 0; i--) {
+    const mb = state.bombs[i];
+    mb.y += 260 * dt;
+    if (mb.y > 560) { state.bombs.splice(i, 1); continue; }
+    const sh = shieldAt(mb.x, mb.y);
+    if (sh) { erodeShield(sh, mb.x, mb.y, 7); state.bombs.splice(i, 1); continue; }
+    if (bombHitsPlayer(mb)) { state.bombs.splice(i, 1); killPlayer(); }
+  }
+
+  // form bombs
+  updateBombs(dt);
+
+  // formation movement
+  updateFormation(dt);
+
+  // invader reached player row
+  if (invaderLowestY() >= state.player.y - 14) gameOver();
+}
+
+function bombHitsPlayer(mb) {
+  const p = state.player;
+  return Math.abs(mb.x - p.x) < 12 && mb.y > p.y - 14 && mb.y < p.y + 4;
+}
+
+function killPlayer() {
+  state.lives--;
+  if (state.lives <= 0) { gameOver(); return; }
+  state.freeze = 0.8;
+  state.player.x = 240;
+  state.bombs = [];
+}
+
+function gameOver() {
+  state.over = true;
+}
+
+function updateBombs(dt) {
+  state.bombTimer += dt;
+  const alive = countAlive();
+  if (alive === 0) return;
+  state.bombInterval = 0.35 + alive * 0.012; // ~1s when full, faster as they thin
+  if (state.bombTimer < state.bombInterval) return;
+  state.bombTimer = 0;
+  if (state.bombs.length >= 3) return;
+  // bottom-most alive invader per column -> pick a random alive one
+  const f = state.formation;
+  const aliveCells = [];
+  for (let c = 0; c < FORM_COLS; c++) {
+    for (let r = FORM_ROWS - 1; r >= 0; r--) {
+      if (f.grid[r][c].alive) { aliveCells.push({ r, c }); break; }
+    }
+  }
+  if (!aliveCells.length) return;
+  const pick = aliveCells[(Math.random() * aliveCells.length) | 0];
+  const sprite = SPRITES[f.grid[pick.r][pick.c].type];
+  const cx = f.x + pick.c * CELL_W + (sprite.w * INV_SCALE) / 2;
+  const by = f.y + pick.r * CELL_H + sprite.h * INV_SCALE;
+  state.bombs.push({ x: cx, y: by });
+}
+
+function invaderLowestY() {
+  const f = state.formation;
+  let maxY = -1;
+  for (let r = 0; r < FORM_ROWS; r++)
+    for (let c = 0; c < FORM_COLS; c++)
+      if (f.grid[r][c].alive) {
+        const y = f.y + r * CELL_H + SPRITES[f.grid[r][c].type].h * INV_SCALE;
+        if (y > maxY) maxY = y;
+      }
+  return maxY;
+}
+
+function hitInvader(b) {
+  const f = state.formation;
+  for (let r = 0; r < FORM_ROWS; r++) {
+    for (let c = 0; c < FORM_COLS; c++) {
+      const cell = f.grid[r][c];
+      if (!cell.alive) continue;
+      const sprite = SPRITES[cell.type];
+      const ix = f.x + c * CELL_W;
+      const iy = f.y + r * CELL_H;
+      const iw = sprite.w * INV_SCALE, ih = sprite.h * INV_SCALE;
+      if (b.x > ix - 1 && b.x < ix + iw + 1 && b.y > iy && b.y < iy + ih) {
+        cell.alive = false;
+        state.score += sprite.score;
+        state.bullet = null;
+        return;
+      }
+    }
+  }
+}
+
+function updateFormation(dt) {
+  const f = state.formation;
+  const alive = countAlive();
+  if (alive === 0) return;
+  const interval = 0.2 + alive * 0.045; // faster as fewer remain
+  f.stepTimer += dt;
+  if (f.stepTimer < interval) return;
+  f.stepTimer = 0;
+
+  const px = 20 * f.dir; // step size
+  let minX = Infinity, maxX = -Infinity;
+  for (let r = 0; r < FORM_ROWS; r++)
+    for (let c = 0; c < FORM_COLS; c++)
+      if (f.grid[r][c].alive) {
+        const sx = f.x + c * CELL_W + (px > 0 ? px : 0);
+        const ex = sx + SPRITES[f.grid[r][c].type].w * INV_SCALE;
+        if (sx < minX) minX = sx;
+        if (ex > maxX) maxX = ex;
+      }
+
+  if (minX < 0 || maxX > 480) {
+    f.y += CELL_H * 0.5 + 6; // drop a row
+    f.dir *= -1;
+  } else {
+    f.x += px;
+    f.frame ^= 1; // toggle animation frame
+  }
+}
+
+function restart() {
+  state.over = false;
+  state.paused = false;
+  state.player.x = 240;
+  state.bullet = null;
+  state.bombs = [];
+  state.bombTimer = 1;
+  state.shields = makeShields();
+  state.formation = makeFormation();
+  state.score = 0;
+  state.lives = 3;
+  state.freeze = 0;
+}
+
+function drawSprite(arr, cx, cy, px, color) {
+  const h = arr.length, w = arr[0].length;
+  ctx.fillStyle = color;
+  for (let r = 0; r < h; r++)
+    for (let c = 0; c < w; c++)
+      if (arr[r][c]) ctx.fillRect(cx - (w * px) / 2 + c * px, cy + r * px - h * px, px, px);
+}
+
+function drawSpriteTL(arr, x, y, px, color) {
+  ctx.fillStyle = color;
+  for (let r = 0; r < arr.length; r++)
+    for (let c = 0; c < arr[0].length; c++)
+      if (arr[r][c]) ctx.fillRect(x + c * px, y + r * px, px, px);
+}
+
+function draw() {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, 480, 560);
+
+  // invader formation
+  const f = state.formation;
+  for (let r = 0; r < FORM_ROWS; r++)
+    for (let c = 0; c < FORM_COLS; c++) {
+      const cell = f.grid[r][c];
+      if (!cell.alive) continue;
+      const sprite = SPRITES[cell.type];
+      const arr = sprite.frames[f.frame];
+      drawSpriteTL(arr, f.x + c * CELL_W, f.y + r * CELL_H, INV_SCALE, sprite.color);
+    }
+
+  // shields
+  for (const sh of state.shields)
+    for (let j = 0; j < sh.cells.length; j++)
+      for (let i = 0; i < sh.cells[j].length; i++)
+        if (sh.cells[j][i]) {
+          ctx.fillStyle = "#0f0";
+          ctx.fillRect(sh.x + i * BLOCK, sh.y + j * BLOCK, BLOCK, BLOCK);
+        }
+
+  // score + lives
+  ctx.fillStyle = "#fff";
+  ctx.font = "14px monospace";
+  ctx.textBaseline = "top";
+  ctx.textAlign = "left";
+  ctx.fillText("SCORE " + state.score, 8, 8);
+  ctx.textAlign = "right";
+  let lives = "";
+  for (let i = 0; i < state.lives; i++) lives += " ";
+  ctx.fillText("LIVES" + lives, 472, 8);
+  ctx.textAlign = "left";
+
+  // player
+  drawSprite(CANNON, state.player.x, state.player.y, 3, "#0f0");
+
+  // bullet
+  const b = state.bullet;
+  if (b) {
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(b.x - 1, b.y - 6, 2, 8);
+  }
+
+  // bombs
+  ctx.fillStyle = "#f44";
+  for (const mb of state.bombs) {
+    ctx.fillRect(mb.x - 1, mb.y - 4, 2, 8);
+    if (((mb.y >> 1) & 1) === 0) ctx.fillRect(mb.x - 2, mb.y, 4, 2);
+  }
+
+  // game over
+  if (state.over) {
+    ctx.fillStyle = "rgba(0,0,0,0.7)";
+    ctx.fillRect(0, 0, 480, 560);
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.font = "28px monospace";
+    ctx.fillText("GAME OVER", 240, 250);
+    ctx.font = "16px monospace";
+    ctx.fillText("SCORE " + state.score, 240, 290);
+    ctx.fillText("PRESS ENTER TO RESTART", 240, 330);
+    ctx.textAlign = "left";
+  }
+}
+
+let last = performance.now(), acc = 0;
+function frame(now) {
+  acc += now - last;
+  last = now;
+  while (acc >= STEP) {
+    if (!state.over && !state.paused) update(STEP / 1000);
+    acc -= STEP;
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

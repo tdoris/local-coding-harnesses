@@ -1,0 +1,5 @@
+Stage 4 for invaders.html:
+- Wave clear: when all invaders are dead, show "WAVE N" briefly, then spawn a fresh formation one row lower than the previous wave started and with a slightly faster step interval; keep score and lives.
+- Mystery UFO crossing the top every 20-30s, worth 50-300 random, killable by the player's bullet.
+- Attract/start screen: title, controls, "Press Enter" — the game starts on Enter; Enter also restarts after GAME OVER.
+Edit the existing file (specific functions), don't rewrite it. When done, reply with one line saying what to test.

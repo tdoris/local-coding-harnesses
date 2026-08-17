@@ -1,0 +1,289 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11434 (won't stop it on exit)
+[36m[local-agent][0m cloud model gpt-oss:120b-cloud via system Ollama on 127.0.0.1:11434 (no local GPU work)
+[36m[local-agent][0m sampling (no Modelfile params → gpt-oss/OpenAI guidance): temperature=1.0 top_p=1.0 presence_penalty=0
+[36m[local-agent][0m launching opencode (model=gpt-oss:120b-cloud, ctx=131072, max_output=32000)
+[0m
+> build · gpt-oss:120b-cloud
+[0m
+[0m→ [0mRead test_jpatch.py[90m [limit=2000, offset=1][0m
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+Now run tests.
+[0m$ [0mpython3 -m unittest discover -v
+test_A10_add_nested_object (test_jpatch.TestJpatch.test_A10_add_nested_object) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpofzhc2y1/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpofzhc2y1/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A11_ignore_unrecognized (test_jpatch.TestJpatch.test_A11_ignore_unrecognized) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjjr2u67g/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjjr2u67g/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A12_add_nonexistent_target (test_jpatch.TestJpatch.test_A12_add_nonexistent_target) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpanlfqdgj/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpanlfqdgj/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A14_tilde_escape (test_jpatch.TestJpatch.test_A14_tilde_escape) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8krj84l_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8krj84l_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A15_string_vs_number (test_jpatch.TestJpatch.test_A15_string_vs_number) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp36dncrw9/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp36dncrw9/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A16_add_array_value (test_jpatch.TestJpatch.test_A16_add_array_value) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1y8feejo/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1y8feejo/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A1_add_member (test_jpatch.TestJpatch.test_A1_add_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpz4bhyhki/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpz4bhyhki/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A2_add_array_element (test_jpatch.TestJpatch.test_A2_add_array_element) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ewi2yiz/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ewi2yiz/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A3_remove_member (test_jpatch.TestJpatch.test_A3_remove_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdumno9q_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdumno9q_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A4_remove_array_element (test_jpatch.TestJpatch.test_A4_remove_array_element) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwzvf2g4_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwzvf2g4_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A5_replace (test_jpatch.TestJpatch.test_A5_replace) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv25xwo_6/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv25xwo_6/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A6_move (test_jpatch.TestJpatch.test_A6_move) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpygx_hrgs/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpygx_hrgs/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A7_move_array_element (test_jpatch.TestJpatch.test_A7_move_array_element) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpaetqkqfc/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpaetqkqfc/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A8_test_success (test_jpatch.TestJpatch.test_A8_test_success) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2jgr75vu/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2jgr75vu/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_A9_test_error (test_jpatch.TestJpatch.test_A9_test_error) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpq8cufryd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpq8cufryd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_dash_append (test_jpatch.TestJpatch.test_add_dash_append) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgt8px8cw/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgt8px8cw/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_index_eq_len (test_jpatch.TestJpatch.test_add_index_eq_len) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqy4zrxwq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqy4zrxwq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_index_gt_len (test_jpatch.TestJpatch.test_add_index_gt_len) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcurmqsod/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcurmqsod/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_missing_value_member (test_jpatch.TestJpatch.test_add_missing_value_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcpgj2kjy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcpgj2kjy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_null_and_false (test_jpatch.TestJpatch.test_add_null_and_false) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ax_z3ox/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ax_z3ox/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_replaces_existing_member (test_jpatch.TestJpatch.test_add_replaces_existing_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppitpjing/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppitpjing/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_add_slash_key (test_jpatch.TestJpatch.test_add_slash_key) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqg19w_32/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqg19w_32/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_atomic_failure_no_partial (test_jpatch.TestJpatch.test_atomic_failure_no_partial) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphcqtqupr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphcqtqupr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_copy_array_element_append (test_jpatch.TestJpatch.test_copy_array_element_append) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp40c17f89/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp40c17f89/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_copy_member (test_jpatch.TestJpatch.test_copy_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpit8fuvqy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpit8fuvqy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_empty_patch (test_jpatch.TestJpatch.test_empty_patch) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfjybz_ay/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfjybz_ay/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_move_into_own_child (test_jpatch.TestJpatch.test_move_into_own_child) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppj3q6ljv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppj3q6ljv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_move_missing_from (test_jpatch.TestJpatch.test_move_missing_from) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp361ubhst/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp361ubhst/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_patch_not_array (test_jpatch.TestJpatch.test_patch_not_array) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr3tmn9j2/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr3tmn9j2/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_remove_missing_member (test_jpatch.TestJpatch.test_remove_missing_member) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp48okzv_9/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp48okzv_9/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_remove_nested (test_jpatch.TestJpatch.test_remove_nested) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxuae2mv0/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxuae2mv0/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_replace_array_element (test_jpatch.TestJpatch.test_replace_array_element) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppsdqq7q4/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppsdqq7q4/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_replace_missing (test_jpatch.TestJpatch.test_replace_missing) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd5pxe31d/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd5pxe31d/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_sequence_many_ops (test_jpatch.TestJpatch.test_sequence_many_ops) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnab15hoq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnab15hoq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_test_array_element (test_jpatch.TestJpatch.test_test_array_element) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi_ap9e_b/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi_ap9e_b/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_test_object_key_order (test_jpatch.TestJpatch.test_test_object_key_order) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3ya78zpb/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3ya78zpb/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_unknown_op (test_jpatch.TestJpatch.test_unknown_op) ... /home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxh_mnl3s/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/scratch/harness-test/cloud-seq/opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxh_mnl3s/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.707s
+
+OK
+[0m
+Implemented `jpatch.py`, a full JSON Patch (RFC 6902) processor using only the Python standard library.
+
+Key features:
+- Parses JSON Pointer (RFC 6901) with proper `~0`/`~1` decoding.
+- Supports `add`, `remove`, `replace`, `move`, `copy`, and `test` operations, handling objects, arrays, and the special `-` index.
+- Validates operation structure, pointer syntax, array indices, and ensures atomic application (no partial output on error).
+- Maintains object key order, respects numeric equality, and treats booleans and nulls strictly.
+- Provides clear error messages on `stderr` and exits with appropriate status codes.
+
+All unit tests now pass (`37 passed`).

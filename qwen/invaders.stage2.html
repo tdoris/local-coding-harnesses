@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #000;
+  }
+</style>
+</head>
+<body>
+<canvas id="game" width="480" height="560"></canvas>
+<script>
+"use strict";
+const W = 480, H = 560;
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const PS = 4; // pixel-art unit size
+
+const CANNON = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,0],
+];
+const CANNON_W = CANNON[0].length * PS;
+const CANNON_H = CANNON.length * PS;
+const PLAYER_Y = H - CANNON_H - 24;
+
+const MOVE_SPEED = 240;   // px/s
+const BULLET_SPEED = 600; // px/s
+
+// Invader sprites: three types, each with 2 animation frames (8x8 pixel arrays).
+const SQUID = [
+  [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,0,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [1,1,0,0,0,0,1,1],
+    [0,1,0,0,0,0,1,0],
+  ],
+  [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,0,1,1,0,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [1,1,0,1,1,0,1,1],
+  ],
+];
+const CRAB = [
+  [
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [1,0,0,0,0,0,0,1],
+  ],
+  [
+    [0,1,0,0,0,0,1,0],
+    [0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,0,0,0,0,1,0],
+    [0,0,1,0,0,1,0,0],
+  ],
+];
+const OCTOPUS = [
+  [
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,0,0,1,1,0],
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,0,0,1,1,1],
+    [1,1,0,0,0,0,1,1],
+  ],
+  [
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,0,0,1,0,0],
+    [1,0,0,1,1,0,0,1],
+    [1,0,0,0,0,0,0,1],
+  ],
+];
+const INV_SPRITES = [SQUID, CRAB, OCTOPUS];
+const INV_TYPE_BY_ROW = [0, 1, 1, 2, 2];   // row 0 squid, rows 1-2 crab, rows 3-4 octopus
+const INV_SCORE  = [30, 20, 10];           // points by type
+const INV_COLOR  = ['#7df9ff', '#ffb15e', '#c792ea'];
+const INV_COLS = 11, INV_ROWS = 5;
+const INV_W = 8 * PS, INV_H = 8 * PS;
+const H_GAP = 8, V_GAP = 16;
+const INV_TOTAL = INV_COLS * INV_ROWS;
+const INV_STEP_PX = 8;                     // sideways jump per tick
+const INV_MIN_INT = 0.15, INV_MAX_INT = 0.85; // step interval (shrinks as they die)
+const INV_DROP = V_GAP;                    // "drop one row"
+const FORMATION_W = INV_COLS * INV_W + (INV_COLS - 1) * H_GAP;
+const FORMATION_START_X = (W - FORMATION_W) / 2;
+const FORMATION_START_Y = 56;
+
+const state = {
+  x: 0,
+  y: PLAYER_Y,
+  bullet: null, // {x, y} or null
+  paused: false,
+  score: 0,
+  inv: null,   // {x, y, dir, timer, frame, live}
+  list: [],    // invaders
+};
+
+const keys = {};
+function codeMap(e) {
+  switch (e.code) {
+    case 'ArrowLeft':  case 'KeyA':  return 'left';
+    case 'ArrowRight': case 'KeyD':  return 'right';
+    case 'Space':       return 'fire';
+    case 'KeyP':        return 'pause';
+    case 'Enter':       return 'start';
+  }
+  return null;
+}
+addEventListener('keydown', (e) => {
+  const k = codeMap(e);
+  if (k) {
+    if (e.code === 'Space' ) e.preventDefault();
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') e.preventDefault();
+    if (!keys[k]) {
+      if (k === 'pause') state.paused = !state.paused;
+      if (k === 'start') reset();
+    }
+    keys[k] = true;
+  }
+});
+addEventListener('keyup', (e) => {
+  const k = codeMap(e);
+  if (k) keys[k] = false;
+});
+
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+function buildInvaders() {
+  const list = [];
+  for (let r = 0; r < INV_ROWS; r++) {
+    for (let c = 0; c < INV_COLS; c++) {
+      list.push({
+        row: r,
+        col: c,
+        colOffset: c * (INV_W + H_GAP),
+        type: INV_TYPE_BY_ROW[r],
+        alive: true,
+      });
+    }
+  }
+  return list;
+}
+
+function resetFormation() {
+  state.inv = {
+    x: FORMATION_START_X,
+    y: FORMATION_START_Y,
+    dir: 1,
+    timer: 0,
+    frame: 0,
+    live: INV_TOTAL,
+  };
+  state.list = buildInvaders();
+}
+
+// Step interval shrinks as fewer invaders remain (classic speed-up).
+function stepInterval() {
+  const live = state.inv.live;
+  if (live <= 0) return INV_MIN_INT;
+  return INV_MIN_INT + (INV_MAX_INT - INV_MIN_INT) * (live / INV_TOTAL);
+}
+
+function stepFormation() {
+  const f = state.inv;
+  const nx = f.x + f.dir * INV_STEP_PX;
+  let blocked = false;
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    const l = nx + inv.colOffset;
+    const r = l + INV_W;
+    if (l < 0 || r > W) { blocked = true; break; }
+  }
+  if (blocked) {
+    f.dir = -f.dir;      // reversed
+    f.y += INV_DROP;     // drop one row
+  } else {
+    f.x = nx;            // step sideways
+  }
+  f.frame ^= 1;          // toggle animation frame on every step
+}
+
+function reset() {
+  state.x = (W - CANNON_W) / 2;
+  state.y = PLAYER_Y;
+  state.bullet = null;
+  state.paused = false;
+  state.score = 0;
+  resetFormation();
+}
+
+function update(dt) {
+  if (keys.left)  state.x -= MOVE_SPEED * dt;
+  if (keys.right) state.x += MOVE_SPEED * dt;
+  state.x = clamp(state.x, 0, W - CANNON_W);
+
+  if (keys.fire && !state.bullet) {
+    state.bullet = { x: state.x + CANNON_W / 2, y: state.y };
+  }
+  if (state.bullet) {
+    state.bullet.y -= BULLET_SPEED * dt;
+    if (state.bullet.y < -8) state.bullet = null;
+  }
+
+  // Invader formation: step on a timer (interval shrinks as they die).
+  const f = state.inv;
+  f.timer += dt;
+  const interval = stepInterval();
+  let guard = 0;
+  while (f.timer >= interval && guard++ < 8) {
+    stepFormation();
+    f.timer -= interval;
+  }
+
+  // Bullet vs invader collision (first overlap in list order = topmost).
+  if (state.bullet) {
+    const bx = Math.round(state.bullet.x) - 2;
+    const by = Math.round(state.bullet.y);
+    const bw = 4, bh = 8;
+    let hit = -1;
+    for (let i = 0; i < state.list.length; i++) {
+      const inv = state.list[i];
+      if (!inv.alive) continue;
+      const l = f.x + inv.colOffset;
+      const t = f.y + inv.row * (INV_H + V_GAP);
+      if (bx < l + INV_W && bx + bw > l && by < t + INV_H && by + bh > t) {
+        hit = i;
+        break;
+      }
+    }
+    if (hit >= 0) {
+      const inv = state.list[hit];
+      inv.alive = false;
+      f.live -= 1;
+      state.score += INV_SCORE[inv.type];
+      state.bullet = null;
+    }
+  }
+}
+
+function drawSprite(sprite, x, y, color) {
+  const ox = Math.round(x), oy = Math.round(y);
+  ctx.fillStyle = color;
+  for (let r = 0; r < sprite.length; r++) {
+    const row = sprite[r];
+    for (let c = 0; c < row.length; c++) {
+      if (row[c]) ctx.fillRect(ox + c * PS, oy + r * PS, PS, PS);
+    }
+  }
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  const f = state.inv;
+  for (const inv of state.list) {
+    if (!inv.alive) continue;
+    const sprite = INV_SPRITES[inv.type][f.frame];
+    const x = f.x + inv.colOffset;
+    const y = f.y + inv.row * (INV_H + V_GAP);
+    drawSprite(sprite, x, y, INV_COLOR[inv.type]);
+  }
+
+  drawSprite(CANNON, state.x, state.y, '#7be97a');
+
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(Math.round(state.bullet.x) - 1, Math.round(state.bullet.y), 3, 8);
+  }
+
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  ctx.font = '16px "Courier New", monospace';
+  ctx.fillStyle = '#7be97a';
+  ctx.fillText('SCORE ' + String(state.score).padStart(4, '0'), 12, 10);
+}
+
+// Fixed-timestep loop
+const STEP = 1 / 60;
+let last = performance.now();
+let acc = 0;
+function frame(now) {
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  acc += dt;
+  while (acc >= STEP) {
+    if (!state.paused) update(STEP);
+    acc -= STEP;
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+
+reset();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+Done. **`tomlq.py`** is complete and verified:
+
+## Deliverable
+- **`tomlq.py`** — single-file Python 3, stdlib only (`json` + `sys`), from-scratch TOML v1.0.0 subset parser. Usage: `python3 tomlq.py FILE [KEYPATH]`; exit 0/1/2 as specified, clean error messages on stderr with line numbers.
+
+## Features implemented
+- **Keys**: bare, quoted (basic/literal), dotted, with spaces around dots
+- **Strings**: basic + literal, single & multi-line, all escapes (`\b \t \n \f \r \" \\ \uXXXX \UXXXXXXXX`), line-ending-backslash trimming in multi-line basic, first-newline trimming in both multi-line forms
+- **Numbers**: integers (decimal/hex/oct/binary, underscores validated as between-digits), floats (scientific notation, `+1.0`, `-0.0`), booleans; rejects leading zeros, signed hex/oct/bin, misplaced underscores, `inf`/`nan`/dates (per spec allowance)
+- **Arrays**: multi-line, comments inside, trailing comma, nested; inline tables closed & single-line only
+- **Tables**: `[a.b.c]`, `[[aot]]` with sub-tables, super-table-after-sub-table allowed, dotted-created tables not redefinable by headers, inline tables not extendable, all duplicate/key-collision rules per the spec's "duplicate definition" list
+- **Keypaths**: dotted paths from root (also array indices, e.g. `node.0.id`), rc=2 with a message naming the missing part
+
+## Verification (all passing)
+- `runtests.py` — **68 targeted tests** (valid, invalid, keypath)
+- `compare_tomllib.py` — 22 curated valid docs, output identical to CPython's `tomllib`
+- `compare_invalid.py` — 77 invalid docs, all rejected (only divergence from `tomllib`: dates/`inf`/`nan`, which the task permits rejecting)
+- `fuzz_tomllib.py` — 1500 random documents across 5 seeds, **0 accept/reject mismatches, 0 output mismatches** vs `tomllib`

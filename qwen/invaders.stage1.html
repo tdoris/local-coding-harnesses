@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Space Invaders</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #000;
+  }
+</style>
+</head>
+<body>
+<canvas id="game" width="480" height="560"></canvas>
+<script>
+"use strict";
+const W = 480, H = 560;
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+const PS = 4; // pixel-art unit size
+
+const CANNON = [
+  [0,0,0,0,1,0,0,0,0],
+  [0,0,0,1,1,1,0,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,0,1,1,1,1,1,0,0],
+  [0,1,1,1,1,1,1,1,0],
+  [0,1,1,1,1,1,1,1,0],
+];
+const CANNON_W = CANNON[0].length * PS;
+const CANNON_H = CANNON.length * PS;
+const PLAYER_Y = H - CANNON_H - 24;
+
+const MOVE_SPEED = 240;   // px/s
+const BULLET_SPEED = 600; // px/s
+
+const state = {
+  x: 0,
+  y: PLAYER_Y,
+  bullet: null, // {x, y} or null
+  paused: false,
+};
+
+const keys = {};
+function codeMap(e) {
+  switch (e.code) {
+    case 'ArrowLeft':  case 'KeyA':  return 'left';
+    case 'ArrowRight': case 'KeyD':  return 'right';
+    case 'Space':       return 'fire';
+    case 'KeyP':        return 'pause';
+    case 'Enter':       return 'start';
+  }
+  return null;
+}
+addEventListener('keydown', (e) => {
+  const k = codeMap(e);
+  if (k) {
+    if (e.code === 'Space' ) e.preventDefault();
+    if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') e.preventDefault();
+    if (!keys[k]) {
+      if (k === 'pause') state.paused = !state.paused;
+      if (k === 'start') reset();
+    }
+    keys[k] = true;
+  }
+});
+addEventListener('keyup', (e) => {
+  const k = codeMap(e);
+  if (k) keys[k] = false;
+});
+
+function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+function reset() {
+  state.x = (W - CANNON_W) / 2;
+  state.y = PLAYER_Y;
+  state.bullet = null;
+  state.paused = false;
+}
+
+function update(dt) {
+  if (keys.left)  state.x -= MOVE_SPEED * dt;
+  if (keys.right) state.x += MOVE_SPEED * dt;
+  state.x = clamp(state.x, 0, W - CANNON_W);
+
+  if (keys.fire && !state.bullet) {
+    state.bullet = { x: state.x + CANNON_W / 2, y: state.y };
+  }
+  if (state.bullet) {
+    state.bullet.y -= BULLET_SPEED * dt;
+    if (state.bullet.y < -8) state.bullet = null;
+  }
+}
+
+function drawSprite(sprite, x, y, color) {
+  const ox = Math.round(x), oy = Math.round(y);
+  ctx.fillStyle = color;
+  for (let r = 0; r < sprite.length; r++) {
+    const row = sprite[r];
+    for (let c = 0; c < row.length; c++) {
+      if (row[c]) ctx.fillRect(ox + c * PS, oy + r * PS, PS, PS);
+    }
+  }
+}
+
+function draw() {
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, W, H);
+
+  drawSprite(CANNON, state.x, state.y, '#7be97a');
+
+  if (state.bullet) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(Math.round(state.bullet.x) - 1, Math.round(state.bullet.y), 3, 8);
+  }
+}
+
+// Fixed-timestep loop
+const STEP = 1 / 60;
+let last = performance.now();
+let acc = 0;
+function frame(now) {
+  let dt = (now - last) / 1000;
+  last = now;
+  if (dt > 0.25) dt = 0.25;
+  acc += dt;
+  while (acc >= STEP) {
+    if (!state.paused) update(STEP);
+    acc -= STEP;
+  }
+  draw();
+  requestAnimationFrame(frame);
+}
+
+reset();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

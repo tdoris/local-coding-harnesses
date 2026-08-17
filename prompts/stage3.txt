@@ -1,0 +1,6 @@
+Stage 3 for invaders.html:
+- Invader bombs: every ~1s (shorter as fewer remain) a random bottom-most invader in a column drops a bomb; up to 3 bombs on screen; bombs kill the player on contact.
+- Player has 3 lives shown top-right; on death: brief freeze, respawn at center; 0 lives = GAME OVER screen with final score, Enter restarts.
+- 4 destructible shields above the player, each a small grid of pixel blocks; both bullets and bombs erase a few blocks where they hit.
+- If any invader reaches the player's row, game over.
+Edit the existing file (specific functions), don't rewrite it. When done, reply with one line saying what to test.
