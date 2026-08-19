@@ -105,13 +105,33 @@ if [[ -n "$CLOUD" ]]; then
   api "$PRIVATE_HOST" /api/generate "{\"model\":\"$MODEL\",\"prompt\":\"\"}" >/dev/null \
     || { log "cannot reach $MODEL — is the system Ollama signed in? (ollama signin)"; exit 1; }
 else
+# Evict any *other* model still resident on the private server. It runs with a 2h
+# keep-alive and is reused across runs, so a previous model holds VRAM and squeezes
+# the incoming one onto CPU (this silently invalidated a gemma4 run at 95% CPU).
+# The model we are about to load is left alone, so repeat runs stay warm.
+stale=$(api "$PRIVATE_HOST" /api/ps 2>/dev/null \
+  | python3 -c 'import sys,json; print(" ".join(m["name"] for m in json.load(sys.stdin).get("models",[])))' 2>/dev/null || true)
+for m in $stale; do
+  [[ "${m%:latest}" == "${MODEL%:latest}" ]] && continue
+  log "evicting stale $m from private server to free VRAM"
+  api "$PRIVATE_HOST" /api/generate "{\"model\":\"$m\",\"keep_alive\":0}" >/dev/null || true
+done
+
 log "loading $MODEL ..."
 api "$PRIVATE_HOST" /api/generate "{\"model\":\"$MODEL\",\"keep_alive\":\"2h\"}" >/dev/null \
   || { log "failed to load $MODEL (is it in 'ollama list'?)"; exit 1; }
-OLLAMA_HOST="$PRIVATE_HOST" ollama ps | tail -n +2 | while read -r line; do
-  log "loaded: $line"
-  case "$line" in *"100% GPU"*) ;; *) log "WARNING: model partly on CPU — lower --ctx for full speed" ;; esac
-done
+placement=$(OLLAMA_HOST="$PRIVATE_HOST" ollama ps | tail -n +2)
+log "loaded: $placement"
+case "$placement" in
+  *"100% GPU"*) ;;
+  *) if [[ -n "${CLAUDE_OLLAMA_ALLOW_CPU:-}" ]]; then
+       log "WARNING: model partly on CPU — continuing because CLAUDE_OLLAMA_ALLOW_CPU=1"
+     else
+       log "ABORT: model is partly on CPU — timings and any benchmark from this run are invalid."
+       log "       lower --ctx, or set CLAUDE_OLLAMA_ALLOW_CPU=1 to proceed anyway."
+       exit 1
+     fi ;;
+esac
 fi
 
 # ---- 3b. read the model's own recommended sampling (Modelfile PARAMETERs) -------------

@@ -1,0 +1,1729 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading gemma4:26b ...
+[36m[local-agent][0m loaded: gemma4:26b    5571076f3d70    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching opencode (model=gemma4:26b, ctx=81920, max_output=32000)
+[0m
+> build · gemma4:26b
+[0m
+[0m$ [0mls
+test_jpatch.py
+[0m
+[0m$ [0mpython3 test_jpatch.py
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfm2rpryl/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfm2rpryl/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp__3ylgtk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp__3ylgtk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_ayo2b7i/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_ayo2b7i/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmvmz0wzh/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmvmz0wzh/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeg7omtc3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeg7omtc3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppnu_a35_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppnu_a35_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmplbwo_7fq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmplbwo_7fq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxe7pa41f/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxe7pa41f/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx4vni64a/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx4vni64a/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd_erlzrq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd_erlzrq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi1toykyv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi1toykyv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_8g1e9un/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_8g1e9un/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwnt5s79t/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwnt5s79t/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5849yvn_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5849yvn_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpyi4bwao8/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpyi4bwao8/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw9w0z12i/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw9w0z12i/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvj40hzj5/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvj40hzj5/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxgog27aq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxgog27aq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbzg6wqye/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbzg6wqye/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbpik_n_8/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbpik_n_8/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvusut4yq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvusut4yq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbjgc87lf/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbjgc87lf/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnddogzdo/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnddogzdo/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsqwaxy2j/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsqwaxy2j/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2_i8b36a/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2_i8b36a/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl2z1oriw/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl2z1oriw/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe1nt3h1r/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe1nt3h1r/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp57ad5_br/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp57ad5_br/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk8pwc5cd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk8pwc5cd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpae59_hhk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpae59_hhk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdedfe5so/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdedfe5so/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp9zykofh2/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp9zykofh2/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkl42puzl/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkl42puzl/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxhsln_st/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxhsln_st/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd0i4fzli/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd0i4fzli/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbexml0fq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbexml0fq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpuiym8bbe/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpuiym8bbe/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F
+======================================================================
+FAIL: test_A10_add_nested_object (__main__.TestJpatch.test_A10_add_nested_object)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 77, in test_A10_add_nested_object
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A11_ignore_unrecognized (__main__.TestJpatch.test_A11_ignore_unrecognized)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 83, in test_A11_ignore_unrecognized
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A12_add_nonexistent_target (__main__.TestJpatch.test_A12_add_nonexistent_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 89, in test_A12_add_nonexistent_target
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_A14_tilde_escape (__main__.TestJpatch.test_A14_tilde_escape)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 94, in test_A14_tilde_escape
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A15_string_vs_number (__main__.TestJpatch.test_A15_string_vs_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 100, in test_A15_string_vs_number
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_A16_add_array_value (__main__.TestJpatch.test_A16_add_array_value)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 105, in test_A16_add_array_value
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A1_add_member (__main__.TestJpatch.test_A1_add_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 24, in test_A1_add_member
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A2_add_array_element (__main__.TestJpatch.test_A2_add_array_element)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 30, in test_A2_add_array_element
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A3_remove_member (__main__.TestJpatch.test_A3_remove_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 36, in test_A3_remove_member
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A4_remove_array_element (__main__.TestJpatch.test_A4_remove_array_element)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 42, in test_A4_remove_array_element
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A5_replace (__main__.TestJpatch.test_A5_replace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 48, in test_A5_replace
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A6_move (__main__.TestJpatch.test_A6_move)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 54, in test_A6_move
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A7_move_array_element (__main__.TestJpatch.test_A7_move_array_element)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 60, in test_A7_move_array_element
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A8_test_success (__main__.TestJpatch.test_A8_test_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 66, in test_A8_test_success
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_A9_test_error (__main__.TestJpatch.test_A9_test_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 72, in test_A9_test_error
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_add_dash_append (__main__.TestJpatch.test_add_dash_append)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 111, in test_add_dash_append
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_add_index_eq_len (__main__.TestJpatch.test_add_index_eq_len)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 117, in test_add_index_eq_len
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_add_index_gt_len (__main__.TestJpatch.test_add_index_gt_len)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 123, in test_add_index_gt_len
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_add_missing_value_member (__main__.TestJpatch.test_add_missing_value_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 146, in test_add_missing_value_member
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_add_null_and_false (__main__.TestJpatch.test_add_null_and_false)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 134, in test_add_null_and_false
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_add_replaces_existing_member (__main__.TestJpatch.test_add_replaces_existing_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 128, in test_add_replaces_existing_member
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_add_slash_key (__main__.TestJpatch.test_add_slash_key)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 140, in test_add_slash_key
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_atomic_failure_no_partial (__main__.TestJpatch.test_atomic_failure_no_partial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 223, in test_atomic_failure_no_partial
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_copy_array_element_append (__main__.TestJpatch.test_copy_array_element_append)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 189, in test_copy_array_element_append
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_copy_member (__main__.TestJpatch.test_copy_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 183, in test_copy_member
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_empty_patch (__main__.TestJpatch.test_empty_patch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 207, in test_empty_patch
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_move_into_own_child (__main__.TestJpatch.test_move_into_own_child)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 173, in test_move_into_own_child
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_move_missing_from (__main__.TestJpatch.test_move_missing_from)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 178, in test_move_missing_from
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_patch_not_array (__main__.TestJpatch.test_patch_not_array)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 218, in test_patch_not_array
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_remove_missing_member (__main__.TestJpatch.test_remove_missing_member)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 151, in test_remove_missing_member
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_remove_nested (__main__.TestJpatch.test_remove_nested)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 156, in test_remove_nested
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_replace_array_element (__main__.TestJpatch.test_replace_array_element)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 167, in test_replace_array_element
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_replace_missing (__main__.TestJpatch.test_replace_missing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 162, in test_replace_missing
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+======================================================================
+FAIL: test_sequence_many_ops (__main__.TestJpatch.test_sequence_many_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 228, in test_sequence_many_ops
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_test_array_element (__main__.TestJpatch.test_test_array_element)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 201, in test_test_array_element
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_test_object_key_order (__main__.TestJpatch.test_test_object_key_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 195, in test_test_object_key_order
+    self.assertEqual(rc, 0, err)
+AssertionError: 2 != 0 : /usr/bin/python3: can't open file '/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py': [Errno 2] No such file or directory
+
+
+======================================================================
+FAIL: test_unknown_op (__main__.TestJpatch.test_unknown_op)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 213, in test_unknown_op
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 2 != 1 : expected exit 1 (error), got 2; stdout=''
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.466s
+
+FAILED (failures=37)
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m$ [0mpython3 test_jpatch.py
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpla7szwlf/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpla7szwlf/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwioq3w0l/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwioq3w0l/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3_lbdxkv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3_lbdxkv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1vz6kj0_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1vz6kj0_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgppseyf7/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgppseyf7/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx2yo8zp2/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx2yo8zp2/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpj4fyqfuh/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpj4fyqfuh/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpurjctftn/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpurjctftn/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6y4191lu/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6y4191lu/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp7v_2p6r3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp7v_2p6r3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbkgupyyg/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbkgupyyg/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjgo46_cp/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjgo46_cp/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1fgofa6_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1fgofa6_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw3kruvfq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw3kruvfq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxngbgpdx/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxngbgpdx/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi4iruavg/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi4iruavg/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqfwa1hvt/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqfwa1hvt/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4d79iy1n/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4d79iy1n/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph4fs9nqj/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph4fs9nqj/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6pmxczhf/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6pmxczhf/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpccrlbeqi/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpccrlbeqi/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi7pfl1wm/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi7pfl1wm/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph7hu10oe/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph7hu10oe/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkk_jhmp3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkk_jhmp3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbn4n_t68/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbn4n_t68/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl_lageyy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl_lageyy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi5il_5zp/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi5il_5zp/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpc45vc5bd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpc45vc5bd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpuhxg_wce/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpuhxg_wce/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxr5dm3i3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpxr5dm3i3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn0095pp3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn0095pp3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpplmb21ru/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpplmb21ru/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpzu9owy65/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpzu9owy65/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpq243ud2e/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpq243ud2e/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_ljluxgf/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_ljluxgf/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjqtm5xlx/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjqtm5xlx/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpron4qxc4/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpron4qxc4/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+======================================================================
+FAIL: test_A5_replace (__main__.TestJpatch.test_A5_replace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 50, in test_A5_replace
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"foo": "bar", "baz": "boo"} expected {"baz": "boo", "foo": "bar"}
+
+======================================================================
+FAIL: test_sequence_many_ops (__main__.TestJpatch.test_sequence_many_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 230, in test_sequence_many_ops
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"users": [{"name": "bob", "tags": []}, {"name": "ann"}, {"tags": ["x"], "name": "cid"}]} expected {"users": [{"name": "bob", "tags": []}, {"name": "ann"}, {"name": "cid", "tags": ["x"]}]}
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.631s
+
+FAILED (failures=2)
+[0m
+[0m→ [0mRead test_jpatch.py
+[0m
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+## Objective
+- Implement a single-file Python 3 program `jpatch.py` that applies JSON Patch (RFC 6902) to a JSON document using only the standard library.
+
+## Important Details
+- Must implement JSON Pointer (RFC 6901) with proper `~1` and `~0` decoding.
+- Supported operations: `add`, `remove`, `replace`, `move`, `copy`, and `test`.
+- Error handling must be atomic: print error to `stderr`, print nothing to `stdout`, and exit with code 1.
+- Must preserve object key order in the output.
+- Must handle specific array behaviors (e.g., `'-'` for end-of-array, canonical decimal indices).
+- Must pass the existing `test_jpatch.py` without modification.
+
+## Work State
+### Completed
+- Implemented `jpatch.py` with core functions: `decode_pointer`, `get_at_path`, `get_parent_and_key`, `add_to_path`, `remove_from_path`, and `apply_patch`.
+- Implemented all required operations: `add`, `remove`, `replace`, `move`, `copy`, and `test`.
+- Implemented atomic application by working on a deep copy of the document.
+
+### Active
+- Verifying the implementation by running `python3 test_jpatch.py`.
+
+### Blocked
+- (none)
+
+## Next Move
+1. Check the full output of `python3 test_jpatch.py` to confirm all tests pass.
+2. Fix any logic errors or edge cases identified by the test suite.
+
+## Relevant Files
+- `jpatch.py`: The implementation of the JSON Patch utility.
+- `test_jpatch.py`: The acceptance test suite for `jpatch.py`.
+Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed.
+[0m← [0mWrite jpatch.py
+Wrote file successfully.
+[0m
+[0m$ [0mpython3 test_jpatch.py
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp9mb4wq7q/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp9mb4wq7q/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3x63hlvk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp3x63hlvk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmps32_tkjx/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmps32_tkjx/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpiu5k7ht_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpiu5k7ht_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmped5ey6t6/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmped5ey6t6/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi_6n8pyr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpi_6n8pyr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphn_yf__u/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphn_yf__u/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn10hr4sd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpn10hr4sd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppynihhz8/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppynihhz8/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv120sqpc/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv120sqpc/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv3jf85gd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv3jf85gd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvspa7pp3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvspa7pp3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpos8ezznr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpos8ezznr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_fn96g93/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_fn96g93/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcjbbh5jx/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcjbbh5jx/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpifd69u58/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpifd69u58/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpz6dl6bj7/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpz6dl6bj7/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpppvfo3pv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpppvfo3pv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp87yjy87i/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp87yjy87i/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_kuppzgj/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_kuppzgj/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpklmei3wr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpklmei3wr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphufhbc48/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphufhbc48/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_hqqt5xi/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_hqqt5xi/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsrp7fqgy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsrp7fqgy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr0_28efv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr0_28efv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmg0rnin_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmg0rnin_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfglju8zu/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpfglju8zu/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa305z2cn/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa305z2cn/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1yi91sxy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1yi91sxy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2w05ovcr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp2w05ovcr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwfj6ikwa/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwfj6ikwa/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjkv7veqm/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpjkv7veqm/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyqplxmy/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsyqplxmy/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpze9f9awu/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpze9f9awu/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa884zg4g/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpa884zg4g/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmplk0bqsr0/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmplk0bqsr0/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpga9ccse4/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpga9ccse4/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F
+======================================================================
+FAIL: test_A5_replace (__main__.TestJpatch.test_A5_replace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 50, in test_A5_replace
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"foo": "bar", "baz": "boo"} expected {"baz": "boo", "foo": "bar"}
+
+======================================================================
+FAIL: test_sequence_many_ops (__main__.TestJpatch.test_sequence_many_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 230, in test_sequence_many_ops
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"users": [{"tags": [], "name": "cid"}, {"name": "ann"}, {"tags": [], "name": "cid"}]} expected {"users": [{"name": "bob", "tags": []}, {"name": "ann"}, {"name": "cid", "tags": ["x"]}]}
+
+======================================================================
+FAIL: test_unknown_op (__main__.TestJpatch.test_unknown_op)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 213, in test_unknown_op
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 0 != 1 : expected exit 1 (error), got 0; stdout='{"a": 1}\n'
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.647s
+
+FAILED (failures=3)
+[0m
+<template>
+    ## Objective
+    - Implement a single-file Python 3 program `jpatch.py` that applies JSON Patch (RFC 6902) to a JSON document using only the standard library.
+
+    ## Important Details
+    - Must implement JSON Pointer (RFC 6901) with proper `~1` and `~0` decoding.
+    - Supported operations: `add`, `remove`, `replace`, `move`, `copy`, and `test`.
+    - Error handling must be atomic: print error to `stderr`, print nothing to `stdout`, and exit with code 1.
+    - Must preserve object key order in the output.
+    - Must handle specific array behaviors (e.g., `'-'` for end-of-array, canonical decimal indices).
+    - Must pass the existing `test_jpatch.py` without modification.
+    - `replace` operation on dictionaries should update the value in place to preserve key order.
+    - `replace` operation on arrays should replace the element at the specified index.
+    - Unknown operations should result in an exit code of 1.
+
+    ## Work State
+    ### Completed
+    - Implemented core functions: `decode_pointer`, `get_at_path`, `get_parent_and_key`, `add_to_path`, `remove_from_path`, and `apply_patch`.
+    - Implemented all required operations: `add`, `remove`, `replace`, `move`, `copy`, and `test`.
+    - Implemented atomic application by working on a deep copy of the document.
+
+    ### Active
+    - Debugging and fixing `jpatch.py` based on `test_jpatch.py` failures.
+    - Addressing key order preservation issues in `replace` and `add` operations.
+    - Investigating sequence errors in `test_sequence_many_ops`.
+    - Fixing `unknown_op` to ensure correct exit status.
+
+    ### Blocked
+    - (none)
+
+    ## Next Move
+    1. Refactor `apply_patch` and helper functions to ensure correct key ordering and array index handling for `replace` and `add`.
+    2. Resolve the logic errors causing `test_sequence_many_ops` to fail.
+    3. Update `unknown_op` handling to exit with status 1.
+    4. Verify the fix by running `python3 test_jpatch.py`.
+
+    ## Relevant Files
+    - `jpatch.py`: The implementation of the JSON Patch utility.
+    - `test_jpatch.py`: The acceptance test suite for `jpatch.py`.
+    </template>
+Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed.
+[0m$ [0mls
+jpatch.py
+test_jpatch.py
+[0m
+[0m→ [0mRead jpatch.py
+[0m
+[0m$ [0mpython3 test_jpatch.py
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5xd87x_l/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5xd87x_l/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw4kjy4w4/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpw4kjy4w4/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwbob3raa/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwbob3raa/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4jarb1zk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4jarb1zk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdk36qr_u/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdk36qr_u/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprslzxgcb/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmprslzxgcb/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsptwk2un/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsptwk2un/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpj5fckd27/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpj5fckd27/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmap77rrt/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpmap77rrt/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpoxp9o9ae/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpoxp9o9ae/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcljp62zi/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcljp62zi/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph32u_tik/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmph32u_tik/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpllpesi7l/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpllpesi7l/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp81wsgkcv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp81wsgkcv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe51vgu59/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe51vgu59/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpyr46engo/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpyr46engo/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp74argz4k/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp74argz4k/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl66x1uau/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl66x1uau/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqfytjsbe/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpqfytjsbe/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp33owb2mv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp33owb2mv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpm6xk48fv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpm6xk48fv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5sg64_zp/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp5sg64_zp/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ddafzxc/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp1ddafzxc/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe1v96m2e/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe1v96m2e/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphp47wy3a/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphp47wy3a/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcyhgs3w3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpcyhgs3w3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp123rikt5/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp123rikt5/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp7dnj1rdl/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp7dnj1rdl/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbfsmpzt_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbfsmpzt_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeb0j9v7h/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeb0j9v7h/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpg1airp2r/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpg1airp2r/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwfsf5ycj/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpwfsf5ycj/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgsze_uif/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgsze_uif/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpu4aid1jq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpu4aid1jq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_5sejq2n/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp_5sejq2n/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe850wf2u/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpe850wf2u/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpb9sn3y9t/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpb9sn3y9t/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F
+======================================================================
+FAIL: test_A5_replace (__main__.TestJpatch.test_A5_replace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 50, in test_A5_replace
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"foo": "bar", "baz": "boo"} expected {"baz": "boo", "foo": "bar"}
+
+======================================================================
+FAIL: test_sequence_many_ops (__main__.TestJpatch.test_sequence_many_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 230, in test_sequence_many_ops
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"users": [{"tags": [], "name": "cid"}, {"name": "ann"}, {"tags": [], "name": "cid"}]} expected {"users": [{"name": "bob", "tags": []}, {"name": "ann"}, {"name": "cid", "tags": ["x"]}]}
+
+======================================================================
+FAIL: test_unknown_op (__main__.TestJpatch.test_unknown_op)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 213, in test_unknown_op
+    self.assertEqual(rc, 1, f"expected exit 1 (error), got {rc}; stdout={out!r}")
+AssertionError: 0 != 1 : expected exit 1 (error), got 0; stdout='{"a": 1}\n'
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.638s
+
+FAILED (failures=3)
+[0m
+[0m← [0mEdit jpatch.py
+Index: /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+===================================================================
+--- /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
++++ /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+@@ -130,10 +130,9 @@
+             actual_value = get_at_path(new_doc, path_parts)
+             if actual_value != op_obj["value"]:
+                 raise ValueError("Test failed")
+         else:
+-            # RFC 6902: ignore unrecognized operations
+-            pass
++            raise ValueError(f"Unknown operation: {op}")
+             
+     return new_doc
+ 
+ def main():
+
+[0m
+[0m$ [0mpython3 test_jpatch.py
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6up6iw6s/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp6up6iw6s/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnexeswg7/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnexeswg7/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsi2s9mab/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpsi2s9mab/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr139gkoq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpr139gkoq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp56vxzk7c/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp56vxzk7c/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp0lejs4ke/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp0lejs4ke/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgjhn2sj_/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpgjhn2sj_/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp10xiwhno/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp10xiwhno/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk3s703t1/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk3s703t1/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeflls2gn/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeflls2gn/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvz890jkr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpvz890jkr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnsce349n/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpnsce349n/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk76ufa7t/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpk76ufa7t/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4jewy6i8/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp4jewy6i8/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkm_oj6id/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpkm_oj6id/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppuysx1iz/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppuysx1iz/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpldx43u48/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpldx43u48/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdl51a4a3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdl51a4a3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp69uy_6np/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp69uy_6np/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd7gukkvk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpd7gukkvk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp777hwa06/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp777hwa06/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppevxqnd3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmppevxqnd3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpolzh05of/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpolzh05of/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpp4fjv9z2/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpp4fjv9z2/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp16ioqikp/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp16ioqikp/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8zn2xaj3/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp8zn2xaj3/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeom82srr/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpeom82srr/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdbip5abv/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdbip5abv/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl_okvjqb/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpl_okvjqb/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx4l3sph9/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpx4l3sph9/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpc4t3w4h2/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpc4t3w4h2/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdhcipoxk/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpdhcipoxk/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbvfqfmdd/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpbvfqfmdd/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphpjt9moq/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmphpjt9moq/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+F/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpzmq8d6ef/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpzmq8d6ef/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp0na52us6/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmp0na52us6/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv2_k2m6t/doc.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py:10: ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/tmpv2_k2m6t/patch.json' mode='w' encoding='UTF-8'>
+  json.dump(doc, open(dp, "w")); json.dump(patch, open(pp, "w"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+======================================================================
+FAIL: test_A5_replace (__main__.TestJpatch.test_A5_replace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 50, in test_A5_replace
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"foo": "bar", "baz": "boo"} expected {"baz": "boo", "foo": "bar"}
+
+======================================================================
+FAIL: test_sequence_many_ops (__main__.TestJpatch.test_sequence_many_ops)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/test_jpatch.py", line 230, in test_sequence_many_ops
+    self.assertTrue(strict_eq(json.loads(out), expected), f"got {out.strip()} expected {json.dumps(expected)}")
+AssertionError: False is not true : got {"users": [{"tags": [], "name": "cid"}, {"name": "ann"}, {"tags": [], "name": "cid"}]} expected {"users": [{"name": "bob", "tags": []}, {"name": "ann"}, {"name": "cid", "tags": ["x"]}]}
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.641s
+
+FAILED (failures=2)
+[0m
+[0m→ [0mRead test_jpatch.py
+[0m
+[0m← [0mEdit jpatch.py
+Index: /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+===================================================================
+--- /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
++++ /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+@@ -59,9 +59,15 @@
+                 raise ValueError("Index out of range")
+         else:
+             raise ValueError("Invalid array index")
+     elif isinstance(parent, dict):
+-        parent[key_or_index] = value
++        if key_or_index in parent:
++            # If it exists, we replace it to preserve order or just overwrite
++            # However, the spec says add can replace.
++            # To preserve order in dict, we should update the existing key.
++            parent[key_or_index] = value
++        else:
++            parent[key_or_index] = value
+     else:
+         raise ValueError("Target is not a container")
+ 
+ def remove_from_path(doc, path_parts):
+
+[0m
+[0m← [0mEdit jpatch.py
+Index: /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+===================================================================
+--- /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
++++ /home/jim/repos/local-coding-harnesses/models-fair/gemma4-opencode/jpatch/jpatch.py
+@@ -112,8 +112,15 @@
+     remove_from_path(new_doc, path_parts)
+ elif op == "replace":
+     if "value" not in op_obj:
+         raise ValueError("Operation 'replace' missing 'value'")
++    if isinstance(parent, dict):
++        # To preserve order, we must update the existing key
++        # but replace_at_path is not implemented.
++        # Let's use a simpler approach: we already have remove and add.
++        # But remove/add might change order if not careful.
++        # Actually, for dicts, parent[key] = value is enough to preserve order in Python 3.7+
++        pass
+     remove_from_path(new_doc, path_parts)
+     add_to_path(new_doc, path_parts, op_obj["value"])
+ elif op == "move":
+     if "from" not in op_obj:
+
+[0m
+[0m✗ [0mEdit jpatch.py failed
+[91m[1mError: [0mCould not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+[0m→ [0mRead jpatch.py
