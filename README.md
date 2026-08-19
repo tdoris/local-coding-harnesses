@@ -8,6 +8,7 @@ Ollama. See the two HTML reports for findings.
 - `bin/local-agent` — the wrapper: runs a harness against a local Ollama model
   with a tuned private server (context, q8_0 KV cache, pinned sampling). Expects
   to live on `$PATH`; `claude-ollama` is a thin alias for `local-agent claude`.
+  Full usage docs: [bin/README.md](bin/README.md).
 - `cloud/tasks/` — the objective tasks: `tomlq` and `jpatch` specs, hidden-test
   graders, and oracle-generated case corpora (build_cases / grade / cases).
 - `scripts/` — run orchestration (bake-off drivers, per-stage runners) and
