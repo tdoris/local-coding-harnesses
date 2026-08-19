@@ -1,0 +1,11 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Fixed. In `llm/llama_server.go`:
+
+- **Cause:** llama-server's timing reports split the prompt into `prompt_n` (newly evaluated) and `cache_n` (served from the prompt cache), but the code only parsed `prompt_n`, so cached prompt tokens were omitted from the count.
+- **Fix:** Added a `CacheN` field to both `llamaServerCompletionResponse.Timings` and `llamaServerChatResponse.Timings`, and changed both assignment sites (completion stream at ~line 1470 and chat stream at ~line 1766) to `PromptEvalCount = CacheN + PromptN`.
+
+`go test ./llm/...` passes, including `TestLlamaServerCompletionPromptEvalCountIncludesCache` and `TestLlamaServerChatPromptEvalCountIncludesCache` (cache_n 12 + prompt_n 5 → 17).

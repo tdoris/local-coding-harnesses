@@ -69,10 +69,31 @@ fix commit and **fail** with the fix reverted. A tenth candidate
 (`632ff0079`, "remove duplicate template parsing") was rejected because it is a
 pure refactor — reverting it broke nothing, so it cannot discriminate.
 
+## Baseline: pi + qwen3.8, easy mode
+
+| Task | Wall | Solved |
+|---|---|---|
+| `discover-radeon-igpu` | 22s | yes |
+| `llm-cached-tokens` | 23s | yes |
+| `llm-projector-offload` | 27s | yes |
+| `server-mmproj-layers` | 28s | yes |
+| `tools-json-braces` | 29s | yes |
+| `llm-sse-ping` | 33s | yes |
+| `llm-mmap-doublecount` | 85s | yes |
+| `llm-shift-headroom` | 103s | yes |
+| `llm-load-stall` | 146s | yes |
+
+**9/9 solved**, 22–146s. Every solve was verified by hand: each touched exactly
+one source file and none touched a test file. Effort tracks difficulty — the
+one-line fixes finished in ~25s, the 44-line `llm-load-stall` fix took 146s.
+
 ## Known limitation
 
-In `easy` mode pi + qwen3.8 solves these in 22–33s each, which suggests the
-symptom text does too much of the diagnostic work. `hard` mode exists for that
-reason and has not yet been run. Treat easy-mode results as a floor check
-("can the pairing work in a large repo at all"), not as a discriminating
-benchmark.
+Easy mode is **saturated** for this pairing, exactly as `tomlq`/`jpatch` are. A
+100% solve rate establishes a floor — pi + qwen3.8 genuinely can locate and fix
+real bugs in a 281k-LOC repository — but it cannot discriminate between
+harnesses or measure an improvement.
+
+`hard` mode (terse issue title, package not named) exists for that reason and
+has not yet been run. If it also saturates, the next lever is multi-file fixes
+or tasks whose failing test does not name the symptom.

@@ -1,0 +1,16 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. 
+
+**Fix:** In `server/create.go` (`ggufLayersWithMediaType`, line 1235), the projector classification only checked for `vision.block_count > 0` (with `block_count == 0`) or `Kind() == "projector"`. New mmproj files (e.g. gemma multimodal projectors) use architecture-prefixed keys like `clip.vision.block_count` and are tagged with `general.type = "mmproj"`, so they fell through to the plain model media type.
+
+Added one condition to the branch:
+
+```go
+} else if (f.KV().Uint("block_count") == 0 && f.KV().Uint("vision.block_count") > 0) || f.KV().Kind() == "projector" || f.KV().String("general.type") == "mmproj" {
+```
+
+`go test ./server/...` now passes, including `TestGGUFLayersClassifiesMMProjAsProjector`.

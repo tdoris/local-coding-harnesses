@@ -1,0 +1,16 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. Here's a summary of the fix in `llm/llama_server.go`:
+
+**Root cause:** In `completionPromptForRequest`, the prompt budget for context-shifting was `s.options.NumCtx - 1` — i.e. the prompt could occupy (nearly) the entire context, leaving only 1 token of headroom for the response. Additionally, a negative `NumKeep` fell back to `len(tokens)`, producing a "truncated" prompt that was actually longer than the limit.
+
+**Fix:**
+1. Added `contextShiftPromptLimit(numCtx, numKeep)` which reserves real generation headroom: the prompt is limited to `numCtx - (numCtx-numKeep)/2` (clamped to `[0, numCtx-1]`, negative keep treated as 0, invalid context → 0).
+2. In `completionPromptForRequest`:
+   - Prompts that fit within `NumCtx - 1` still pass through untouched.
+   - Over-limit prompts are truncated to `contextShiftPromptLimit(...)`.
+   - When the tokenizer adds a BOS token, it's counted as one extra kept token (`nKeep++`).
+   - Negative `NumKeep` now clamps to 0 instead of `len(tokens)`.

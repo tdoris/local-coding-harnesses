@@ -1,0 +1,23 @@
+[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass, including with `-race -count=3`. 
+
+## Summary
+
+**Bug:** `llamaServerRunner.WaitUntilRunning` never detected stalls in llama-server's output during model load — the runner had no output-activity tracking at all (the `startLoadTracking`/`stopLoadTracking`/`lastLoadActivity` APIs the package tests expect were missing, and the build failed).
+
+**Fix in `llm/llama_server.go` (non-test files only):**
+
+1. **Load activity tracking on the runner** — added `loadTracking`/`lastActivity` fields plus:
+   - `startLoadTracking(start time.Time)` / `stopLoadTracking()` (flag guarded, mutex-protected)
+   - `lastLoadActivity()` accessor
+   - `recordLoadActivityLocked()` which refreshes the timestamp only while tracking is active
+
+2. **`memoryParsingWriter.Write`** now records output activity on the runner (via the already-held lock) while tracking is on, so any llama-server output refreshes the "last activity" timestamp.
+
+3. **`WaitUntilRunning`** starts/stops load tracking and replaces the plain deadline check with a stall check: if no output has been seen for `envconfig.LoadTimeout()` (`OLLAMA_LOAD_TIMEOUT`), it returns a `timed out waiting for llama-server to start (stalled with no output …)` error instead of waiting indefinitely.
+
+4. **`getServerStatus`** now recognizes llama-server's error-envelope form `{"error":{"message":"Loading model",…}}` as `ServerStatusLoadingModel`, matching the health-parsing tests.
