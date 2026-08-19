@@ -1,0 +1,69 @@
+{
+  "repo": "https://github.com/ollama/ollama",
+  "note": "SWE-bench style. Check out the fix commit (tests in post-fix state), revert ONLY the non-test source files to the parent. The agent must re-implement the fix. The repo's own tests are the oracle.",
+  "tasks": [
+    {
+      "id": "tools-json-braces",
+      "sha": "32a97b7493786e5784e4445e80c1a078c14c255f",
+      "pkg": "tools",
+      "symptom": "When a model emits a tool call whose JSON string argument contains a '}' or '{' character, the parser ends the tool call at the wrong place and the call is truncated or rejected. Brace characters inside JSON string literals must not be treated as structural.",
+      "title": "ignore braces inside JSON strings when detecting tool call end"
+    },
+    {
+      "id": "llm-sse-ping",
+      "sha": "e828061b6e2a49639eb5e3415412006241d51772",
+      "pkg": "llm",
+      "symptom": "The llama-server SSE response stream sometimes contains comment/ping lines. These are being parsed as if they were data events, causing errors or bogus output. Comment lines in an SSE stream should be ignored.",
+      "title": "ignore llama-server SSE ping comments"
+    },
+    {
+      "id": "llm-projector-offload",
+      "sha": "01557ff313adef5ebfbb0fefb6b3125d22d99723",
+      "pkg": "llm",
+      "symptom": "Multimodal projectors are not being offloaded to the GPU when they should be; GPU offload is incorrectly disallowed for projector layers.",
+      "title": "allow GPU offload for projectors"
+    },
+    {
+      "id": "discover-radeon-igpu",
+      "sha": "4c076813be6bbd78a5009ea5c231dc29db853256",
+      "pkg": "discover",
+      "symptom": "The Radeon 8060S integrated GPU is being filtered out during device discovery. It should be allowed by default.",
+      "title": "allow Radeon 8060S iGPU by default"
+    },
+    {
+      "id": "llm-shift-headroom",
+      "sha": "c191a145bb6b40c7f8fa1ba91f3c7c3467f68983",
+      "pkg": "llm",
+      "symptom": "When a prompt has been shifted, the space reserved for generation is computed incorrectly, leaving too little headroom for the response.",
+      "title": "preserve generation headroom for shifted prompts"
+    },
+    {
+      "id": "server-mmproj-layers",
+      "sha": "5f56a289b3e5284fba1270c0f654397cc5721c99",
+      "pkg": "server",
+      "symptom": "GGUF files that are multimodal projectors (mmproj) are not being classified as projector layers, so their layer accounting is wrong.",
+      "title": "classify mmproj GGUFs as projector layers"
+    },
+    {
+      "id": "llm-cached-tokens",
+      "sha": "35fa277fa97c1e1d1cd7c7f5f9b492f91d6af505",
+      "pkg": "llm",
+      "symptom": "Prompt token counts reported from llama-server omit tokens served from the prompt cache, so the reported counts are too low.",
+      "title": "include cached prompt tokens in llama-server counts"
+    },
+    {
+      "id": "llm-load-stall",
+      "sha": "b7b7fa0454b8267dfed3db88b123c2f0ef7e18b0",
+      "pkg": "llm",
+      "symptom": "When llama-server stalls during model load, the stall is not detected from its output and the caller waits indefinitely instead of surfacing an error.",
+      "title": "detect llama-server load stalls from output"
+    },
+    {
+      "id": "llm-mmap-doublecount",
+      "sha": "0463940334a07ae81f67a9f8cbd62987c35a01c1",
+      "pkg": "llm",
+      "symptom": "'ollama ps' reports inflated memory for a partially offloaded model: memory-mapped weights are counted twice.",
+      "title": "fix ollama ps double-counting mmap'd weights on partial offload"
+    }
+  ]
+}
