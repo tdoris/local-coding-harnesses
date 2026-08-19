@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# setup.sh <task-id> <workdir>
+# Builds an isolated task directory containing NO upstream git history, so the
+# fix cannot be recovered with git. Layout:
+#   - every file at the fix commit (so tests are in their post-fix state)
+#   - the non-test source files rolled back to the parent commit
+#   - a fresh single-commit git repo, so the agent still has diff/status of its
+#     own work but no access to the real fix
+set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC="${BENCH_REPO:-/home/jim/bench-repos/ollama}"
+id="$1"; work="$2"
+read -r sha pkg < <(python3 -c "
+import json,sys
+t=[x for x in json.load(open('$HERE/tasks.json'))['tasks'] if x['id']=='$id']
+if not t: sys.exit('unknown task: $id')
+print(t[0]['sha'], t[0]['pkg'])")
+
+rm -rf "$work"; mkdir -p "$work"
+
+# 1. full tree at the fix commit (tests in post-fix state)
+git -C "$SRC" archive "$sha" | tar -x -C "$work"
+
+# 2. roll back ONLY the non-test source files touched by the fix
+srcs=$(git -C "$SRC" show --name-only --format= "$sha" | grep '\.go$' | grep -v '_test\.go$' || true)
+for f in $srcs; do
+  if git -C "$SRC" cat-file -e "$sha^:$f" 2>/dev/null; then
+    mkdir -p "$work/$(dirname "$f")"
+    git -C "$SRC" show "$sha^:$f" > "$work/$f"
+  else
+    rm -f "$work/$f"      # file was added by the fix
+  fi
+done
+
+# 3. fresh history: the agent can diff its own work, but the fix is unreachable
+git -C "$work" init -q
+git -C "$work" -c user.email=bench@local -c user.name=bench add -A
+git -C "$work" -c user.email=bench@local -c user.name=bench commit -qm "task: $id"
+
+# 4. pin the tests for anti-cheat
+find "$work/$pkg" -name '*_test.go' -exec sha256sum {} \; \
+  | sed "s|$work/||" | sort > "$work/.bench-test-hashes"
+echo "$work"

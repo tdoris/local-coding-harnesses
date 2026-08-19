@@ -1,0 +1,19 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. The affected package was `llm`.
+
+**Cause:** In `llm/llama_server.go`, `completionPromptForRequest` truncated context-shifted prompts to `NumCtx - 1` — i.e., only a one-token "headroom". That left no room for generated tokens between the kept prefix and the prompt tail, so shifted prompts were packed right up against the context limit (the "one-token headroom" regression).
+
+**Fix** (non-test source only, `llm/llama_server.go`):
+- Added `contextShiftPromptLimit(numCtx, numKeep)`, which reserves generation headroom: the prompt is capped at `numKeep + ceil((numCtx - numKeep) / 2)`, clamped to `[0, numCtx-1]`.
+- In `completionPromptForRequest`:
+  - The "prompt fits" gate now uses the full context (`len(tokens) <= NumCtx`) so prompts leaving generation headroom are passed through untouched.
+  - When truncating a shifted prompt, the `numKeep` used for both the limit and the preserved-prefix slice accounts for an implicit BOS token (`tokenizerAddsBOS()`), and truncation keeps `nKeep` leading tokens + the tail, dropping the middle with `limit = contextShiftPromptLimit(...)` instead of `NumCtx - 1`.
+
+**Verification:**
+- `go test ./llm/...` → ok (including `TestContextShiftPromptLimit`, `TestLlamaServerCompletionContextShiftAllowsPromptWithHeadroom`, `TestLlamaServerCompletionContextShiftTruncatesPromptOverContext`, `TestLlamaServerCompletionContextShiftAvoidsOneTokenHeadroomRegression`)
+- `go build ./...` and `go test ./server/...` → all pass
+[36m[local-agent][0m stopping private Ollama server (pid 148787)

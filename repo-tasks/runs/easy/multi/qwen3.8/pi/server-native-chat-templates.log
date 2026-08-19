@@ -1,0 +1,23 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All server package tests pass. Here's a summary of what was broken and the fix.
+
+## Root cause
+
+Two gaps in the `server` package around "native chat templates":
+
+### 1. `GenerateHandler` never used the native GGUF `chat_template`
+`ChatHandler` routes to a native path (`handleNativeChat` → `r.ApplyChatTemplate`), but `GenerateHandler` always rendered the prompt through the Go `TEMPLATE` (via `chatPrompt`/`renderPrompt`). Models that have a `tokenizer.chat_template` and are in native mode (no Go template, or a weaker Go template that should be skipped) therefore got the default `{{ .Prompt }}` rendering instead of the native chat template.
+
+**Fix (`server/routes.go`):** Added `renderNativeGeneratePrompt`, which builds the message list, converts image payloads into inline `[img-N]` markers (passing the data separately to the runner), applies the native chat template via `r.ApplyChatTemplate`, and prepends any deprecated context. `GenerateHandler` now takes this path when `!req.Raw && m.HasChatTemplate && chatModeForModel(m) == chatExecutionModeNative`, otherwise falls back to the existing Go-TEMPLATE flow.
+
+### 2. `shouldPreferChatTemplate` ignored tool round-trip parity
+The old logic only preferred the chat template when it had *strictly more* capabilities. A chat template that handles a full tool round trip (emitting tool calls **and** reading tool responses) should beat a Go template that only emits tool calls — even when the capability sets are otherwise equal (the failing "prefers chat template with stronger tool round trip" case).
+
+**Fix (`server/images.go`):** Reworked the comparison to key off tool round-trip support — keep the Go template if it has a round trip the chat template lacks; prefer the chat template if it has a round trip the Go template lacks; otherwise fall back to the capability-count comparison. This preserves the "keep Go TEMPLATE when chat template has weaker tool support" case.
+
+Verification: `go test ./server/...` — all packages pass (no test files were modified).
+[36m[local-agent][0m stopping private Ollama server (pid 192979)

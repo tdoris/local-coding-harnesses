@@ -1,0 +1,27 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. Summary:
+
+**Cause:** In `discover/runner.go`, `filterIntegratedGPUs` drops all integrated GPUs by default except those approved by `integratedGPUAllowedByDefault`, which only allowed `device.Library == "CUDA"`. AMD's Radeon 8060S iGPU (gfx1151) was therefore always dropped unless the user explicitly set `OLLAMA_IGPU_ENABLE`.
+
+**Fix** (`discover/runner.go:412`):
+```go
+func integratedGPUAllowedByDefault(device ml.DeviceInfo) bool {
+	switch {
+	case device.Library == "CUDA":
+		return true
+	// Allowlist of known-good AMD iGPUs (Radeon 8060S family)
+	case device.Library == "ROCm" && strings.Contains(device.GFXTarget, "gfx1151"):
+		return true
+	}
+	return false
+}
+```
+
+**Verification:**
+- `go test ./discover/...` → `ok` (including `TestFilterIntegratedGPUs`, which confirms the 8060S/gfx1151 is admitted by default while gfx1103 and generic AMD iGPUs remain dropped, and explicit `OLLAMA_IGPU_ENABLE=true/false` still work)
+- `go test ./ml/... ./server/...` → all pass, no failures
+[36m[local-agent][0m stopping private Ollama server (pid 144584)

@@ -1,0 +1,19 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All three packages pass. The missing gemma4-12b support was split across exactly the three packages:
+
+1. **`server/renderer_resolution.go`** — gemma4-12b was missing from the legacy renderer resolution:
+   - Added `"12b"` to the name-based match list that resolves to the `gemma4-large` renderer (e.g. `gemma-4-12b-it`).
+   - Lowered `gemma4LargeMinParameterCount` from 16B to 8B so a legacy model type of `"12B"` resolves to `gemma4-large` (while 4.3B stays small, 25.2B stays large).
+
+2. **`x/create/create.go`** — the tensor import transform registry didn't recognize the unified gemma4 architecture, so safetensors import fell back to `noopImportTransform`:
+   - Registered `Gemma4UnifiedForConditionalGeneration` and the `gemma4_unified` model-type fallback (used via `sourceModelConfig.Architecture()` when no `architectures` field is present) → `newGemma4ImportTransform`.
+
+3. **`x/models/gemma4/gemma4.go`** — the `parseSuppressTokens` helper (parsing `suppress_tokens` from generation config JSON, returning nil for absent/invalid payloads) was missing entirely, breaking the package build:
+   - Added `parseSuppressTokens(data []byte) []int32`.
+
+Verified: `go test ./server/... ./x/create/... ./x/models/gemma4/...` — all pass, no test files touched.
+[36m[local-agent][0m stopping private Ollama server (pid 167111)

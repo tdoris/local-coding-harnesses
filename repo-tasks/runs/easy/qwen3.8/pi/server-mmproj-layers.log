@@ -1,16 +1,17 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-All tests pass. 
+Fixed. All `go test ./server/...` packages now pass.
 
-**Fix:** In `server/create.go` (`ggufLayersWithMediaType`, line 1235), the projector classification only checked for `vision.block_count > 0` (with `block_count == 0`) or `Kind() == "projector"`. New mmproj files (e.g. gemma multimodal projectors) use architecture-prefixed keys like `clip.vision.block_count` and are tagged with `general.type = "mmproj"`, so they fell through to the plain model media type.
+**Root cause:** In `server/create.go` (`ggufLayersWithMediaType`), the media-type classification for GGUF blobs only treated a file as a projector when `general.type == "projector"` (or it had a standalone `vision.block_count`). Multimodal projector files (mmproj) use `general.type == "mmproj"`, so they were misclassified as `application/vnd.ollama.image.model`, giving them wrong layer accounting.
 
-Added one condition to the branch:
+**Fix** (one line, `server/create.go:1235`):
 
 ```go
-} else if (f.KV().Uint("block_count") == 0 && f.KV().Uint("vision.block_count") > 0) || f.KV().Kind() == "projector" || f.KV().String("general.type") == "mmproj" {
+} else if (f.KV().Uint("block_count") == 0 && f.KV().Uint("vision.block_count") > 0) || f.KV().Kind() == "projector" || f.KV().Kind() == "mmproj" {
 ```
 
-`go test ./server/...` now passes, including `TestGGUFLayersClassifiesMMProjAsProjector`.
+Now files with `general.type` of either `projector` or `mmproj` are classified as `application/vnd.ollama.image.projector`, which makes `TestGGUFLayersClassifiesMMProjAsProjector` pass along with the rest of the suite.
+[36m[local-agent][0m stopping private Ollama server (pid 125839)

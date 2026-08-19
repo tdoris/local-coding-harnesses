@@ -1,13 +1,11 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-All tests pass. 
+All tests pass.
 
-**Root cause:** In `tools/tools.go`, the `done()` method did a naive brace/bracket count over the buffer to detect the end of a tool call. It ignored JSON string state, so a `}` (or `]`) inside a string argument decremented the structural count — making the parser conclude the tool call was complete at the wrong position, truncating or rejecting it (especially when streaming, where `done()` firing early discarded the not-yet-complete call).
+**Cause:** In `tools/tools.go`, the `done()` method determined the end of a tool call by counting `{`/`}` (or `[`/`]`) characters, but it did so blindly — without tracking JSON string context. A brace inside a string value like `{"note": "a}b"}` would incorrectly decrement the brace count and signal "done" prematurely, truncating or rejecting the call.
 
-**Fix:** Made `done()` string- and escape-aware (same technique already used by `findArguments` in the same file): it now tracks `inString` and `escaped` state and only counts braces/brackets that are outside JSON string literals.
-
-- Changed: `tools/tools.go` (only `done()`)
-- Verified: `go test -count=1 ./tools/...` → `ok`
+**Fix:** Added `inString`/`escaped` state tracking to `done()` (mirroring what `findArguments` already does), so `"` toggles string mode, `\\` handles escapes, and only braces/brackets outside string literals affect the count.
+[36m[local-agent][0m stopping private Ollama server (pid 98437)

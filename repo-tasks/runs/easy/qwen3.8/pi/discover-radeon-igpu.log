@@ -1,24 +1,24 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-Fixed. All tests pass.
+Fixed and passing. 
 
-**Cause:** In `discover/runner.go`, `filterIntegratedGPUs` drops integrated GPUs unless explicitly enabled via `OLLAMA_IGPU_ENABLE`, with `integratedGPUAllowedByDefault` as the allowlist — which only permitted `CUDA` devices. The Radeon 8060S (ROCm, `gfx1151`) was therefore filtered out by default.
+**Cause:** `integratedGPUAllowedByDefault()` in `discover/runner.go` only admitted CUDA integrated GPUs by default. The ROCm Radeon 8060S (gfx1151) was not on the allowlist, so `filterIntegratedGPUs` dropped it in auto mode.
 
-**Fix** (`discover/runner.go:412`): extended the allowlist to also admit ROCm integrated GPUs with the `gfx1151` compute target:
+**Fix** (`discover/runner.go:412`): also allow integrated GPUs whose `GFXTarget` is a `gfx115x` target (the 8060S / Strix Halo class, gfx1151), while still dropping the 780M (gfx1103) in auto mode. Explicit `OLLAMA_IGPU_ENABLE` true/false behavior is unchanged.
 
 ```go
 func integratedGPUAllowedByDefault(device ml.DeviceInfo) bool {
-	if device.Library == "CUDA" {
+	// Integrated GPUs are allowed by default when the compute target is known
+	// to work well, e.g. the AMD Radeon 8060S (gfx1151) or NVIDIA integrated.
+	if strings.HasPrefix(device.GFXTarget, "gfx115") {
 		return true
 	}
-	// Allowlist AMD integrated GPUs with a supported compute target (e.g. Radeon 8060S).
-	return device.Library == "ROCm" && device.GFXTarget == "gfx1151"
+	return device.Library == "CUDA"
 }
 ```
 
-This matches the test expectations: `gfx1151` (8060S) admitted, `gfx1103` (780M) still dropped in auto mode, and explicit `OLLAMA_IGPU_ENABLE` true/false overrides unchanged.
-
-`go test ./discover/...` → `ok`
+`go test ./discover/...` → `ok`.
+[36m[local-agent][0m stopping private Ollama server (pid 102155)

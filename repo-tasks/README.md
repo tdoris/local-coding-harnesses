@@ -69,31 +69,57 @@ fix commit and **fail** with the fix reverted. A tenth candidate
 (`632ff0079`, "remove duplicate template parsing") was rejected because it is a
 pure refactor — reverting it broke nothing, so it cannot discriminate.
 
-## Baseline: pi + qwen3.8, easy mode
+## Anti-leak (important)
 
-| Task | Wall | Solved |
+An earlier version checked out the fix commit as HEAD and reverted the source in
+the working tree. That left the answer one `git restore --source=HEAD` away, and
+the agent found it — it reported *"Restored llm/llama_server.go from HEAD"* and
+finished a 44-line fix in 19s. All results from that version were discarded.
+
+Task directories now contain **no upstream history**: `git archive` the fix
+commit's tree, roll back the source files, then `git init` a fresh single-commit
+repo. The agent keeps git for diffing its own work; the fix is unreachable.
+Verified: 1 commit, no upstream refs, fix commit absent, and
+`git restore --source=HEAD` returns the *broken* code.
+
+## Results
+
+See [RESULTS.md](RESULTS.md). Summary for pi + qwen3.8:
+
+| Tier | Easy | Hard |
 |---|---|---|
-| `discover-radeon-igpu` | 22s | yes |
-| `llm-cached-tokens` | 23s | yes |
-| `llm-projector-offload` | 27s | yes |
-| `server-mmproj-layers` | 28s | yes |
-| `tools-json-braces` | 29s | yes |
-| `llm-sse-ping` | 33s | yes |
-| `llm-mmap-doublecount` | 85s | yes |
-| `llm-shift-headroom` | 103s | yes |
-| `llm-load-stall` | 146s | yes |
+| Single-file (9) | 9/9 | 9/9 |
+| Multi-file (4) | 3/4 | 3/4 |
 
-**9/9 solved**, 22–146s. Every solve was verified by hand: each touched exactly
-one source file and none touched a test file. Effort tracks difficulty — the
-one-line fixes finished in ~25s, the 44-line `llm-load-stall` fix took 146s.
+**Both single-file tiers are saturated.** 18/18 real bugs fixed in a 281k-LOC Go
+repo with no git shortcut — a genuine capability result, but useless for ranking
+harnesses.
 
-## Known limitation
+**Hard mode barely matters for single-file tasks** (723s vs 750s total, same
+score). ollama's commit subjects leak the package through domain vocabulary
+("llama-server" → `llm`, "Radeon iGPU" → `discover`), so removing the explicit
+package name changes little. On multi-file tasks it does cost real time
+(1.6-2.9x), because with up to 5 packages the localization is no longer implied.
 
-Easy mode is **saturated** for this pairing, exactly as `tomlq`/`jpatch` are. A
-100% solve rate establishes a floor — pi + qwen3.8 genuinely can locate and fix
-real bugs in a 281k-LOC repository — but it cannot discriminate between
-harnesses or measure an improvement.
+## The one discriminating task
 
-`hard` mode (terse issue title, package not named) exists for that reason and
-has not yet been run. If it also saturates, the next lever is multi-file fixes
-or tasks whose failing test does not name the symptom.
+`ornith9b-parser-renderer` is the only task never solved, in either mode. It is a
+**feature addition** requiring new files rather than a bug fix, and it fails in
+instructive ways:
+
+- easy mode: wrote both new files, but with `newline in string` — Go that does
+  not compile. It never built its own output.
+- best observed: 1/2 packages, on a longer manual attempt.
+- hard mode: twice returned an empty response and wrote nothing at all (pi exits
+  0 printing nothing) — a real failure mode of a max-reasoning-effort model on an
+  under-specified task.
+
+This is the only task in the suite with headroom to measure whether the
+`skills/` hardening (`verify-before-finishing`, `cli-contract`) actually helps:
+a single `go build ./...` would have caught the easy-mode failure.
+
+## Where difficulty should come from next
+
+Bug-fix commits are too tractable for this pairing. Feature additions requiring
+new files are not. Mine for those, and for commits whose tests are less
+localized.

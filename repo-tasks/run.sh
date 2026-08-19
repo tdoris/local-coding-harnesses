@@ -1,26 +1,27 @@
 #!/usr/bin/env bash
-# run.sh <task-id> <harness> [model]   e.g. run.sh tools-json-braces pi qwen3.8
+# run.sh <task-id> <harness> [model]   env: BENCH_MODE=easy|hard  TASKS_FILE=...
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TASKS="${TASKS_FILE:-$HERE/tasks.json}"
 id="$1"; harness="${2:-pi}"; model="${3:-qwen3.8}"
-W="/home/jim/bench-repos/wt-$id-$harness"
-OUT="$HERE/runs/${BENCH_MODE:-easy}/$model/$harness"; mkdir -p "$OUT"
-
-read -r pkg symptom < <(python3 -c "
+tier=$(python3 -c "
 import json
-t=[x for x in json.load(open('$HERE/tasks.json'))['tasks'] if x['id']=='$id'][0]
-print(t['pkg'], t['symptom'])")
+print([x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0].get('tier','single'))")
+W="/home/jim/bench-repos/wd-$id-$harness"
+OUT="$HERE/runs/${BENCH_MODE:-easy}/$tier/$model/$harness"; mkdir -p "$OUT"
+
+pkglist=$(python3 -c "
+import json
+t=[x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0]
+print(', '.join(t.get('pkgs') or [t['pkg']]))")
 symptom=$(python3 -c "
 import json
-print([x for x in json.load(open('$HERE/tasks.json'))['tasks'] if x['id']=='$id'][0]['symptom'])")
-
-"$HERE/setup.sh" "$id" "$W" >/dev/null
-
+print([x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0]['symptom'])")
 title=$(python3 -c "
 import json
-print([x for x in json.load(open('$HERE/tasks.json'))['tasks'] if x['id']=='$id'][0].get('title',''))")
+print([x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0].get('title',''))")
 
-# BENCH_MODE=easy  -> descriptive symptom + the package is named  (tests comprehension + editing)
-# BENCH_MODE=hard  -> terse issue title only, package NOT named   (tests repo navigation)
+TASKS_FILE="$TASKS" "$HERE/setup.sh" "$id" "$W" >/dev/null
+
 if [ "${BENCH_MODE:-easy}" = hard ]; then
 PROMPT="This is the ollama Go repository (Go, ~280k LOC).
 
@@ -28,29 +29,30 @@ ISSUE
 $title
 
 YOUR TASK
-Locate the affected package yourself, find the cause, and fix it in the source.
-Then verify by running that package's tests, e.g. 'go test ./<pkg>/...'.
+Locate every affected package yourself, find the cause, and fix it in the source.
+The change may span several files and several packages.
+Verify by running the affected packages' tests, e.g. 'go test ./<pkg>/...'.
 
 Rules:
 - Do NOT modify, delete, or add any *_test.go file. The tests define correct behaviour.
 - Change only non-test source files.
-- You are done when the affected package's tests pass."
+- You are done when the affected packages' tests pass."
 else
-PROMPT="This is the ollama Go repository. There is a bug in the \`$pkg\` package.
+PROMPT="This is the ollama Go repository. Something is missing or broken across these package(s): $pkglist
 
-BUG REPORT
+REPORT
 $symptom
 
 YOUR TASK
-Find the cause and fix it in the source. Verify with:
+Find the cause and fix it in the source. The change may span several files and
+several packages. Verify with:
 
-    go test ./$pkg/...
+    go test ./<pkg>/...   (for each of: $pkglist)
 
 Rules:
 - Do NOT modify, delete, or add any *_test.go file. The tests define correct behaviour.
 - Change only non-test source files.
-- The fix is small. Locate the relevant code before editing.
-- You are done when 'go test ./$pkg/...' passes."
+- You are done when every listed package's tests pass."
 fi
 
 case "$harness" in
@@ -66,5 +68,5 @@ t0=$(date +%s)
     local-agent --model "$model" "${A[@]}" "$PROMPT" </dev/null \
     > "$OUT/$id.log" 2>&1 ); rc=$?
 wall=$(( $(date +%s) - t0 ))
-verdict=$("$HERE/grade.sh" "$id" "$W")
+verdict=$(TASKS_FILE="$TASKS" "$HERE/grade.sh" "$id" "$W")
 echo "### $id $harness/$model exit=$rc wall=${wall}s :: $verdict" | tee -a "$OUT/results.txt"

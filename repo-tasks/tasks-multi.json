@@ -1,0 +1,61 @@
+{
+  "repo": "https://github.com/ollama/ollama",
+  "note": "Multi-file tier. Same SWE-bench construction as tasks.json, but each fix spans several source files and often several packages, so 'pkgs' lists every package that must pass.",
+  "tasks": [
+    {
+      "id": "gemma4-12b-support",
+      "sha": "50bbda566067b4598c67b90e08db244606766dda",
+      "tier": "multi",
+      "pkgs": [
+        "server",
+        "x/create",
+        "x/models/gemma4"
+      ],
+      "pkg": "server",
+      "n_src_files": 3,
+      "title": "add support for gemma4-12b",
+      "symptom": "A change spanning 3 source files across 3 package(s) is missing. Add support for gemma4-12b."
+    },
+    {
+      "id": "llama-server-followups",
+      "sha": "630882621baac7bbd3298afcb13e64ed5b3f32dc",
+      "tier": "multi",
+      "pkgs": [
+        "discover",
+        "llm",
+        "server",
+        "x/imagegen/mlx",
+        "x/mlxrunner/mlx"
+      ],
+      "pkg": "discover",
+      "n_src_files": 7,
+      "title": "llama-server followups",
+      "symptom": "A change spanning 7 source files across 5 package(s) is missing. Llama-server followups."
+    },
+    {
+      "id": "ornith9b-parser-renderer",
+      "sha": "2e474c98f91a3995001abfa80c41f7e11ad5f4a3",
+      "tier": "multi",
+      "pkgs": [
+        "model/parsers",
+        "model/renderers"
+      ],
+      "pkg": "model/parsers",
+      "n_src_files": 4,
+      "title": "add Ornith 9B renderer/parser support",
+      "symptom": "A change spanning 4 source files across 2 package(s) is missing. Add ornith 9b renderer/parser support."
+    },
+    {
+      "id": "server-native-chat-templates",
+      "sha": "16739dee607e645392e6f4b21674dc951686d0f2",
+      "tier": "multi",
+      "pkgs": [
+        "server"
+      ],
+      "pkg": "server",
+      "n_src_files": 3,
+      "title": "align generate with native chat templates",
+      "symptom": "A change spanning 3 source files across 1 package(s) is missing. Align generate with native chat templates."
+    }
+  ]
+}

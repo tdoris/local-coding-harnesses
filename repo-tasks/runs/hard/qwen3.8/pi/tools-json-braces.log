@@ -1,0 +1,15 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Fixed. Summary:
+
+**Cause:** In `tools/tools.go`, the `Parser.done()` method counted `{`/`}` (or `[`/`]`) occurrences to detect the end of a tool call, but it did so naively — braces embedded inside JSON string values (e.g. `{"name": "get_weather", "arguments": {"query": "foo}bar"}}`) were counted as delimiters, prematurely marking the parser as done.
+
+**Fix:** Added JSON string/escape state tracking to `done()` in `tools/tools.go` (same pattern already used by `findArguments`): it now skips over bytes inside double-quoted strings and handles backslash escapes, so only structural braces/brackets affect the open/close count.
+
+**Verification:**
+- Before: `TestDone/json_close_brace_inside_string` and `TestDone/list_close_bracket_inside_string` failed
+- After: `go test ./tools/` → `ok`, and `go build ./...` + `go vet ./tools/` are clean
+[36m[local-agent][0m stopping private Ollama server (pid 137736)

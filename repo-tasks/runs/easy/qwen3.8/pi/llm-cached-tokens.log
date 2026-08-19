@@ -1,11 +1,15 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-Fixed. In `llm/llama_server.go`:
+All tests pass.
 
-- **Cause:** llama-server's timing reports split the prompt into `prompt_n` (newly evaluated) and `cache_n` (served from the prompt cache), but the code only parsed `prompt_n`, so cached prompt tokens were omitted from the count.
-- **Fix:** Added a `CacheN` field to both `llamaServerCompletionResponse.Timings` and `llamaServerChatResponse.Timings`, and changed both assignment sites (completion stream at ~line 1470 and chat stream at ~line 1766) to `PromptEvalCount = CacheN + PromptN`.
+**Root cause:** Newer llama-server reports prompt tokens served from the prompt cache in a separate `timings.cache_n` field, with `prompt_n` only counting freshly evaluated tokens. The Go structs `llamaServerCompletionResponse` and `llamaServerChatResponse` in `llm/llama_server.go` didn't decode `cache_n`, so `PromptEvalCount` was set to just `Timings.PromptN` — omitting cached tokens.
 
-`go test ./llm/...` passes, including `TestLlamaServerCompletionPromptEvalCountIncludesCache` and `TestLlamaServerChatPromptEvalCountIncludesCache` (cache_n 12 + prompt_n 5 → 17).
+**Fix** (in `llm/llama_server.go`):
+- Added `CacheN int \`json:"cache_n"\`` to both `Timings` structs.
+- Changed the two `PromptEvalCount` assignments (completion stream at line ~1470 and chat stream at line ~1767) to `lsResp.Timings.CacheN + lsResp.Timings.PromptN`.
+
+`go test -count=1 ./llm/...` → `ok github.com/ollama/ollama/llm`.
+[36m[local-agent][0m stopping private Ollama server (pid 130836)

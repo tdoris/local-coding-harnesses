@@ -1,0 +1,20 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. The affected package was `llm` (the `llamaServerRunner` in `llm/llama_server.go`). Changes made (no test files touched):
+
+1. **Load-stall tracking on the runner** (`llm/llama_server.go`)
+   - Added `loadTrackingStopped` and `loadLastActivity` fields (guarded by `memoryMu`).
+   - Added `startLoadTracking(start)`, `stopLoadTracking()`, and `lastLoadActivity()` methods.
+   - `startProcess()` now starts load tracking alongside `loadStart`; `resetLoadAccounting()` (projector-OOM retry) restarts it; `WaitUntilRunning` stops it once the server is ready.
+
+2. **Detect stalls from output** — `memoryParsingWriter.Write` now records the time of every chunk of llama-server output as load activity (unless tracking was stopped).
+
+3. **Stall-aware timeout in `WaitUntilRunning`** — the fixed `OLLAMA_LOAD_TIMEOUT` deadline is now extended while the server is still producing output; if output goes silent for the full window, it times out with "timed out waiting for llama-server to start". This distinguishes a genuinely slow but progressing load from a stalled one.
+
+4. **Health envelope handling** — `getServerStatus` now recognizes llama-server's 503 error envelope (`{"error":{"message":"Loading model",...}}`) as `ServerStatusLoadingModel` instead of an error (real failures still come back as 500/`"status":"error"`, preserving the OOM detection paths).
+
+Verification: `go build ./...`, `go vet ./llm/`, and `go test -count=1 ./llm/...` all pass, including the new behavior tests (`TestLlamaServerWaitUntilRunningTimesOutWhenLoadStalls`, `...ExtendsTimeoutOnOutputActivity`, and the memory-parsing-writer activity tests).
+[36m[local-agent][0m stopping private Ollama server (pid 157816)

@@ -1,16 +1,24 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-All tests pass. Here's a summary of the fix in `llm/llama_server.go`:
+All tests pass. Here's a summary of the fix:
 
-**Root cause:** In `completionPromptForRequest`, the prompt budget for context-shifting was `s.options.NumCtx - 1` — i.e. the prompt could occupy (nearly) the entire context, leaving only 1 token of headroom for the response. Additionally, a negative `NumKeep` fell back to `len(tokens)`, producing a "truncated" prompt that was actually longer than the limit.
+## Bug
+In `llm/llama_server.go`, `completionPromptForRequest` reserved generation headroom incorrectly when context shift was enabled: it only truncated against `NumCtx - 1`, leaving effectively **one token** of headroom for the generated response (the "one-token headroom regression"). The `contextShiftPromptLimit` helper the tests rely on was also missing entirely.
 
-**Fix:**
-1. Added `contextShiftPromptLimit(numCtx, numKeep)` which reserves real generation headroom: the prompt is limited to `numCtx - (numCtx-numKeep)/2` (clamped to `[0, numCtx-1]`, negative keep treated as 0, invalid context → 0).
-2. In `completionPromptForRequest`:
-   - Prompts that fit within `NumCtx - 1` still pass through untouched.
-   - Over-limit prompts are truncated to `contextShiftPromptLimit(...)`.
-   - When the tokenizer adds a BOS token, it's counted as one extra kept token (`nKeep++`).
-   - Negative `NumKeep` now clamps to 0 instead of `len(tokens)`.
+## Fix (in `llm/llama_server.go`)
+1. **Added `contextShiftPromptLimit(numCtx, numKeep)`** — reserves half of the remaining context as generation headroom:
+   ```go
+   limit = numKeep + ceil((numCtx - numKeep) / 2)   // clamped to numCtx - 1
+   ```
+   e.g. `NumCtx=4096, NumKeep=4` → prompt budget **2050** instead of 4095.
+
+2. **Updated `completionPromptForRequest`**:
+   - The pass-through check now only skips truncation when the prompt still leaves at least half the context free (`contextShiftPromptLimit(numCtx, 0) + nKeep`).
+   - When truncating, the shifted suffix is bounded by `contextShiftPromptLimit(numCtx, nKeep)`, so the response always gets real headroom.
+   - For tokenizers that add an implicit BOS, the kept prefix is counted as `NumKeep + 1` (BOS occupies a context slot).
+
+`go test ./llm/...` → `ok`, including `TestContextShiftPromptLimit` and `TestLlamaServerCompletionContextShiftAvoidsOneTokenHeadroomRegression`. No test files were modified.
+[36m[local-agent][0m stopping private Ollama server (pid 103429)

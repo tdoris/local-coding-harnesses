@@ -1,29 +1,18 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-All tests pass.
+Fixed. The bug was in `llm/llama_server.go`: both SSE stream parsers (completion at ~line 1506 and chat at ~line 1793) treated any non-empty line without a `data: ` prefix as a JSON event. SSE comment/ping lines like `: ping` therefore hit `json.Unmarshal` and errored out.
 
-**Root cause:** In `llm/llama_server.go`, both SSE stream parsers (completion loop at ~line 1511 and chat loop at ~line 1798) had a fallback that treated any line without a `data: ` prefix as a raw JSON event:
-
-```go
-evt, ok := bytes.CutPrefix(line, []byte("data: "))
-if !ok {
-    evt = line   // ping/comment lines like ":" hit this path
-}
-```
-
-So SSE comment/ping lines (e.g. `:`) were passed straight to `json.Unmarshal`, failing with a bogus error.
-
-**Fix:** Changed both fallbacks to `continue`, so non-data SSE lines (comments, pings) are ignored per the SSE spec:
+The fix skips comment lines per the SSE spec (any line starting with `:`):
 
 ```go
-evt, ok := bytes.CutPrefix(line, []byte("data: "))
-if !ok {
-    // Skip SSE comment lines and other non-data lines (e.g. pings)
+// SSE comment lines (e.g. ": ping" keepalives) must be ignored.
+if line[0] == ':' {
     continue
 }
 ```
 
-**Verification:** `go test ./llm/...` → `ok github.com/ollama/ollama/llm` (previously `TestLlamaServerCompletionSSEParsing` and `TestLlamaServerChatPromptEvalCountIncludesCache` failed).
+added in both scanner loops. `go test -count=1 ./llm/...` passes and `go vet` is clean.
+[36m[local-agent][0m stopping private Ollama server (pid 99488)

@@ -1,27 +1,41 @@
 #!/usr/bin/env bash
 # setup.sh <task-id> <workdir>
-# Prepares an isolated git worktree with the fix reverted. Prints the workdir.
+# Builds a task directory with NO upstream git history, so the fix cannot be
+# recovered with git. Supports single-package tasks ("pkg") and multi-package
+# tasks ("pkgs": [...]). Task file selectable via TASKS_FILE.
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC="${BENCH_REPO:-/home/jim/bench-repos/ollama}"
+TASKS="${TASKS_FILE:-$HERE/tasks.json}"
 id="$1"; work="$2"
-read -r sha pkg < <(python3 -c "
+sha=$(python3 -c "
 import json,sys
-t=[x for x in json.load(open('$HERE/tasks.json'))['tasks'] if x['id']=='$id']
+t=[x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id']
 if not t: sys.exit('unknown task: $id')
-print(t[0]['sha'], t[0]['pkg'])")
+print(t[0]['sha'])")
+pkgs=$(python3 -c "
+import json
+t=[x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0]
+print(' '.join(t.get('pkgs') or [t['pkg']]))")
 
-rm -rf "$work"
-git -C "$SRC" worktree prune >/dev/null 2>&1 || true
-git -C "$SRC" worktree add -q --detach "$work" "$sha"
+rm -rf "$work"; mkdir -p "$work"
+git -C "$SRC" archive "$sha" | tar -x -C "$work"
 
-# Revert only non-test source files touched by the fix commit
 srcs=$(git -C "$SRC" show --name-only --format= "$sha" | grep '\.go$' | grep -v '_test\.go$' || true)
 for f in $srcs; do
-  git -C "$work" checkout "$sha^" -- "$f" 2>/dev/null || rm -f "$work/$f"
+  if git -C "$SRC" cat-file -e "$sha^:$f" 2>/dev/null; then
+    mkdir -p "$work/$(dirname "$f")"; git -C "$SRC" show "$sha^:$f" > "$work/$f"
+  else rm -f "$work/$f"; fi
 done
 
-# Record the pristine hash of every test file in the package, for anti-cheat
-find "$work/$pkg" -name '*_test.go' -exec sha256sum {} \; \
-  | sed "s|$work/||" | sort > "$work/.bench-test-hashes"
+git -C "$work" init -q
+git -C "$work" -c user.email=bench@local -c user.name=bench add -A
+git -C "$work" -c user.email=bench@local -c user.name=bench commit -qm "task: $id"
+
+: > "$work/.bench-test-hashes"
+for p in $pkgs; do
+  [ -d "$work/$p" ] && find "$work/$p" -name '*_test.go' -exec sha256sum {} \; \
+    | sed "s|$work/||" >> "$work/.bench-test-hashes"
+done
+sort -o "$work/.bench-test-hashes" "$work/.bench-test-hashes"
 echo "$work"

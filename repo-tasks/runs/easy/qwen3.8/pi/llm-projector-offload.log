@@ -1,18 +1,19 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-Fixed. All `./llm/...` tests now pass.
+Fixed. `go test ./llm/...` passes.
 
-**Cause:** In `llm/llama_server.go`, `shouldDisableMMProjOffload` treated *every* integrated GPU as shared-memory-limited and added `--no-mmproj-offload`. That incorrectly disallowed GPU offload for integrated Metal GPUs (Apple Silicon), where the projector should stay on GPU.
+**Cause:** In `llm/llama_server.go`, `shouldDisableMMProjOffload` treated every integrated GPU as a "shared-memory-gpu" and appended `--no-mmproj-offload`. That's correct for discrete shared-memory GPUs (e.g. integrated ROCm), but Metal GPUs use the system's unified memory — the tests (`integrated metal gpu keeps projector offload`) require offload to stay enabled there.
 
-**Fix** (one line in `llm/llama_server.go:634`):
+**Fix:** Skip the integrated-GPU disallow for Metal backends:
 
 ```go
-if gpu.Integrated && gpu.DeviceID.Library != "Metal" {
+if gpu.Integrated && !strings.EqualFold(gpu.DeviceID.Library, "Metal") {
     return true, "shared-memory-gpu"
 }
 ```
 
-Now only non-Metal integrated GPUs disable projector offload, while the Metal case falls through to the VRAM check (and keeps offload when memory is sufficient), matching the `TestAppendMMProjArgs` expectations.
+All `TestAppendMMProjArgs` cases now pass (large discrete GPU and Metal keep offload; small discrete, integrated ROCm, CPU-only, partial offload, and OOM-retry disable it).
+[36m[local-agent][0m stopping private Ollama server (pid 100932)

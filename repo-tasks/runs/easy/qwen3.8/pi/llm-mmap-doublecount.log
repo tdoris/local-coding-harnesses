@@ -1,22 +1,20 @@
-[36m[local-agent][0m reusing Ollama server already on 127.0.0.1:11435 (won't stop it on exit)
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
 [36m[local-agent][0m loading qwen3.8 ...
 [36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
 [36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
 [36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
-All tests pass. 
+The fix is complete. Both `go vet` and `go test ./llm/...` pass.
 
 ## Summary
 
-**Root cause:** In `llm/llama_server.go`, `memoryParsingWriter.updateRunnerMemoryLocked()` summed every reported buffer size into the process total. When a model is partially offloaded with mmap on, llama-server reports the weights *once per backend* (`CPU_Mapped model buffer` + `CUDA0/MTL0 model buffer`), but all of those mappings reference the same on-disk GGUF — so `ollama ps` counted the file-backed weights twice (e.g. ~26.6 GiB for a 13.26 GiB model).
+**Root cause:** In `llm/llama_server.go`, `memoryParsingWriter.updateRunnerMemoryLocked()` simply summed *every* buffer size reported by `llama-server`. When a model is memory-mapped and only partially offloaded, the weights get reported twice: once as the `CPU_Mapped`/`<DEV>_Mapped` buffer (the page-cache mapping of the on-disk file) and again as the device model buffer (the offloaded copy of those same weights). `ollama ps` therefore showed roughly 2× the real weight memory.
 
-**Fix:** In `updateRunnerMemoryLocked()`, track the model buffers that are file-backed (all `model` buffers except `_REPACK`, which are real copies). If their sum exceeds the actual model file size (via `os.Stat(runner.modelPath)`), subtract the excess from the reported total:
+**Fix:** Split model-weight buffers into three groups:
+- `*_Mapped` (file-backed page-cache mappings)
+- `*_REPACK` (real repacked copies — kept in full)
+- other plain model buffers (e.g. the offloaded device model buffer)
 
-```go
-if info, err := os.Stat(w.runner.modelPath); err == nil && info.Size() > 0 && fileBackedWeights > uint64(info.Size()) {
-    total -= fileBackedWeights - uint64(info.Size())
-}
-```
+When a `*_Mapped` buffer is present and the model file size is known, the `mapped + plain-model` group is clamped to the on-disk file size so the weights count **once**. KV/compute/output buffers and `_REPACK` copies are always kept in full. VRAM (`gpu`/`vramByDevice`) is unchanged — only the inflated *total* was corrected.
 
-The trim only touches the total — per-device VRAM (`memGPU`/`vramByDevice`) keeps the real GPU mapping sizes. Edge cases preserved: no trim when buffers fit within the file, when REPACK is the only overlap-free copy, when mmap is off, or when the file size is unknown.
-
-`go test ./llm/...` → **ok**.
+This matches all six test scenarios (partial offload with mmap on CUDA & Metal, CPU-only mmap+repack, no-mmap, missing model file, and mapped buffers that don't overlap), without touching any `_test.go` files.
+[36m[local-agent][0m stopping private Ollama server (pid 135155)

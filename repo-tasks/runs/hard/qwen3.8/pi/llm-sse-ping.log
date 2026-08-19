@@ -1,0 +1,22 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. Summary:
+
+**Cause:** In `llm/llama_server.go`, both SSE stream parsers (the completion path at ~line 1506 and the chat path at ~line 1793) read lines directly from `res.Body` and attempted `json.Unmarshal` on any non-empty line that didn't start with `data: `. llama-server sends SSE comment lines (e.g. `: keep-alive` ping comments) to keep idle streams alive; per the SSE spec these are comments to be ignored, but the code tried to parse them as JSON and returned an error, aborting the stream.
+
+**Fix:** In both parser loops, skip lines that begin with `:` (SSE comments):
+
+```go
+// Ignore SSE comment lines, e.g. keep-alive ping comments from llama-server.
+if bytes.HasPrefix(line, []byte(":")) {
+    continue
+}
+```
+
+**Verification:**
+- `go test ./llm/...` → `ok github.com/ollama/ollama/llm`
+- Also confirmed `go test ./middleware/... ./openai/... ./anthropic/...` all pass.
+[36m[local-agent][0m stopping private Ollama server (pid 141324)

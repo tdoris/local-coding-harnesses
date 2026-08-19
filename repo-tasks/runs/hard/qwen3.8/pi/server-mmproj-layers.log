@@ -1,0 +1,24 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. All `server` package tests pass, including the two projector-related ones.
+
+**Root cause:** In `server/create.go`, `ggufLayersWithMediaType` classified a GGUF as a projector layer only when `general.type` was `"projector"`. Published mmproj GGUFs (e.g. Gemma 4 VL, Qwen3-VL, LFM2-VL — see `convert/convert_gemma4.go`, `convert/convert_qwen3vl.go`) use `general.type = "mmproj"`, and when the vision block count is 0 they fell through to the default `application/vnd.ollama.image.model` media type.
+
+**Fix** (`server/create.go`, `ggufLayersWithMediaType`):
+
+```go
+} else if (f.KV().Uint("block_count") == 0 && f.KV().Uint("vision.block_count") > 0) ||
+    f.KV().Kind() == "projector" || f.KV().Kind() == "mmproj" {
+    // if a model has vision.block_count but not block_count, it is a standalone vision model
+    mediaType = "application/vnd.ollama.image.projector"
+}
+```
+
+**Verification:**
+- `go test ./server/...` — all pass
+- `TestGGUFLayersClassifiesMMProjAsProjector` — PASS (mmproj GGUF now gets `application/vnd.ollama.image.projector`)
+- `TestCreateModelAddsDefaultLlavaProjectorType` — PASS
+[36m[local-agent][0m stopping private Ollama server (pid 154605)

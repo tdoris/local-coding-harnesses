@@ -1,0 +1,24 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All affected packages pass. Summary of the changes to add gemma4-12b support:
+
+**Cause:** gemma4-12b ships with architecture `Gemma4UnifiedForConditionalGeneration` (model type `gemma4_unified`) and declares `suppress_tokens` in its `config.json` — none of which the codebase recognized.
+
+**Fixes (4 files, non-test only):**
+
+1. **`x/models/gemma4/gemma4.go`**
+   - Registered the 12B architecture: `base.Register("Gemma4UnifiedForConditionalGeneration", newModel)` (plus `gemma4_unified`).
+   - Added `parseSuppressTokens(configData []byte) []int32` — returns the `suppress_tokens` list, or `nil` when absent/unparseable (per the test's expectations).
+   - Wired it into `newModel`: suppress tokens are added as additional EOS tokens so generation stops on them (the runner stops via `Tokenizer.IsEOS`).
+
+2. **`x/tokenizer/tokenizer.go`** — added `AddEOSToken(id int32)` (idempotent) so models can extend the EOS set; `IsEOS`/`EOSTokens` now reflect it.
+
+3. **`x/create/create.go`** — registered `Gemma4UnifiedForConditionalGeneration` and `gemma4_unified` in `tensorImportTransformRegistry` so 12B HF weights import with the gemma4 quantization heuristics.
+
+4. **`server/renderer_resolution.go`** — 12B uses the large (thinking) prompt: added `"12b"` name match to `gemma4RendererFromName` and lowered `gemma4LargeMinParameterCount` from 16B to 12B so the `"12B"` model-type resolves to `gemma4-large` (4.3B stays small, 25.2B stays large).
+
+**Verification:** `go build ./...` clean; `go test` passes for `./x/models/gemma4/...`, `./x/create/...`, `./x/tokenizer/...`, `./server/...`, and `./server/internal/...` — including `TestParseSuppressTokens`, `TestParseTextConfig12BUnified`, `TestGemma4UnifiedImportTransformRegistration`, and `TestResolveGemma4Renderer`.
+[36m[local-agent][0m stopping private Ollama server (pid 207714)

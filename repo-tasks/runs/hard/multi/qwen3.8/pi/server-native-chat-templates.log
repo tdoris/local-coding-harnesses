@@ -1,0 +1,25 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. All affected packages pass. Summary of the fix — "align generate with native chat templates":
+
+## Root cause
+The `/api/chat` handler already routes to llama-server's native `chat_template` when the model has one (`handleNativeChat`), but `/api/generate` always rendered the prompt with the Go template (`chatPrompt`/`m.Template.Execute`), ignoring the native `tokenizer.chat_template` even when it should be preferred. Additionally, the preference heuristic in `shouldPreferChatTemplate` required the native template to have *strictly more* capabilities than the Go template, so a native template with an equally-strong (or stronger) tool round-trip was never chosen.
+
+## Changes
+
+**`server/routes.go` — `GenerateHandler`**
+- Added a native chat-template branch: when the model has a GGUF `chat_template`, is in native chat mode (`chatModeForModel(m) == chatExecutionModeNative`), and the request has no explicit `Template`/`Suffix` (and isn't raw), the prompt is now built as a message list (system + embedded messages + user prompt), rendered via `r.ApplyChatTemplate` (same runner path chat uses), truncated with `truncateNativeChatMessages`, and run through `Completion` with **no** leading BOS.
+- Deprecated `Context` tokens are detokenized and prepended to the native prompt; image `[img]` markers are replaced with stable `[img-N]` markers inline while the images are passed as `Media` on the completion request; `DebugRenderOnly` returns the natively rendered template.
+- Models without a native template (or where Go template/renderers/harmony apply) keep the existing Go-template path.
+
+**`server/images.go` — `shouldPreferChatTemplate`**
+- Now decides on tool round-trip strength first: a native chat template with a tool round-trip that the Go template lacks is preferred even on a capability tie; a Go template with a better round-trip always wins; otherwise falls back to capability count comparison.
+
+## Verification
+- `go test ./server/... ./llm/... ./template/... ./model/...` — all pass (previously `TestGenerateHandlerChatTemplateRoute` and `TestGetModelTemplateMetadata` failed).
+- Full repo `go test ./...` — only pre-existing, unrelated `cmd/launch` CLI-config failures (confirmed failing on the pristine tree via `git stash`); integration package is build-tag excluded.
+- No test files were modified.
+[36m[local-agent][0m stopping private Ollama server (pid 227403)
