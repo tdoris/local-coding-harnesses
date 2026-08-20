@@ -1,0 +1,29 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. The work is complete.
+
+## Summary
+
+**The problem:** `server` didn't compile — tests required a lightweight model list (tags) cache, startup that skips heavy local show hydration, `Capabilities`/`ContextLength`/`EmbeddingLength` in the list API, and the `cmd/launch` inventory carrying tags metadata. Root cause: startup hydration built full show responses for every local model (tensor walks, template rendering) and `/api/tags` rebuilt model details per request.
+
+**Changes:**
+
+1. **`server/model_list_cache.go` (new)** — `modelListCache`/`modelListSummary`: process-local `/api/tags` cache keyed by canonical model name (protocol scheme stripped so keys match). Startup hydration (`Start`/`Wait`) builds only cheap summaries via a `build` seam (manifest + config + GGUF header, no full show response). `List` syncs against current manifests (add new, refresh digest changes, drop deleted/stale, never serves a stale summary), `RefreshModel`/`Delete` serve mutation hooks, `Get`/`Len` for lookups.
+
+2. **`server/model_caches.go`** — added `modelList` to `modelCaches` and started it in `Start`.
+
+3. **`server/model_show_cache.go`** — `runStartup` now only warms cloud entries; local show responses are built on demand in `GetLocal`, so boot cost is independent of the number/size of installed models.
+
+4. **`server/routes.go`** — `ListHandler` serves from the cache (with fallback to the old scan); `CopyHandler`/`DeleteHandler` refresh/delete cache entries; added `refreshModelListCache`/`removeModelListCache` helpers.
+
+5. **`server/create.go`** — create hook refreshes the list cache after a successful `createModel`.
+
+6. **`api/types.go`** — `ListModelResponse.Capabilities`; `ModelDetails.ContextLength`/`EmbeddingLength`.
+
+7. **`cmd/launch`** — `modelInfo`/`ModelItem` carry `Capabilities`, `Size`, `Details`, `ToolCapable`; inventory populated from the tags response; `buildModelListWithRecommendations` preserves installed models' metadata (including alongside recommendation copy).
+
+**Verification:** `go build ./...`, `go vet` (only pre-existing warnings), and the full test suite pass — including `TestModelListCache*`, `TestModelShowCacheStartupSkipsLocalHydration`, `TestList`, `TestRoutes`, and the launch `TestBuildModelList_*` tests. (The one `TestDroidEdit` subtest failure under the harness environment is caused by `OLLAMA_HOST=11435` being set while the test asserts the default `11434`; it passes with the variable unset and is unrelated to this change.)
+[36m[local-agent][0m stopping private Ollama server (pid 694169)

@@ -1,0 +1,40 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. All five packages' tests pass.
+
+## What was wrong
+
+The plan-aware model gating feature (upstream ollama commit `bab59072`, "launch: add plan-aware model gating (#16027)") had been stripped from the source: 9 existing source files were reverted to their pre-feature state and 1 new file deleted, while the tests were left in place. The tests referenced symbols that no longer existed:
+
+- `api.ModelRecommendation.RequiredPlan` (api, server)
+- `launch.AccountState`, `ApplyAccountStateToSelectionItems`, `SelectionItemsWithAccountState`, `ModelItem.RequiredPlan`/`AvailabilityBadge` (cmd/launch)
+- `launch.DefaultUpgrade`, `DefaultSingleSelectorWithUpdates`, `DefaultMultiSelectorWithUpdates`, `DefaultUpgradeURL` (cmd/launch, cmd/tui)
+- `SelectItem.AvailabilityBadge`, `selectorItemsUpdatedMsg`, `renderUpgrade` (cmd/tui)
+- `RunModelRequest`/`IntegrationLaunchRequest` account-state fields and `launcherDeps.accountState/accountStateUpdates` (cmd, cmd/launch)
+
+## The fix
+
+I verified via tree-blob comparison that this repo is exactly upstream `bab59072` with that commit's changes removed (every one of the 10 differing files matched the parent commit `bab59072^` byte-for-byte, and every other file matched `bab59072`). I restored the 10 source files from the upstream commit:
+
+- **api/types.go** — `RequiredPlan` field on `ModelRecommendation` (`required_plan` JSON)
+- **cmd/launch/account.go** (new) — `AccountState`, plan/status constants, `ApplyAccountStateToSelectionItems`, `SelectionItemsWithAccountState` (badge logic: "Sign in required" when signed out, "Upgrade required" when the model's required plan exceeds the user's plan, no badge when satisfied or state unknown)
+- **cmd/launch/launch.go, models.go, selector_hooks.go** — `RequiredPlan`/`AvailabilityBadge` on `ModelItem`, `SelectionItem` alias, `DefaultUpgrade` / `*WithUpdates` hooks, upgrade-gating in `ResolveRunModel` (sign-in vs. upgrade paths, re-selection on upgrade cancellation)
+- **cmd/cmd.go** — plumbs prefetched account state and update channels into the TUI menu and run/integration requests
+- **cmd/tui/selector.go, signin.go** — availability badge rendering on the cursor row, live item updates (`selectorItemsUpdatedMsg`), `renderUpgrade` flow
+- **server/model_recommendations.go, routes.go** — persists/serves `required_plan` in model recommendations
+
+## Verification
+
+```
+ok  github.com/ollama/ollama/api
+ok  github.com/ollama/ollama/cmd
+ok  github.com/ollama/ollama/cmd/launch
+ok  github.com/ollama/ollama/cmd/tui
+ok  github.com/ollama/ollama/server
+```
+
+No test files were touched. (Note: run tests with `OLLAMA_HOST` unset — my shell's `OLLAMA_HOST=127.0.0.1:11435` makes the unrelated pre-existing `TestDroidEdit/required_fields_present` expect its default-port 11434.)
+[36m[local-agent][0m stopping private Ollama server (pid 578373)

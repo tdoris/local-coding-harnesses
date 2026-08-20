@@ -1,0 +1,140 @@
+{
+  "repo": "https://github.com/ollama/ollama",
+  "note": "Feature-addition tier. Unlike the bug-fix tiers these require AUTHORING new files and wiring them into existing registries -- the shape that produced the only unsolved task in the earlier tiers.",
+  "tasks": [
+    {
+      "id": "anthropic-local-image-paths",
+      "sha": "6bdb73073b8cb2a5430b9e2524f3e9debac39953",
+      "tier": "feature",
+      "pkgs": [
+        "anthropic",
+        "model/renderers",
+        "server"
+      ],
+      "pkg": "anthropic",
+      "n_src_files": 9,
+      "n_new_files": 1,
+      "lines_added": 200,
+      "title": "Preserve Claude local image-path tool results in renderer-owned prompt formatting",
+      "symptom": "A feature is missing: Preserve Claude local image-path tool results in renderer-owned prompt formatting. Implementing it requires 9 source file(s) (1 of them new) across 3 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "speculative-draft-length",
+      "sha": "505e35f2b97d7b5a72581d71df5a80838ba5c3c6",
+      "tier": "feature",
+      "pkgs": [
+        "x/mlxrunner",
+        "x/models/gemma4"
+      ],
+      "pkg": "x/mlxrunner",
+      "n_src_files": 7,
+      "n_new_files": 2,
+      "lines_added": 583,
+      "title": "choose the speculative draft length to maximize throughput",
+      "symptom": "A feature is missing: choose the speculative draft length to maximize throughput. Implementing it requires 7 source file(s) (2 of them new) across 2 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "model-recommendations-endpoint",
+      "sha": "321cc8a2bab861ebe7c29e4ca8d81c393388431e",
+      "tier": "feature",
+      "pkgs": [
+        "api",
+        "cmd/launch",
+        "server"
+      ],
+      "pkg": "api",
+      "n_src_files": 6,
+      "n_new_files": 1,
+      "lines_added": 596,
+      "title": "add model recommendations cache endpoint",
+      "symptom": "A feature is missing: add model recommendations cache endpoint. Implementing it requires 6 source file(s) (1 of them new) across 3 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "server-show-response-cache",
+      "sha": "d319227df01254ba375dbabd1d42e851465e4476",
+      "tier": "feature",
+      "pkgs": [
+        "server"
+      ],
+      "pkg": "server",
+      "n_src_files": 3,
+      "n_new_files": 2,
+      "lines_added": 763,
+      "title": "cache show responses",
+      "symptom": "A feature is missing: cache show responses. Implementing it requires 3 source file(s) (2 of them new) across 1 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "startup-model-hydration",
+      "sha": "4b2d529966f504db4b6fb76b25d030194a8a1efe",
+      "tier": "feature",
+      "pkgs": [
+        "api",
+        "cmd/launch",
+        "server"
+      ],
+      "pkg": "api",
+      "n_src_files": 8,
+      "n_new_files": 1,
+      "lines_added": 919,
+      "title": "Reduce startup model hydration",
+      "symptom": "A feature is missing: Reduce startup model hydration. Implementing it requires 8 source file(s) (1 of them new) across 3 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "plan-aware-model-gating",
+      "sha": "bab59072fb910b0e52ce01ef42e7e91fc038f229",
+      "tier": "feature",
+      "pkgs": [
+        "api",
+        "cmd",
+        "cmd/launch",
+        "cmd/tui",
+        "server"
+      ],
+      "pkg": "api",
+      "n_src_files": 10,
+      "n_new_files": 1,
+      "lines_added": 974,
+      "title": "add plan-aware model gating",
+      "symptom": "A feature is missing: add plan-aware model gating. Implementing it requires 10 source file(s) (1 of them new) across 5 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "cohere2-moe-mlx",
+      "sha": "acfb50d9afdb7777eb430b5345ae0abdea26d84e",
+      "tier": "feature",
+      "pkgs": [
+        "model/parsers",
+        "model/renderers",
+        "x/create",
+        "x/create/client",
+        "x/mlxrunner"
+      ],
+      "pkg": "model/parsers",
+      "n_src_files": 9,
+      "n_new_files": 4,
+      "lines_added": 1442,
+      "title": "add cohere2_moe (Command A / North) to the MLX engine",
+      "symptom": "A feature is missing: add cohere2_moe (Command A / North) to the MLX engine. Implementing it requires 9 source file(s) (4 of them new) across 5 tested package(s). The existing tests define the expected behaviour."
+    },
+    {
+      "id": "dflash-speculative-decoding",
+      "sha": "98e26b8c3723e4b7c8ff9b8985b630b42698153d",
+      "tier": "feature",
+      "pkgs": [
+        "x/create/client",
+        "x/mlxrunner",
+        "x/mlxrunner/cache",
+        "x/mlxrunner/mlx",
+        "x/models/dflash",
+        "x/models/laguna",
+        "x/models/nn",
+        "x/models/qwen3_5"
+      ],
+      "pkg": "x/create/client",
+      "n_src_files": 14,
+      "n_new_files": 3,
+      "lines_added": 1785,
+      "title": "add DFlash speculative decoding",
+      "symptom": "A feature is missing: add DFlash speculative decoding. Implementing it requires 14 source file(s) (3 of them new) across 8 tested package(s). The existing tests define the expected behaviour."
+    }
+  ]
+}

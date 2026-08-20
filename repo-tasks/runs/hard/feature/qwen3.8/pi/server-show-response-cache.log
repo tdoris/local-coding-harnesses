@@ -1,0 +1,28 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Unrelated — that's the CLI client's `ShowHandler`. Everything builds and all tests pass.
+
+## Summary
+
+**Issue:** `server` package tests (`server/model_show_cache_test.go`) defined a caching layer for `/api/show` responses that didn't exist — the package wouldn't even compile its tests.
+
+**Changes:**
+
+1. **New file `server/model_show_cache.go`** implementing the cache:
+   - `modelCaches` — groups per-server runtime caches (`recommendations` + `show`).
+   - `modelShowCache` with two key spaces:
+     - **Local:** keyed by normalized name + `verbose` variant (`modelShowLocalKeyForRequest`), invalidated when the manifest digest changes; `GetLocal` is a read-through (one `getModelInfo` call per model per digest), `hydrateLocal` warms the cache from disk but skips unchanged in-memory entries.
+     - **Cloud:** `modelShowCloudKeyForModel` normalizes source tags (`kimi-k2.5:cloud` / `gpt-oss:20b-cloud` → base name); `hydrateCloud` lists `/api/tags` then fetches `/api/show` per model (returns `errModelShowNoCloud` when cloud is disabled); `triggerCloudReadRefresh` does stale-while-revalidate with an in-flight flag + cooldown.
+   - Reused the existing `cloudProxyBaseURL`, `envconfig.NoCloud()`, `internal/cloud` helpers.
+
+2. **`server/routes.go`**:
+   - `Server` now holds `modelCaches *modelCaches` (replacing the bare `modelRecommendations` field); `Serve()` and `ModelRecommendationsExperimentalHandler` updated accordingly.
+   - `ShowHandler`:
+     - local models are served from the cache, but **bypassed** when the request carries a `system` or `options` overlay (those change the response);
+     - cloud models go through new `serveCloudShow`: 403 with the disabled-cloud error when cloud is off, stale cached response + background refresh on a warm hit, and proxy fallback (`proxyCloudJSONRequest` with the normalized model) on a cold miss.
+
+**Verification:** `go test ./server/... ./internal/cloud/...` — all pass; `go build ./...` clean. No test files were modified.
+[36m[local-agent][0m stopping private Ollama server (pid 689006)

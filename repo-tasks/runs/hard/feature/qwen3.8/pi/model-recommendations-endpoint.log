@@ -1,0 +1,35 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. Summary of the change:
+
+## Problem
+The `server` package tests (`server/model_recommendations_test.go`) referenced a model-recommendations cache endpoint that didn't exist: no `api.ModelRecommendation` types, no cache, no handler, no route.
+
+## Changes (source files only)
+
+**`api/types.go`** — added the wire types:
+- `ModelRecommendation` (`model`, `description`, `context_length`, `max_output_tokens`, `vram`)
+- `ModelRecommendationsResponse` (`recommendations`)
+
+**`server/model_recommendations.go`** (new) — the full cache + endpoint implementation:
+- `defaultModelRecommendations` — fallback list (kimi-k2.6:cloud, glm-5.1:cloud, qwen3.5:cloud, minimax-m2.7:cloud, gemma4, qwen3.5)
+- `modelRecommendationsCache` with:
+  - `refresh(ctx)` — GETs `modelRecommendationsURL`, short-circuits with `errModelRecommendationsNoCloud` when `envconfig.NoCloud()`, validates the payload, atomically replaces the cache + persists a snapshot only on success (all error paths — transport, non-200, bad JSON, duplicates, empty/invalid cloud entries — preserve current data and skip snapshot writes)
+  - `GetSWR(ctx)` — stale-while-revalidate: returns cached data immediately, triggers one async refresh at a time, throttled by `modelRecommendationsReadRefreshCooldown` (also after failures)
+  - `persistSnapshot`/`loadSnapshot`/`modelRecommendationsSnapshotPath` — snapshot at `~/.ollama/model_recommendations.json`, invalid snapshots never overwrite existing data
+- `validateModelRecommendations` — trims fields, drops cloud entries missing context/output limits, rejects duplicate model names
+- `ModelRecommendationsExperimentalHandler` — serves the cache (via SWR), or defaults when no cache is attached
+
+**`server/routes.go`**:
+- Added `modelRecommendations *modelRecommendationsCache` to `Server`
+- Registered `GET /api/experimental/model-recommendations` (POST correctly yields 405)
+- `Serve()` initializes the cache (`newModelRecommendationsCache()`, which loads any local snapshot)
+
+## Verification
+- `go build ./...` clean
+- `go test ./server ./api` — all pass (including all 11 model-recommendation tests)
+- `gofmt`/`go vet` clean; no `*_test.go` files touched
+[36m[local-agent][0m stopping private Ollama server (pid 678982)

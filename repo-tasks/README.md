@@ -82,44 +82,42 @@ repo. The agent keeps git for diffing its own work; the fix is unreachable.
 Verified: 1 commit, no upstream refs, fix commit absent, and
 `git restore --source=HEAD` returns the *broken* code.
 
+## Tiers
+
+| File | Tier | Shape |
+|---|---|---|
+| `tasks.json` | single | one-file bug fixes |
+| `tasks-multi.json` | multi | bug fixes spanning up to 5 packages |
+| `tasks-feature.json` | feature | **feature additions** requiring new files (1-4) wired into existing registries, 200-1785 added lines, 1-8 packages |
+
+Select a tier with `TASKS_FILE=tasks-feature.json ./run-all.sh pi qwen3.8`.
+
 ## Results
 
-See [RESULTS.md](RESULTS.md). Summary for pi + qwen3.8:
+See [RESULTS.md](RESULTS.md).
 
 | Tier | Easy | Hard |
 |---|---|---|
-| Single-file (9) | 9/9 | 9/9 |
-| Multi-file (4) | 3/4 | 3/4 |
+| Single-file bug fixes (9) | 9/9 | 9/9 |
+| Multi-file bug fixes (4) | 3/4 | 3/4 |
+| **Feature additions (8)** | **4/8** | **4/8** |
 
-**Both single-file tiers are saturated.** 18/18 real bugs fixed in a 281k-LOC Go
-repo with no git shortcut — a genuine capability result, but useless for ranking
-harnesses.
+The bug-fix tiers are saturated for pi + qwen3.8. The feature tier is the one
+that discriminates, and it is where new tasks should be mined.
 
-**Hard mode barely matters for single-file tasks** (723s vs 750s total, same
-score). ollama's commit subjects leak the package through domain vocabulary
-("llama-server" → `llm`, "Radeon iGPU" → `discover`), so removing the explicit
-package name changes little. On multi-file tasks it does cost real time
-(1.6-2.9x), because with up to 5 packages the localization is no longer implied.
+## Where difficulty comes from
 
-## The one discriminating task
+Confirmed empirically: **bug-fix commits are too tractable for this pairing;
+feature additions are not.** Within the feature tier, what predicts failure is
+how *dispersed* a change is across packages, not how large it is — the smallest
+task (+200 lines, 3 packages) failed while a +1442-line task with four new files
+succeeded. Mine for dispersed multi-package features, not for big diffs.
 
-`ornith9b-parser-renderer` is the only task never solved, in either mode. It is a
-**feature addition** requiring new files rather than a bug fix, and it fails in
-instructive ways:
+Two caveats worth keeping attached to any number here:
 
-- easy mode: wrote both new files, but with `newline in string` — Go that does
-  not compile. It never built its own output.
-- best observed: 1/2 packages, on a longer manual attempt.
-- hard mode: twice returned an empty response and wrote nothing at all (pi exits
-  0 printing nothing) — a real failure mode of a max-reasoning-effort model on an
-  under-specified task.
-
-This is the only task in the suite with headroom to measure whether the
-`skills/` hardening (`verify-before-finishing`, `cli-contract`) actually helps:
-a single `go build ./...` would have caught the easy-mode failure.
-
-## Where difficulty should come from next
-
-Bug-fix commits are too tractable for this pairing. Feature additions requiring
-new files are not. Mine for those, and for commits whose tests are less
-localized.
+- **One sampled run per cell at temperature 1.** Four of the eight feature tasks
+  flip between easy and hard mode, two in each direction, while the aggregate
+  stays 4/8. Treat per-task easy/hard differences as noise until repeated.
+- **A 2400s timeout is load-bearing.** Two feature runs hit it. Tasks that do not
+  converge in 40 minutes are recorded as failures at whatever partial credit they
+  reached.

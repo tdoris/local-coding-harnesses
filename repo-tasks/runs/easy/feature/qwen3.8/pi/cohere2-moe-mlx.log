@@ -1,0 +1,29 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. 
+
+## Summary
+
+**Cause:** The cohere2_moe (Command A / North) chat support was missing — `model/parsers/cohere_test.go` and `model/renderers/cohere_test.go` defined the expected behavior, but the `CohereParser` and `CohereRenderer` implementations and their registrations didn't exist.
+
+**Changes (non-test files only):**
+
+1. **`model/parsers/cohere.go` (new)** — `CohereParser` with a three-state streaming parser (thinking → content → action):
+   - Handles the Command A tags: `<|START/END_THINKING|>`, `<|START/END_TEXT|>`, legacy `<|START/END_RESPONSE|>` markers, `<|START/END_ACTION|>`, and `<|END_OF_TURN_TOKEN|>`.
+   - Holds back trailing partial tags split across chunk boundaries (`overlap`/trailing-whitespace tracking) so tags never leak into output, while streaming content/thinking as it arrives (unknown tags flow through rather than stalling the stream).
+   - Reasoning defaults on; `ThinkValue{false}` and assistant prefills start in content state.
+   - Action blocks parse a JSON array of tool calls with a string/brace-aware scanner, so malformed entries are skipped without dropping well-formed siblings, missing commas between entries are tolerated, and braces inside string values don't split objects.
+
+2. **`model/renderers/cohere.go` (new)** — `CohereRenderer` reproducing the HF jinja template output exactly per the tests:
+   - Always-emitted system turn with the `# Available Tools` JSON block (empty array, `..., "responses": null` entries), optional system preamble.
+   - User turns, assistant turns with optional thinking + text, action turns (template indentation, thinking block, `tool_call_id`/`tool_name`/`parameters` JSON array), and merged consecutive tool-result turns with regenerated sequential ids.
+   - Generation prompt: open `<|START_THINKING|>` (reasoning on) vs. closed thinking block (off); assistant prefill leaves the text block open. `LeadingBOS()` = `<BOS_TOKEN>`.
+
+3. **`model/parsers/parsers.go`** — registered `"cohere"` → `&CohereParser{}` in `ParserForName`.
+4. **`model/renderers/renderer.go`** — registered `"cohere"` → `&CohereRenderer{}` in `rendererForName`.
+
+**Verification:** `go build ./...`, `go vet`, and `go test` all pass for `model/parsers`, `model/renderers`, `x/create`, `x/create/client`, and `x/mlxrunner` (the latter three had no cohere-specific gaps and were already green).
+[36m[local-agent][0m stopping private Ollama server (pid 628652)

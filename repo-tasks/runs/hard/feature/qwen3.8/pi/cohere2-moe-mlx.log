@@ -1,0 +1,24 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. Summary of the fix:
+
+**Root cause:** The MLX engine resolves a checkpoint's `architectures[0]` from `config.json` against a registry populated by per-architecture packages blank-imported in `x/mlxrunner/imports.go`. The `x/models/cohere2_moe/` directory existed but was empty and not imported, so Command A / North (`Cohere2MoeForCausalLM`) failed with "unsupported architecture".
+
+**Changes (non-test source only):**
+
+1. **`x/models/cohere2_moe/cohere2_moe.go` (new)** — full MLX implementation of the Cohere2 MoE architecture, following the repo's existing patterns:
+   - Registers `Cohere2MoeForCausalLM` and `Cohere2Moe` via `base.Register` in `init()`.
+   - Standard grouped-query attention with RoPE and GQA (same as `x/models/llama`), supporting `head_dim` and optional attention bias.
+   - MoE block matching HuggingFace's Cohere2Moe: softmax → top-k (`num_experts_per_tok`) → renormalized router, routed experts via the stacked-weight `GatherMM`/`GatherQMM` path (reused from `x/models/glm4_moe_lite`), plus the shared expert.
+   - Weight loading uses the actual Cohere2Moe checkpoint naming: `model.layers.{i}.input_layernorm`, `model.layers.{i}.post_attn_layernorm`, `mlp.gate`, `mlp.experts.{e}.{gate,up,down}_proj`, `mlp.shared_expert.*`, with quantization (affine int4/int8, dequant fallback), tied-embedding LM-head fallback, and `NewCaches()` for the KV cache session.
+
+2. **`x/mlxrunner/imports.go`** — added `_ "github.com/ollama/ollama/x/models/cohere2_moe"` so the registration runs when the MLX runner loads.
+
+**Verification:**
+- `go build ./...` — clean
+- `go vet` / `gofmt` — clean
+- `go test ./x/models/... ./x/mlxrunner/...` — all pass (mlxrunner's init path now pulls in and registers the new architecture without conflicts).
+[36m[local-agent][0m stopping private Ollama server (pid 749464)

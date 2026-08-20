@@ -1,0 +1,29 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. Summary of the fix:
+
+**Cause:** The `server` package's tests referenced a model-show response cache API (`modelCaches`, `newModelShowCache`, `modelShowLocalKeyForRequest`, `modelShowCloudKeyForModel`, `errModelShowNoCloud`, etc.) that didn't exist in the source — the feature was simply missing.
+
+**Changes (non-test files only):**
+
+1. **New: `server/model_show_cache.go`** — implements the show-response cache:
+   - `modelCaches` struct (groups `show` + `recommendations` caches) and `Server.showCache()` accessor
+   - `modelShowCache` with a mutex-guarded `local` map (keyed by model + verbosity, storing the manifest digest at write time) and `cloud` map (keyed by normalized model + verbosity), plus read-refresh bookkeeping (`cloudNextReadRefreshAfter`, single-flight refresh flags) and a pluggable `getModelInfo` provider
+   - `modelShowLocalKeyForRequest` — resolves the model and records its current manifest digest so cache entries are invalidated when the model changes; verbose variants are separate keys
+   - `GetLocal` — serve cached response when digest matches, otherwise compute and store
+   - `hydrateLocal` — refreshes all local models, skipping in-memory entries whose digest is unchanged
+   - `hydrateCloud` — returns `errModelShowNoCloud` when cloud is disabled; otherwise lists models via upstream `/api/tags` and fetches `/api/show` per model
+   - `refreshCloudOnRead` — single-flighted, cooldown-limited background refresh (stale-while-revalidate), reusing the existing cloud-proxy base URL, client-version header, and request signing
+   - `modelShowCloudKeyForModel` — normalizes `:cloud` / `-cloud` tags via `internal/modelref`
+
+2. **Modified: `server/routes.go`**:
+   - Added `modelCaches *modelCaches` to `Server`
+   - `ShowHandler`: cloud models are served from the cache (stale-while-revalidate) with fallback to the proxy on a miss, and a 403 `DisabledError` when cloud is disabled; local models are served via the cache unless `options` overlays are present, with the request's `system` overlay applied to a cloned response
+   - `ModelRecommendationsExperimentalHandler` now reads from `s.modelCaches` (falling back to the legacy field)
+   - `Serve` wires both caches through `modelCaches` and starts the recommendations refresh from there
+
+Verified with `go test ./server/...` — all packages pass (the only failing tests in the repo, `cmd/launch TestDroidEdit` and a `-race` warning in `TestQuantizeModel`, are pre-existing and unrelated).
+[36m[local-agent][0m stopping private Ollama server (pid 528118)

@@ -1,0 +1,32 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+Done. All DFlash-affected package tests pass.
+
+## Summary
+
+**Problem:** The repo had tests for a DFlash speculative-decoding draft model (`x/models/dflash/dflash_test.go`) and draft-architecture metadata (`x/create/client/create_test.go`), but no DFlash implementation existed, and the create client hardcoded the draft architecture to Gemma4Assistant.
+
+**Changes (source files only):**
+
+1. **`x/models/dflash/dflash.go` (new)** — the DFlash draft model package:
+   - `parseConfig` parses the draft `config.json` (including `rope_scaling`, `block_size`, `num_target_layers`, `layer_types`, `dflash_config`), with validation/defaults mirroring the qwen3/gemma4-assistant patterns.
+   - YaRN RoPE frequency construction (`buildYarnRopeFreqs`, correction range/ramp) and the `RopeScale = 0.1·ln(factor) + 1` attention scale the test asserts, applied via `scaleRotaryPart` (same approach as the laguna model).
+   - Full `MTPDraftModel` implementation: block-parallel drafting (anchor hidden state + masked block positions from `dflash_config.mask_token_id`), Qwen3-style layers (Q/K-norm attention + SwiGLU), cross-attention to target KV caches selected by `dflash_config.target_layer_ids` with a self-K/V fallback.
+   - Registered as draft architecture `DFlashDraftModel` via `base.RegisterDraft`.
+
+2. **`x/mlxrunner/imports.go`** — blank-import the `dflash` package so the runner registers it.
+
+3. **`x/models/qwen3/qwen3.go`** — added `TokenEmbeddings`, so a qwen3 target satisfies `base.MTPEmbeddingModel` and the MTP draft loop can embed proposed tokens through the target's embedding table.
+
+4. **`x/create/client/create.go`** — `newManifestWriter` now reads the draft's `config.json` and records its real `architectures[0]` in `config.Draft.Architecture` (falling back to the previous default), so imported DFlash drafts get `architecture: "DFlashDraftModel"`.
+
+**Verification:**
+- `go build ./...` — clean
+- `go test ./x/models/dflash/...` — **ok** (the YaRN test skips only when the MLX dylib isn't present in this env, same as all other MLX-dependent tests)
+- `go test ./x/create/client/...` — **ok**, including `TestNewManifestWriter_PopulatesDraftMetadata`
+- `go test ./x/models/... ./x/create/...` — all pass
+- Full-suite diff vs. clean tree: no new failures; the only remaining failures (`x/mlxrunner`, `x/mlxrunner/cache` recurrent-cache speculation tests, `cmd/launch`) are pre-existing and unrelated to DFlash (identical on the untouched tree).
+[36m[local-agent][0m stopping private Ollama server (pid 755102)

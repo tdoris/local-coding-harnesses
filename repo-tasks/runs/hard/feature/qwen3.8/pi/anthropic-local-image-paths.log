@@ -1,0 +1,25 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+All tests pass. The task is complete.
+
+## Summary
+
+I fixed "Preserve Claude local image-path tool results in renderer-owned prompt formatting" by making changes to three areas (source files only, no test files touched):
+
+### `anthropic` package
+- **Added `OutputConfig`** (`{Effort string}`) and wired it into `MessagesRequest` as `output_config`.
+- **Added `mapEffortToThinkLevel`** mapping Anthropic `effort` → Ollama think level: `low`/`medium`/`high` pass through, `xhigh` → `high`, unknown → ignored.
+- **Reworked Think logic** in `FromMessagesRequest`: an explicit `thinking.type == "disabled"` always wins (`Think=false`); otherwise a mapped effort level is used (`Think="high"` etc.); otherwise `enabled`/`adaptive` turns thinking on.
+- **Preserved image tool results**: the `tool_result` handler now decodes base64 `image` content blocks into the tool message's `Images` (previously only text was kept). Added a `decodeImageSource` helper.
+- **Fixed message ordering**: tool-result messages now precede a message's own trailing text (so `assistant(tool_use) → user[tool_result + text]` yields `assistant, tool, user`).
+
+### `model/renderers`
+- **Created `image_tags.go`** with a shared `renderContentWithImageTags` helper that keeps tag placement renderer-owned: it replaces `[img]` placeholders in order (bounded by image count), prefixes leftover images (space-separated), and preserves already-numbered `[img-N]` tags.
+- **Updated renderers** (qwen3vl, qwen35, glmocr, lfm2, nemotron3nano, gemma4) to use the helper for both user content and tool-response content, so tool messages carrying images get `[img-N]` tags.
+
+### Verification
+`go build ./...` is clean and all affected packages pass: `anthropic`, `model`, `model/renderers`, `server`, plus the full `model/...` tree (no regressions). `gofmt` and `go vet` are clean.
+[36m[local-agent][0m stopping private Ollama server (pid 653847)
