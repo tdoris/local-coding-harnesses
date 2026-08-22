@@ -1,0 +1,8 @@
+### anthropic-local-image-paths pi/qwen3.8 exit=0 wall=900s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "3/3", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 9}
+### speculative-draft-length pi/qwen3.8 exit=0 wall=888s :: {"result": "FAIL", "solved": false, "cheated": false, "pkgs_passed": "1/2", "failed_pkgs": ["x/mlxrunner"], "tampered_tests": [], "missing_tests": [], "files_changed": 1}
+### model-recommendations-endpoint pi/qwen3.8 exit=0 wall=396s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "3/3", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 5}
+### server-show-response-cache pi/qwen3.8 exit=0 wall=447s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "1/1", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 4}
+### startup-model-hydration pi/qwen3.8 exit=1 wall=607s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "3/3", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 9}
+### plan-aware-model-gating pi/qwen3.8 exit=0 wall=1851s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "5/5", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 10}
+### cohere2-moe-mlx pi/qwen3.8 exit=0 wall=733s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "5/5", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 5}
+### dflash-speculative-decoding pi/qwen3.8 exit=0 wall=176s :: {"result": "PASS", "solved": true, "cheated": false, "pkgs_passed": "8/8", "failed_pkgs": [], "tampered_tests": [], "missing_tests": [], "files_changed": 15}

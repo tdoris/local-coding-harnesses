@@ -1,0 +1,30 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+[36m[local-agent][0m forcing skill into system prompt: /tmp/claude-1000/-home-jim/c04e9012-48d5-447d-bfb9-ef07e19c9cd2/scratchpad/sk/cli-contract.txt
+All done. Summary:
+
+## Cause
+The DFlash speculative decoding feature (upstream ollama PR #16134) had been stripped from the source tree — only the test files remained. The repo base matched the PR's parent commit exactly, so the missing pieces were the 14 non-test source files (3 new: `x/mlxrunner/dflash.go`, `x/models/dflash/dflash.go`, `x/models/nn/rope.go`).
+
+## Fix
+Restored the DFlash implementation across all 8 packages:
+
+- **`x/models/dflash/dflash.go`** (new) — DFlash block-diffusion draft model: `parseConfig` (incl. YaRN rope scaling → `RopeFreqs`/`RopeScale`), model wiring against the target model
+- **`x/models/nn/rope.go`** (new) — shared rope frequency/scale helpers used by dflash
+- **`x/models/qwen3_5/qwen3_5.go`, `x/models/laguna/laguna.go`** — target-side DFlash support (hidden-state taps, draft registration)
+- **`x/mlxrunner/mlx/gated_delta.go`** — gated-delta/conv ops needed by the laguna target
+- **`x/mlxrunner/model/base/base.go`** — draft-model registration API
+- **`x/mlxrunner/cache/recurrent.go`, `x/mlxrunner/cache/cache.go`** — `speculativeRecurrentCache` + `RecurrentCache` support in `BeginIsolatedSpeculation`
+- **`x/mlxrunner/cache.go`** — `kvCache.beginWithFactoryLimit` (capped-prefix session, no seed-token retention)
+- **`x/mlxrunner/dflash.go`** (new) — runner-side draft orchestration; also `imports.go`, `pipeline.go`, `runner.go` integration
+- **`x/create/client/create.go`** — draft metadata now records `DFlashDraftModel` architecture
+
+## Verification
+- All 8 target packages pass: `x/create/client`, `x/mlxrunner`, `x/mlxrunner/cache`, `x/mlxrunner/mlx`, `x/models/dflash`, `x/models/laguna`, `x/models/nn`, `x/models/qwen3_5` — every one `ok`
+- `go build ./...` succeeds repo-wide
+- Tests requiring the MLX dynamic library skip cleanly in this environment (no MLX lib installed); all pure-Go tests (e.g. `TestKVCacheBeginWithFactoryLimit*`, `TestNewManifestWriter_PopulatesDraftMetadata`) ran and passed
+- No `*_test.go` files were modified
+[36m[local-agent][0m stopping private Ollama server (pid 2504892)

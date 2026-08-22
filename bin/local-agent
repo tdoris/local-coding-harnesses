@@ -254,7 +254,15 @@ json.dump({"providers": {"ollama": {
 json.dump({"defaultProvider": "ollama", "defaultModel": m}, open(d + "/settings.json", "w"), indent=2)
 PYEOF
     export PI_CODING_AGENT_DIR="$pd"
-    pi --provider ollama --model "$MODEL" "$@"
+    # CLAUDE_OLLAMA_SKILL=<file>: force a skill into pi's system prompt. pi's own
+    # skill discovery is per-agent-dir, and this branch uses a private one, so
+    # skills registered in ~/.pi/agent/settings.json do NOT apply here.
+    if [[ -n "${CLAUDE_OLLAMA_SKILL:-}" && -f "${CLAUDE_OLLAMA_SKILL}" ]]; then
+      log "forcing skill into system prompt: ${CLAUDE_OLLAMA_SKILL}"
+      pi --provider ollama --model "$MODEL" --append-system-prompt "$(cat "${CLAUDE_OLLAMA_SKILL}")" "$@"
+    else
+      pi --provider ollama --model "$MODEL" "$@"
+    fi
     ;;
 
   codex)

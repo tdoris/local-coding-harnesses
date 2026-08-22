@@ -1,0 +1,26 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+[36m[local-agent][0m forcing skill into system prompt: /tmp/claude-1000/-home-jim/c04e9012-48d5-447d-bfb9-ef07e19c9cd2/scratchpad/sk/cli-contract.txt
+All done. Summary of the fix:
+
+**Root cause:** the cohere2_moe (Command A / North) feature was missing its two Go support files — `model/parsers/cohere_test.go` and `model/renderers/cohere_test.go` existed, but `CohereParser` and `CohereRenderer` were never implemented, so both packages failed to build. The other three listed packages (`x/create`, `x/create/client`, `x/mlxrunner`) were already green.
+
+**Changes (non-test source only):**
+
+1. **`model/parsers/cohere.go`** (new) — `CohereParser`:
+   - State machine over cohere special tokens: thinking region (output starts inside `<|START_THINKING|>` since the prompt primes it), text region (`<|START_TEXT|>`/legacy `<|START_RESPONSE|>`, closed by `END_TEXT`/`END_RESPONSE`/`END_OF_TURN_TOKEN`), and action region (`<|START_ACTION|>…<|END_ACTION|>`).
+   - Tags split across chunk boundaries are held back and resolved on the next chunk; text streams out as it arrives (never buffered until `done`), satisfying the streaming regression tests.
+   - Starts in text mode when thinking is disabled or when continuing an assistant prefill.
+   - Tool calls parsed from the action JSON array with string-aware balanced-brace object extraction, so malformed entries (bad JSON, missing commas) are skipped without dropping well-formed siblings; indices assigned sequentially.
+
+2. **`model/renderers/cohere.go`** (new) — `CohereRenderer`:
+   - `LeadingBOS()` → `<BOS_TOKEN>`; renders the system "Available Tools" turn, user/assistant/tool turns, assistant thinking+text turns, indented action turns with per-call sequential `tool_call_id`s, merged consecutive tool-result blocks referencing those regenerated ids, and the generation prompt (`<|START_THINKING|>` primed, or closed when reasoning is off); leaves the text block open on assistant prefill.
+   - Reproduces the exact jinja-derived whitespace from the model's `chat_template.jinja` (e.g. empty tools list `[\n\n\n\n]`, 4/12/16-space action indentation).
+
+3. **Registration** — added `case "cohere"` to `ParserForName` in `model/parsers/parsers.go` and `rendererForName` in `model/renderers/renderer.go`.
+
+**Verification:** `go build ./...`, `go vet`, `gofmt` clean; `go test -count=1` passes for all five packages (all 20 cohere tests pass, no test files modified).
+[36m[local-agent][0m stopping private Ollama server (pid 2493677)

@@ -1,0 +1,33 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+[36m[local-agent][0m forcing skill into system prompt: /tmp/claude-1000/-home-jim/c04e9012-48d5-447d-bfb9-ef07e19c9cd2/scratchpad/sk/cli-contract.txt
+All tests pass. Here's what was missing and how I fixed it:
+
+## Cause
+The `server` package had no show-response caching: `ShowHandler` recomputed local model info on every `/api/show` call and always proxied cloud shows synchronously. The tests (`model_show_cache_test.go`) reference an entire missing API surface: `newModelShowCache`, `ModelShowCache` with `GetLocal`/`hydrateLocal`/`hydrateCloud`/`getCloud`/`setCloud`/`setLocal`, `modelShowLocalKeyForRequest`, `modelShowCloudKeyForModel`, `errModelShowNoCloud`, and a `modelCaches` struct on `Server`.
+
+## Changes (3 files, 2 new)
+
+**`server/model_show_cache.go` (new)** — the cache implementation:
+- **Local cache** keyed by (model, verbose), each entry bound to the manifest digest (`modelShowLocalKeyForRequest` → `getExistingName` + `manifest.ParseNamedManifest().Digest()`). A digest change (re-pull/re-create) invalidates the entry; verbose variants are cached separately. `GetLocal` returns the hit without calling `getModelInfo` again.
+- **Cloud cache** keyed by normalized model name (`modelShowCloudKeyForModel` strips `:cloud`/`-cloud` and whitespace), so `kimi-k2.5:cloud` ↔ `kimi-k2.5` share entries while local and cloud never collide.
+- **Warm-hit read-refresh**: `refreshCloudOnRead` serves the stale entry immediately, then refreshes `/api/show` in the background, guarded per-key by `cloudNextReadRefreshAfter` + `cloudRefreshing` (prevents thundering herds and double refreshes).
+- **Hydration**: `hydrateLocal` pre-populates from `manifest.Manifests`, skipping in-memory hits; `hydrateCloud` fetches `/api/tags` and hydrates each model via `/api/show`, returning `errModelShowNoCloud` when cloud is disabled.
+
+**`server/model_caches.go` (new)** — `modelCaches` struct (`show` + `recommendations`) and nil-safe accessors on `Server` (tests build `Server{modelCaches: &modelCaches{...}}` directly).
+
+**`server/routes.go` (modified)**:
+- `Server` gains a `modelCaches` field.
+- `ShowHandler`: local models are served from the cache (with the per-request `System` overlay applied to a copy, and requests with `Options` bypassing the cache to recompute); cloud models return a warm cache entry with a background refresh, fall back to the existing proxy on cold miss, and return 403 `DisabledError(cloudErrRemoteModelDetailsUnavailable)` when cloud is disabled (never serving stale entries).
+- `ModelRecommendationsExperimentalHandler` now resolves the cache via `modelCaches` first (tests wire it there).
+- `Serve` wires the caches together and hydrates both caches asynchronously at startup.
+
+## Verification
+- `go build ./...` — clean
+- `gofmt -l server/` — clean
+- `go test ./server/... -count=1` — **all packages pass** (2.7s), including all 11 `TestModelShowCache*` tests and the pre-existing cloud/routes tests
+- `go test ./server/ -race -run TestModelShowCache` — passes under the race detector
+[36m[local-agent][0m stopping private Ollama server (pid 2446598)

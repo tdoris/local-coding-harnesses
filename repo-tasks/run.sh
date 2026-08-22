@@ -7,7 +7,7 @@ tier=$(python3 -c "
 import json
 print([x for x in json.load(open('$TASKS'))['tasks'] if x['id']=='$id'][0].get('tier','single'))")
 W="/home/jim/bench-repos/wd-$id-$harness"
-OUT="$HERE/runs/${BENCH_MODE:-easy}/$tier/$model/$harness"; mkdir -p "$OUT"
+OUT="$HERE/runs${BENCH_SUFFIX:-}/${BENCH_MODE:-easy}/$tier/$model/$harness${BENCH_TAG:+/$BENCH_TAG}"; mkdir -p "$OUT"
 
 pkglist=$(python3 -c "
 import json

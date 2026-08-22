@@ -1,0 +1,27 @@
+[36m[local-agent][0m starting private Ollama server on 127.0.0.1:11435 (ctx=81920, kv=q8_0, log: /home/jim/.cache/local-agent/server.log)
+[36m[local-agent][0m loading qwen3.8 ...
+[36m[local-agent][0m loaded: qwen3.8:latest    22130167c4c2    17 GB    100% GPU     81920      2 hours from now    
+[36m[local-agent][0m sampling (from Modelfile): temperature=1 top_p=0.95 presence_penalty=0
+[36m[local-agent][0m launching pi (model=qwen3.8, ctx=81920, max_output=32000)
+[36m[local-agent][0m forcing skill into system prompt: /tmp/claude-1000/-home-jim/c04e9012-48d5-447d-bfb9-ef07e19c9cd2/scratchpad/sk/cli-contract.txt
+All packages pass. Summary of the fix:
+
+## Root cause
+The "model recommendations cache endpoint" feature was never implemented: `server/model_recommendations_test.go` references symbols (`modelRecommendationsCache`, `defaultModelRecommendations`, `validateModelRecommendations`, the handler, etc.) and types (`api.ModelRecommendation`) that didn't exist anywhere in the non-test source — the server package didn't even compile.
+
+## Changes (source files only, no test files touched)
+1. **`api/types.go`** — added `ModelRecommendation` (with `model`, `description`, `context_length`, `max_output_tokens`, `vram` JSON tags) and `ModelRecommendationsResponse`.
+2. **`api/client.go`** — added `Client.ModelRecommendations(ctx)` calling `GET /api/experimental/model-recommendations`.
+3. **`server/model_recommendations.go`** (new) —
+   - `defaultModelRecommendations` in the exact order the tests expect (kimi-k2.6:cloud, glm-5.1:cloud, qwen3.5:cloud, minimax-m2.7:cloud, gemma4, qwen3.5), with cloud token limits and local VRAM from the shared launch catalog.
+   - `modelRecommendationsCache` with `refresh` (GET via `client`, non-200 → `status <code>: <body>`, streaming JSON decode so truncation yields `unexpected EOF`, validation, in-memory update + snapshot persist; on error data is untouched and no snapshot written), `Get`, `GetSWR` (returns immediately, async refresh gated by `refreshing` flag + `modelRecommendationsReadRefreshCooldown`), `loadSnapshot`/`persistSnapshot` under `~/.ollama/model-recommendations.json`, `validateModelRecommendations` (trims fields, drops cloud entries missing limits, rejects duplicates / empty / no-valid entries with the exact expected error strings), and the `errModelRecommendationsNoCloud` short-circuit when `envconfig.NoCloud()` is set.
+   - `Server.ModelRecommendationsExperimentalHandler` serving cache (SWR) or defaults.
+4. **`server/routes.go`** — added `modelRecommendations` field to `Server`, registered `GET /api/experimental/model-recommendations` (POST → 405), and initialized the cache in `Serve`.
+
+## Verification
+- `go test ./api/...` → **ok**
+- `go test ./server/...` → **ok** (incl. all `TestModelRecommendations*`, also clean under `-race`)
+- `go test ./cmd/launch/...` → **ok**
+
+One note: in this interactive shell, `TestDroidEdit` fails solely because the shell exports `OLLAMA_HOST=127.0.0.1:11435` (this agent's own ollama endpoint); `droid.go` correctly honors `OLLAMA_HOST` like every other integration, while that test hard-codes the default `11434` without setting the env var. Unset `OLLAMA_HOST` (clean environment) and the whole package passes, as shown above. That failure predates my change and is environmental, not a code defect.
+[36m[local-agent][0m stopping private Ollama server (pid 2426678)
